@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZeroClaw Metrics Dashboard</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #667085;
+      --line: #d8dee8;
+      --blue: #2563eb;
+      --green: #168a5b;
+      --amber: #b7791f;
+      --red: #c24132;
+      --teal: #0f766e;
+      --shadow: 0 1px 2px rgb(16 24 40 / 7%);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header {
+      background: #17202a;
+      color: white;
+      padding: 28px max(24px, calc((100vw - 1180px) / 2));
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 28px; font-weight: 700; letter-spacing: 0; }
+    header p { color: #d6dde8; margin-top: 8px; max-width: 840px; }
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 24px auto 48px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card, section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .card {
+      min-height: 112px;
+      padding: 16px;
+    }
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      font-weight: 700;
+    }
+    .value {
+      display: block;
+      margin: 8px 0 4px;
+      font-size: 30px;
+      line-height: 1.05;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+    .note, .muted { color: var(--muted); }
+    .note { font-size: 13px; }
+    section {
+      margin-top: 16px;
+      padding: 18px;
+    }
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    h2 { font-size: 18px; }
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #f1f4f8; color: #344054; font-size: 12px; text-transform: uppercase; letter-spacing: 0; }
+    tr:last-child td { border-bottom: 0; }
+    .bars {
+      width: 100%;
+      height: 108px;
+      display: block;
+      overflow: visible;
+    }
+    .bars rect { fill: var(--teal); }
+    .bars rect:nth-child(3n) { fill: var(--blue); }
+    .bars rect:nth-child(5n) { fill: var(--green); }
+    .callout {
+      border-left: 4px solid var(--amber);
+      padding: 12px 14px;
+      background: #fff8e8;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #3342a0;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 6px;
+      margin-top: 6px;
+    }
+    footer {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto 32px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 960px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .split { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      header { padding: 22px 16px; }
+      main { width: calc(100% - 24px); margin-top: 16px; }
+      .grid { grid-template-columns: 1fr; }
+      .value { font-size: 26px; }
+      section { padding: 14px; }
+      .section-head { display: block; }
+      .section-head .muted { margin-top: 4px; }
+    }
+    </style>
+</head>
+<body>
+  <header>
+    <h1>ZeroClaw Metrics Dashboard</h1>
+    <p>Distribution, release, repository, and package-manager metrics snapshot for zeroclaw-labs/zeroclaw. Generated 2026-07-02T21:34:30.744660+00:00.</p>
+  </header>
+  <main>
+    
+    <div class="grid"><article class="card"><span class="label">GHCR Downloads</span><span class="value">361.0K</span><p class="note">Total container package downloads</p></article>
+<article class="card"><span class="label">GHCR 30d</span><span class="value">31.7K</span><p class="note">Scraped from authenticated package chart</p></article>
+<article class="card"><span class="label">Release Assets</span><span class="value">102.6K</span><p class="note">Installable GitHub release asset downloads</p></article>
+<article class="card"><span class="label">Homebrew 30d</span><span class="value">394</span><p class="note">Homebrew Core installs</p></article>
+<article class="card"><span class="label">Repo Stars</span><span class="value">32.1K</span><p class="note">GitHub repository stars</p></article>
+<article class="card"><span class="label">Traffic 14d</span><span class="value">38.7K</span><p class="note">Repository page views</p></article>
+<article class="card"><span class="label">Clones 14d</span><span class="value">67.2K</span><p class="note">Repository clones</p></article>
+<article class="card"><span class="label">PRs Merged 7d</span><span class="value">236</span><p class="note">Pulse-like activity</p></article></div>
+
+    <section>
+      <div class="section-head">
+        <h2>GHCR Container Downloads</h2>
+        <p class="muted">Total 360,969; last 7 days 6,898</p>
+      </div>
+      <div class="split">
+        <div>
+          <svg class="bars" viewBox="0 0 360 92" role="img" aria-label="Daily downloads"><rect x="0" y="34" width="9" height="44" rx="2"><title>2026-06-03: 977</title></rect><rect x="12" y="31" width="9" height="47" rx="2"><title>2026-06-04: 1,042</title></rect><rect x="24" y="39" width="9" height="39" rx="2"><title>2026-06-05: 859</title></rect><rect x="36" y="35" width="9" height="43" rx="2"><title>2026-06-06: 951</title></rect><rect x="48" y="37" width="9" height="41" rx="2"><title>2026-06-07: 907</title></rect><rect x="60" y="38" width="9" height="40" rx="2"><title>2026-06-08: 885</title></rect><rect x="72" y="40" width="9" height="38" rx="2"><title>2026-06-09: 843</title></rect><rect x="84" y="35" width="9" height="43" rx="2"><title>2026-06-10: 949</title></rect><rect x="96" y="38" width="9" height="40" rx="2"><title>2026-06-11: 886</title></rect><rect x="108" y="31" width="9" height="47" rx="2"><title>2026-06-12: 1,039</title></rect><rect x="120" y="21" width="9" height="57" rx="2"><title>2026-06-13: 1,264</title></rect><rect x="132" y="33" width="9" height="45" rx="2"><title>2026-06-14: 1,008</title></rect><rect x="144" y="33" width="9" height="45" rx="2"><title>2026-06-15: 1,006</title></rect><rect x="156" y="19" width="9" height="59" rx="2"><title>2026-06-16: 1,305</title></rect><rect x="168" y="6" width="9" height="72" rx="2"><title>2026-06-17: 1,602</title></rect><rect x="180" y="13" width="9" height="65" rx="2"><title>2026-06-18: 1,445</title></rect><rect x="192" y="16" width="9" height="62" rx="2"><title>2026-06-19: 1,378</title></rect><rect x="204" y="29" width="9" height="49" rx="2"><title>2026-06-20: 1,081</title></rect><rect x="216" y="38" width="9" height="40" rx="2"><title>2026-06-21: 893</title></rect><rect x="228" y="35" width="9" height="43" rx="2"><title>2026-06-22: 954</title></rect><rect x="240" y="11" width="9" height="67" rx="2"><title>2026-06-23: 1,494</title></rect><rect x="252" y="30" width="9" height="48" rx="2"><title>2026-06-24: 1,078</title></rect><rect x="264" y="34" width="9" height="44" rx="2"><title>2026-06-25: 976</title></rect><rect x="276" y="32" width="9" height="46" rx="2"><title>2026-06-26: 1,020</title></rect><rect x="288" y="36" width="9" height="42" rx="2"><title>2026-06-27: 934</title></rect><rect x="300" y="34" width="9" height="44" rx="2"><title>2026-06-28: 989</title></rect><rect x="312" y="27" width="9" height="51" rx="2"><title>2026-06-29: 1,127</title></rect><rect x="324" y="32" width="9" height="46" rx="2"><title>2026-06-30: 1,015</title></rect><rect x="336" y="36" width="9" height="42" rx="2"><title>2026-07-01: 935</title></rect><rect x="348" y="39" width="9" height="39" rx="2"><title>2026-07-02: 878</title></rect></svg>
+          <p class="note">Daily values are scraped from the authenticated GitHub Packages chart because REST package objects omit pull/download counts.</p>
+        </div>
+        <div>
+          <div class="table-wrap"><table><thead><tr><th>Tags</th><th>Downloads</th><th>Digest</th></tr></thead><tbody><tr><td>v0.8.2-debian, debian</td><td>1,180</td><td>sha256:8d80a80293f3...</td></tr>
+<tr><td>latest, v0.8.2</td><td>2,927</td><td>sha256:eae321dac2d3...</td></tr>
+<tr><td>v0.8.1-debian</td><td>1,432</td><td>sha256:414cbe73b618...</td></tr>
+<tr><td>v0.8.1</td><td>3,711</td><td>sha256:61756adcc378...</td></tr>
+<tr><td>v0.8.0-debian</td><td>1,224</td><td>sha256:3d9733778c67...</td></tr></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>GitHub Release Assets</h2>
+        <p class="muted">Average rate since publication; installable assets only</p>
+      </div>
+      <div class="split">
+        <div><div class="table-wrap"><table><thead><tr><th>Release</th><th>Type</th><th>Published</th><th>Age</th><th>Downloads</th><th>Downloads/week</th></tr></thead><tbody><tr><td>v0.8.2</td><td>stable</td><td>2026-06-26</td><td>6.7d</td><td>3,067</td><td>3200</td></tr>
+<tr><td>v0.7.5</td><td>stable</td><td>2026-05-08</td><td>55.7d</td><td>21,429</td><td>2694</td></tr>
+<tr><td>v0.8.1</td><td>stable</td><td>2026-06-19</td><td>13.8d</td><td>3,307</td><td>1676</td></tr>
+<tr><td>v0.8.0</td><td>stable</td><td>2026-06-12</td><td>20.9d</td><td>4,024</td><td>1348</td></tr>
+<tr><td>v0.1.7</td><td>stable</td><td>2026-02-24</td><td>128.5d</td><td>18,164</td><td>989</td></tr>
+<tr><td>v0.7.3</td><td>stable</td><td>2026-04-19</td><td>74.7d</td><td>10,474</td><td>981</td></tr>
+<tr><td>v0.7.4</td><td>stable</td><td>2026-05-01</td><td>62.8d</td><td>6,705</td><td>748</td></tr>
+<tr><td>v0.6.9</td><td>stable</td><td>2026-04-08</td><td>85.6d</td><td>8,621</td><td>705</td></tr>
+<tr><td>v0.6.8</td><td>stable</td><td>2026-04-02</td><td>91.9d</td><td>6,528</td><td>497</td></tr>
+<tr><td>v0.6.5</td><td>stable</td><td>2026-03-27</td><td>97.7d</td><td>4,414</td><td>316</td></tr></tbody></table></div></div>
+        <div><div class="table-wrap"><table><thead><tr><th>Asset category</th><th>Downloads</th><th>Share</th></tr></thead><tbody><tr><td>Linux GNU</td><td>72,546</td><td>70.7%</td></tr>
+<tr><td>Windows zip</td><td>16,545</td><td>16.1%</td></tr>
+<tr><td>macOS tarball</td><td>5,493</td><td>5.4%</td></tr>
+<tr><td>Android</td><td>3,459</td><td>3.4%</td></tr>
+<tr><td>Install script</td><td>2,142</td><td>2.1%</td></tr>
+<tr><td>DMG</td><td>1,625</td><td>1.6%</td></tr>
+<tr><td>Linux musl</td><td>783</td><td>0.8%</td></tr></tbody></table></div></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Repository Activity</h2>
+        <p class="muted">Pulse-like window since 2026-06-25</p>
+      </div>
+      <div class="split">
+        <div>
+          <h3>Traffic</h3>
+          <svg class="bars" viewBox="0 0 168 92" role="img" aria-label="Daily downloads"><rect x="0" y="23" width="9" height="55" rx="2"><title>2026-06-18T00:00:00Z: 2,854</title></rect><rect x="12" y="26" width="9" height="52" rx="2"><title>2026-06-19T00:00:00Z: 2,696</title></rect><rect x="24" y="17" width="9" height="61" rx="2"><title>2026-06-20T00:00:00Z: 3,140</title></rect><rect x="36" y="21" width="9" height="57" rx="2"><title>2026-06-21T00:00:00Z: 2,934</title></rect><rect x="48" y="6" width="9" height="72" rx="2"><title>2026-06-22T00:00:00Z: 3,731</title></rect><rect x="60" y="22" width="9" height="56" rx="2"><title>2026-06-23T00:00:00Z: 2,926</title></rect><rect x="72" y="26" width="9" height="52" rx="2"><title>2026-06-24T00:00:00Z: 2,670</title></rect><rect x="84" y="25" width="9" height="53" rx="2"><title>2026-06-25T00:00:00Z: 2,727</title></rect><rect x="96" y="23" width="9" height="55" rx="2"><title>2026-06-26T00:00:00Z: 2,855</title></rect><rect x="108" y="34" width="9" height="44" rx="2"><title>2026-06-27T00:00:00Z: 2,276</title></rect><rect x="120" y="28" width="9" height="50" rx="2"><title>2026-06-28T00:00:00Z: 2,566</title></rect><rect x="132" y="29" width="9" height="49" rx="2"><title>2026-06-29T00:00:00Z: 2,521</title></rect><rect x="144" y="26" width="9" height="52" rx="2"><title>2026-06-30T00:00:00Z: 2,684</title></rect><rect x="156" y="36" width="9" height="42" rx="2"><title>2026-07-01T00:00:00Z: 2,159</title></rect></svg>
+          <p class="note">Views: 38,739 total, 7,662 unique. Clones: 67,219 total, 4,523 unique.</p>
+        </div>
+        <div>
+          <div class="table-wrap"><table><thead><tr><th>Pulse metric</th><th>Count</th></tr></thead><tbody><tr><td>PRs opened</td><td>234</td></tr>
+<tr><td>PRs merged</td><td>236</td></tr>
+<tr><td>Issues opened</td><td>81</td></tr>
+<tr><td>Issues closed</td><td>84</td></tr>
+<tr><td>Default-branch commits</td><td>236</td></tr></tbody></table></div>
+          <div class="table-wrap"><table><thead><tr><th>Contributor</th><th>Latest week commits</th><th>Total commits</th></tr></thead><tbody><tr><td>Audacity88</td><td>33</td><td>276</td></tr>
+<tr><td>Alix-007</td><td>19</td><td>138</td></tr>
+<tr><td>Nillth</td><td>13</td><td>80</td></tr>
+<tr><td>singlerider</td><td>13</td><td>302</td></tr>
+<tr><td>wangmiao0668000666</td><td>8</td><td>17</td></tr>
+<tr><td>mazhuima</td><td>7</td><td>11</td></tr>
+<tr><td>ConYel</td><td>7</td><td>14</td></tr>
+<tr><td>LiLan0125</td><td>5</td><td>5</td></tr>
+<tr><td>jokewithme110</td><td>5</td><td>8</td></tr>
+<tr><td>tidux</td><td>5</td><td>34</td></tr></tbody></table></div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Package Managers</h2>
+        <p class="muted">External package surfaces with usable metrics</p>
+      </div>
+      <div class="split">
+        <div>
+          <h3>Homebrew Core</h3>
+          <div class="table-wrap"><table><thead><tr><th>Window</th><th>Installs</th><th>Install on request</th></tr></thead><tbody><tr><td>30d</td><td>394</td><td>394</td></tr>
+<tr><td>90d</td><td>2,157</td><td>2,157</td></tr>
+<tr><td>365d</td><td>7,514</td><td>7,514</td></tr></tbody></table></div>
+          <h3 style="margin-top:16px;">crates.io</h3>
+          <div class="table-wrap"><table><thead><tr><th>Crate</th><th>Version</th><th>Total</th><th>7d</th><th>30d</th><th>90d</th></tr></thead><tbody><tr><td>zeroclaw</td><td>0.1.7</td><td>3,998</td><td>34</td><td>456</td><td>1,172</td></tr>
+<tr><td>aardvark-sys</td><td>0.1.0</td><td>2,341</td><td>111</td><td>341</td><td>2,008</td></tr></tbody></table></div>
+        </div>
+        <div>
+          <h3>AUR</h3>
+          <div class="table-wrap"><table><thead><tr><th>Package</th><th>Version</th><th>Votes</th><th>Popularity</th><th>Maintainer</th></tr></thead><tbody><tr><td>zeroclaw</td><td>0.6.9-1</td><td>4</td><td>0.454243</td><td>zeroclaw-bot</td></tr>
+<tr><td>zeroclawlabs</td><td>0.8.2-1</td><td>0</td><td>0.000000</td><td>zeroclaw-bot</td></tr></tbody></table></div>
+          <h3 style="margin-top:16px;">Scoop Bucket</h3>
+          <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Value</th></tr></thead><tbody><tr><td>Manifest version</td><td>0.7.5</td></tr>
+<tr><td>Repo views 14d</td><td>7</td></tr>
+<tr><td>Repo clones 14d</td><td>192</td></tr>
+<tr><td>Stars</td><td>1</td></tr></tbody></table></div>
+        </div>
+      </div>
+      <p class="callout">Do not add package-manager counts together as unique users. Homebrew, Scoop, and installers can ultimately fetch GitHub release assets, and GHCR counts image pulls rather than people.</p>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Docker Hub Search</h2>
+        <p class="muted">No official Docker Hub image found; these are community results</p>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Repository</th><th>Pulls</th><th>Stars</th><th>Description</th></tr></thead><tbody><tr><td>birdxs/zeroclaw</td><td>5,904</td><td>2</td><td></td></tr>
+<tr><td>tonymaithanh/zeroclaw</td><td>289</td><td>0</td><td>zeroclaw</td></tr>
+<tr><td>cardellier/zeroclaw</td><td>2,706</td><td>0</td><td></td></tr>
+<tr><td>ilteoood/zeroclaw</td><td>2,926</td><td>0</td><td></td></tr>
+<tr><td>nphung/zeroclaw</td><td>1,451</td><td>0</td><td></td></tr>
+<tr><td>jyasu/zeroclaw</td><td>1,141</td><td>0</td><td></td></tr>
+<tr><td>mos4/zeroclaw</td><td>1,061</td><td>0</td><td></td></tr>
+<tr><td>cdfng/zeroclaw</td><td>890</td><td>0</td><td></td></tr></tbody></table></div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Recommended Permanent Home</h2>
+        <p class="muted">Keep snapshots separate from source code</p>
+      </div>
+      <p>This repository is the durable home for ZeroClaw metrics. The collector runs from <code>scripts/build_dashboard.py</code>, writes immutable snapshots under <code>data/snapshots/</code>, refreshes <code>data/latest.json</code>, and publishes this static <code>index.html</code> through GitHub Pages. The main application repository should link here rather than storing metrics snapshots in product source.</p>
+      <div>
+        <span class="pill">Collector: scripts/metrics</span>
+        <span class="pill">Snapshots: separate metrics store</span>
+        <span class="pill">Dashboard: GitHub Pages /metrics</span>
+        <span class="pill">Docs link: maintainer docs</span>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Source Status</h2>
+        <p class="muted">Collector health for this snapshot</p>
+      </div>
+      <div class="table-wrap"><table><thead><tr><th>Source</th><th>Status</th></tr></thead><tbody><tr><td>GitHub repo + traffic</td><td>ok</td></tr>
+<tr><td>GitHub releases</td><td>ok</td></tr>
+<tr><td>GHCR package UI</td><td>ok</td></tr>
+<tr><td>Homebrew</td><td>ok</td></tr>
+<tr><td>AUR</td><td>ok</td></tr>
+<tr><td>crates.io</td><td>ok</td></tr>
+<tr><td>Scoop</td><td>ok</td></tr>
+<tr><td>Docker Hub search</td><td>ok</td></tr></tbody></table></div>
+    </section>
+  </main>
+  <footer>
+    Source snapshot: <code>data/latest.json</code>. The live platforms remain canonical; this dashboard is a point-in-time operational view.
+  </footer>
+</body>
+</html>

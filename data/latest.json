@@ -1,0 +1,1212 @@
+{
+  "aur": {
+    "data": {
+      "packages": [
+        {
+          "Depends": [
+            "gcc-libs",
+            "glibc",
+            "alsa-lib"
+          ],
+          "Description": "Fast, small, and fully autonomous AI assistant infrastructure \u2014 deploy anywhere, swap anything (Rust)",
+          "FirstSubmitted": 1772550113,
+          "ID": 2034193,
+          "Keywords": [],
+          "LastModified": 1775817652,
+          "License": [
+            "Apache-2.0",
+            "MIT"
+          ],
+          "Maintainer": "zeroclaw-bot",
+          "MakeDepends": [
+            "rust",
+            "clang",
+            "cargo"
+          ],
+          "Name": "zeroclaw",
+          "NumVotes": 4,
+          "OptDepends": [
+            "bubblewrap",
+            "chromium",
+            "postgresql"
+          ],
+          "OutOfDate": 1779451905,
+          "PackageBase": "zeroclaw",
+          "PackageBaseID": 230418,
+          "Popularity": 0.454243,
+          "Submitter": "SteamedFish",
+          "URL": "https://github.com/zeroclaw-labs/zeroclaw",
+          "URLPath": "/cgit/aur.git/snapshot/zeroclaw.tar.gz",
+          "Version": "0.6.9-1"
+        },
+        {
+          "Conflicts": [
+            "zeroclaw",
+            "zerocode"
+          ],
+          "Depends": [
+            "gcc-libs",
+            "openssl"
+          ],
+          "Description": "Zero overhead. Zero compromise. 100% Rust. The fastest, smallest AI assistant.",
+          "FirstSubmitted": 1781222735,
+          "ID": 2138606,
+          "Keywords": [],
+          "LastModified": 1782448530,
+          "License": [
+            "Apache-2.0",
+            "MIT"
+          ],
+          "Maintainer": "zeroclaw-bot",
+          "MakeDepends": [
+            "cargo",
+            "git",
+            "nodejs",
+            "npm"
+          ],
+          "Name": "zeroclawlabs",
+          "NumVotes": 0,
+          "OutOfDate": null,
+          "PackageBase": "zeroclawlabs",
+          "PackageBaseID": 238953,
+          "Popularity": 0,
+          "Provides": [
+            "zeroclaw",
+            "zerocode"
+          ],
+          "Submitter": "zeroclaw-bot",
+          "URL": "https://github.com/zeroclaw-labs/zeroclaw",
+          "URLPath": "/cgit/aur.git/snapshot/zeroclawlabs.tar.gz",
+          "Version": "0.8.2-1"
+        }
+      ]
+    },
+    "ok": true
+  },
+  "crates_io": {
+    "data": {
+      "crates": [
+        {
+          "description": "Zero overhead. Zero compromise. 100% Rust. The fastest, smallest AI assistant.",
+          "downloads": 3998,
+          "last_30_downloads": 456,
+          "last_7_downloads": 34,
+          "last_90_downloads": 1172,
+          "latest_daily_date": "2026-07-02",
+          "max_version": "0.1.7",
+          "name": "zeroclaw",
+          "recent_downloads": 1171,
+          "repository": "https://github.com/zeroclaw-labs/zeroclaw"
+        },
+        {
+          "description": "Low-level bindings for the Total Phase Aardvark I2C/SPI/GPIO USB adapter",
+          "downloads": 2341,
+          "last_30_downloads": 341,
+          "last_7_downloads": 111,
+          "last_90_downloads": 2008,
+          "latest_daily_date": "2026-07-01",
+          "max_version": "0.1.0",
+          "name": "aardvark-sys",
+          "recent_downloads": 2008,
+          "repository": "https://github.com/zeroclaw-labs/zeroclaw"
+        }
+      ]
+    },
+    "ok": true
+  },
+  "docker_hub": {
+    "data": {
+      "official_candidates": [],
+      "search_count": 80,
+      "top_community_results": [
+        {
+          "pull_count": 5904,
+          "repo_name": "birdxs/zeroclaw",
+          "short_description": "",
+          "star_count": 2
+        },
+        {
+          "pull_count": 289,
+          "repo_name": "tonymaithanh/zeroclaw",
+          "short_description": "zeroclaw",
+          "star_count": 0
+        },
+        {
+          "pull_count": 2706,
+          "repo_name": "cardellier/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 2926,
+          "repo_name": "ilteoood/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 1451,
+          "repo_name": "nphung/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 1141,
+          "repo_name": "jyasu/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 1061,
+          "repo_name": "mos4/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 890,
+          "repo_name": "cdfng/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 861,
+          "repo_name": "mkasajim/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 937,
+          "repo_name": "mlown/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        }
+      ]
+    },
+    "ok": true
+  },
+  "generated_at": "2026-07-02T21:34:30.744660+00:00",
+  "ghcr": {
+    "data": {
+      "last_30_daily": [
+        {
+          "date": "2026-06-03",
+          "downloads": 977
+        },
+        {
+          "date": "2026-06-04",
+          "downloads": 1042
+        },
+        {
+          "date": "2026-06-05",
+          "downloads": 859
+        },
+        {
+          "date": "2026-06-06",
+          "downloads": 951
+        },
+        {
+          "date": "2026-06-07",
+          "downloads": 907
+        },
+        {
+          "date": "2026-06-08",
+          "downloads": 885
+        },
+        {
+          "date": "2026-06-09",
+          "downloads": 843
+        },
+        {
+          "date": "2026-06-10",
+          "downloads": 949
+        },
+        {
+          "date": "2026-06-11",
+          "downloads": 886
+        },
+        {
+          "date": "2026-06-12",
+          "downloads": 1039
+        },
+        {
+          "date": "2026-06-13",
+          "downloads": 1264
+        },
+        {
+          "date": "2026-06-14",
+          "downloads": 1008
+        },
+        {
+          "date": "2026-06-15",
+          "downloads": 1006
+        },
+        {
+          "date": "2026-06-16",
+          "downloads": 1305
+        },
+        {
+          "date": "2026-06-17",
+          "downloads": 1602
+        },
+        {
+          "date": "2026-06-18",
+          "downloads": 1445
+        },
+        {
+          "date": "2026-06-19",
+          "downloads": 1378
+        },
+        {
+          "date": "2026-06-20",
+          "downloads": 1081
+        },
+        {
+          "date": "2026-06-21",
+          "downloads": 893
+        },
+        {
+          "date": "2026-06-22",
+          "downloads": 954
+        },
+        {
+          "date": "2026-06-23",
+          "downloads": 1494
+        },
+        {
+          "date": "2026-06-24",
+          "downloads": 1078
+        },
+        {
+          "date": "2026-06-25",
+          "downloads": 976
+        },
+        {
+          "date": "2026-06-26",
+          "downloads": 1020
+        },
+        {
+          "date": "2026-06-27",
+          "downloads": 934
+        },
+        {
+          "date": "2026-06-28",
+          "downloads": 989
+        },
+        {
+          "date": "2026-06-29",
+          "downloads": 1127
+        },
+        {
+          "date": "2026-06-30",
+          "downloads": 1015
+        },
+        {
+          "date": "2026-07-01",
+          "downloads": 935
+        },
+        {
+          "date": "2026-07-02",
+          "downloads": 878
+        }
+      ],
+      "last_30_downloads": 31720,
+      "last_7_downloads": 6898,
+      "package": {
+        "created_at": "2026-02-15T23:48:19Z",
+        "html_url": "https://github.com/orgs/zeroclaw-labs/packages/container/package/zeroclaw",
+        "id": 10588092,
+        "updated_at": "2026-06-26T04:36:37Z",
+        "version_count": 1494,
+        "visibility": "public"
+      },
+      "release_tags_present": [
+        "latest",
+        "v0.8.2",
+        "debian",
+        "v0.8.2-debian"
+      ],
+      "tag_count": 330,
+      "total_downloads": 360969,
+      "total_downloads_display": "361K",
+      "visible_versions": [
+        {
+          "digest": "sha256:8d80a80293f38139bb03fb86dd32187a0b4320be772c4ead9df2435d5d98b506",
+          "downloads": 1180,
+          "tags": [
+            "v0.8.2-debian",
+            "debian"
+          ]
+        },
+        {
+          "digest": "sha256:eae321dac2d314bc282bdfb28b5378c9d527998f7e2fe0dee8315bfdcdf13a0c",
+          "downloads": 2927,
+          "tags": [
+            "latest",
+            "v0.8.2"
+          ]
+        },
+        {
+          "digest": "sha256:414cbe73b618179bdaabc3085a59954e44e59090aa54cf06f27ac6ce20f099e2",
+          "downloads": 1432,
+          "tags": [
+            "v0.8.1-debian"
+          ]
+        },
+        {
+          "digest": "sha256:61756adcc3786ad4a9113599089c76edc7a4b9d4c738cf6aac8357f25e7af910",
+          "downloads": 3711,
+          "tags": [
+            "v0.8.1"
+          ]
+        },
+        {
+          "digest": "sha256:3d9733778c67b106fa0b98b8ec237954f47c30ce9d28c0b8f72191f3b7f241d1",
+          "downloads": 1224,
+          "tags": [
+            "v0.8.0-debian"
+          ]
+        }
+      ]
+    },
+    "ok": true
+  },
+  "github_repo": {
+    "data": {
+      "commit_activity_latest_week": {
+        "days": [
+          40,
+          48,
+          30,
+          18,
+          21,
+          0,
+          0
+        ],
+        "total": 157,
+        "week": 1782604800
+      },
+      "forks": 4789,
+      "open_issues": 433,
+      "pulse_7d": {
+        "default_branch_commits": 236,
+        "issues_closed": 84,
+        "issues_opened": 81,
+        "prs_merged": 236,
+        "prs_opened": 234,
+        "since": "2026-06-25"
+      },
+      "pushed_at": "2026-07-02T13:52:19Z",
+      "stars": 32119,
+      "top_contributors_latest_week": [
+        {
+          "last_week": 33,
+          "login": "Audacity88",
+          "total": 276
+        },
+        {
+          "last_week": 19,
+          "login": "Alix-007",
+          "total": 138
+        },
+        {
+          "last_week": 13,
+          "login": "Nillth",
+          "total": 80
+        },
+        {
+          "last_week": 13,
+          "login": "singlerider",
+          "total": 302
+        },
+        {
+          "last_week": 8,
+          "login": "wangmiao0668000666",
+          "total": 17
+        },
+        {
+          "last_week": 7,
+          "login": "mazhuima",
+          "total": 11
+        },
+        {
+          "last_week": 7,
+          "login": "ConYel",
+          "total": 14
+        },
+        {
+          "last_week": 5,
+          "login": "LiLan0125",
+          "total": 5
+        },
+        {
+          "last_week": 5,
+          "login": "jokewithme110",
+          "total": 8
+        },
+        {
+          "last_week": 5,
+          "login": "tidux",
+          "total": 34
+        }
+      ],
+      "traffic": {
+        "clones_14d": 67219,
+        "clones_daily": [
+          {
+            "count": 3656,
+            "timestamp": "2026-06-18T00:00:00Z",
+            "uniques": 466
+          },
+          {
+            "count": 3788,
+            "timestamp": "2026-06-19T00:00:00Z",
+            "uniques": 539
+          },
+          {
+            "count": 3428,
+            "timestamp": "2026-06-20T00:00:00Z",
+            "uniques": 451
+          },
+          {
+            "count": 4293,
+            "timestamp": "2026-06-21T00:00:00Z",
+            "uniques": 435
+          },
+          {
+            "count": 6152,
+            "timestamp": "2026-06-22T00:00:00Z",
+            "uniques": 516
+          },
+          {
+            "count": 4755,
+            "timestamp": "2026-06-23T00:00:00Z",
+            "uniques": 500
+          },
+          {
+            "count": 4182,
+            "timestamp": "2026-06-24T00:00:00Z",
+            "uniques": 453
+          },
+          {
+            "count": 5012,
+            "timestamp": "2026-06-25T00:00:00Z",
+            "uniques": 546
+          },
+          {
+            "count": 4626,
+            "timestamp": "2026-06-26T00:00:00Z",
+            "uniques": 362
+          },
+          {
+            "count": 7260,
+            "timestamp": "2026-06-27T00:00:00Z",
+            "uniques": 223
+          },
+          {
+            "count": 5133,
+            "timestamp": "2026-06-28T00:00:00Z",
+            "uniques": 402
+          },
+          {
+            "count": 5985,
+            "timestamp": "2026-06-29T00:00:00Z",
+            "uniques": 402
+          },
+          {
+            "count": 4802,
+            "timestamp": "2026-06-30T00:00:00Z",
+            "uniques": 426
+          },
+          {
+            "count": 4147,
+            "timestamp": "2026-07-01T00:00:00Z",
+            "uniques": 299
+          }
+        ],
+        "clones_uniques_14d": 4523,
+        "views_14d": 38739,
+        "views_daily": [
+          {
+            "count": 2854,
+            "timestamp": "2026-06-18T00:00:00Z",
+            "uniques": 817
+          },
+          {
+            "count": 2696,
+            "timestamp": "2026-06-19T00:00:00Z",
+            "uniques": 1028
+          },
+          {
+            "count": 3140,
+            "timestamp": "2026-06-20T00:00:00Z",
+            "uniques": 869
+          },
+          {
+            "count": 2934,
+            "timestamp": "2026-06-21T00:00:00Z",
+            "uniques": 977
+          },
+          {
+            "count": 3731,
+            "timestamp": "2026-06-22T00:00:00Z",
+            "uniques": 980
+          },
+          {
+            "count": 2926,
+            "timestamp": "2026-06-23T00:00:00Z",
+            "uniques": 881
+          },
+          {
+            "count": 2670,
+            "timestamp": "2026-06-24T00:00:00Z",
+            "uniques": 945
+          },
+          {
+            "count": 2727,
+            "timestamp": "2026-06-25T00:00:00Z",
+            "uniques": 917
+          },
+          {
+            "count": 2855,
+            "timestamp": "2026-06-26T00:00:00Z",
+            "uniques": 943
+          },
+          {
+            "count": 2276,
+            "timestamp": "2026-06-27T00:00:00Z",
+            "uniques": 887
+          },
+          {
+            "count": 2566,
+            "timestamp": "2026-06-28T00:00:00Z",
+            "uniques": 914
+          },
+          {
+            "count": 2521,
+            "timestamp": "2026-06-29T00:00:00Z",
+            "uniques": 843
+          },
+          {
+            "count": 2684,
+            "timestamp": "2026-06-30T00:00:00Z",
+            "uniques": 889
+          },
+          {
+            "count": 2159,
+            "timestamp": "2026-07-01T00:00:00Z",
+            "uniques": 753
+          }
+        ],
+        "views_uniques_14d": 7662
+      },
+      "updated_at": "2026-07-02T19:34:31Z",
+      "watchers": 76
+    },
+    "ok": true
+  },
+  "homebrew": {
+    "data": {
+      "build_error_30d": null,
+      "homepage": "https://www.zeroclawlabs.ai/",
+      "install": {
+        "30d": {
+          "count": "394",
+          "formula": "zeroclaw",
+          "number": 1946,
+          "percent": "0"
+        },
+        "365d": {
+          "count": "7,514",
+          "formula": "zeroclaw",
+          "number": 1620,
+          "percent": "0"
+        },
+        "90d": {
+          "count": "2,157",
+          "formula": "zeroclaw",
+          "number": 1539,
+          "percent": "0"
+        }
+      },
+      "install_on_request": {
+        "30d": {
+          "count": "394",
+          "formula": "zeroclaw",
+          "number": 1451,
+          "percent": "0"
+        },
+        "365d": {
+          "count": "7,514",
+          "formula": "zeroclaw",
+          "number": 1148,
+          "percent": "0.01"
+        },
+        "90d": {
+          "count": "2,157",
+          "formula": "zeroclaw",
+          "number": 1087,
+          "percent": "0.01"
+        }
+      },
+      "version": "0.8.2"
+    },
+    "ok": true
+  },
+  "notes": [
+    "GHCR download counts are scraped from authenticated GitHub package HTML because REST objects omit those fields.",
+    "GitHub release downloads are cumulative per asset; downloads/week is an average since release publication.",
+    "Traffic endpoints expose only the last 14 days.",
+    "Scoop installs ultimately hit GitHub release assets, so avoid double-counting with release downloads.",
+    "npm packages named zeroclaw/zerocode are unrelated and intentionally excluded."
+  ],
+  "releases": {
+    "data": {
+      "asset_totals": {
+        "Android": 3459,
+        "DMG": 1625,
+        "Install script": 2142,
+        "Linux GNU": 72546,
+        "Linux musl": 783,
+        "Windows zip": 16545,
+        "macOS tarball": 5493
+      },
+      "installable_downloads_total": 102593,
+      "prerelease_downloads_total": 3360,
+      "recent_stable": [
+        {
+          "age_days": 6.708087322453704,
+          "asset_count": 11,
+          "downloads": 3067,
+          "downloads_per_week": 3200.4651949204217,
+          "mix": {
+            "Android": 81,
+            "DMG": 28,
+            "Install script": 44,
+            "Linux GNU": 2285,
+            "Linux musl": 126,
+            "Windows zip": 379,
+            "macOS tarball": 124
+          },
+          "name": "v0.8.2",
+          "prerelease": false,
+          "published_at": "2026-06-26T04:34:52Z",
+          "published_date": "2026-06-26",
+          "tag": "v0.8.2"
+        },
+        {
+          "age_days": 13.814302600231482,
+          "asset_count": 12,
+          "downloads": 3307,
+          "downloads_per_week": 1675.727010613775,
+          "mix": {
+            "Android": 75,
+            "DMG": 23,
+            "Install script": 54,
+            "Linux GNU": 2385,
+            "Linux musl": 115,
+            "Windows zip": 446,
+            "macOS tarball": 209
+          },
+          "name": "v0.8.1",
+          "prerelease": false,
+          "published_at": "2026-06-19T02:01:55Z",
+          "published_date": "2026-06-19",
+          "tag": "v0.8.1"
+        },
+        {
+          "age_days": 20.895818803935185,
+          "asset_count": 10,
+          "downloads": 4024,
+          "downloads_per_week": 1348.0208774922612,
+          "mix": {
+            "Android": 80,
+            "Install script": 54,
+            "Linux GNU": 3087,
+            "Linux musl": 134,
+            "Windows zip": 449,
+            "macOS tarball": 220
+          },
+          "name": "v0.8.0",
+          "prerelease": false,
+          "published_at": "2026-06-12T00:04:32Z",
+          "published_date": "2026-06-12",
+          "tag": "v0.8.0"
+        },
+        {
+          "age_days": 55.68173315578704,
+          "asset_count": 11,
+          "downloads": 21429,
+          "downloads_per_week": 2693.9355422059107,
+          "mix": {
+            "Android": 494,
+            "DMG": 304,
+            "Install script": 297,
+            "Linux GNU": 16479,
+            "Linux musl": 408,
+            "Windows zip": 2302,
+            "macOS tarball": 1145
+          },
+          "name": "v0.7.5",
+          "prerelease": false,
+          "published_at": "2026-05-08T05:12:49Z",
+          "published_date": "2026-05-08",
+          "tag": "v0.7.5"
+        },
+        {
+          "age_days": 62.779510933564815,
+          "asset_count": 9,
+          "downloads": 6705,
+          "downloads_per_week": 747.6165281005142,
+          "mix": {
+            "Android": 119,
+            "DMG": 160,
+            "Install script": 121,
+            "Linux GNU": 5003,
+            "Windows zip": 917,
+            "macOS tarball": 385
+          },
+          "name": "v0.7.4",
+          "prerelease": false,
+          "published_at": "2026-05-01T02:52:01Z",
+          "published_date": "2026-05-01",
+          "tag": "v0.7.4"
+        },
+        {
+          "age_days": 74.73552945208334,
+          "asset_count": 9,
+          "downloads": 10474,
+          "downloads_per_week": 981.0327234920817,
+          "mix": {
+            "Android": 233,
+            "DMG": 283,
+            "Install script": 236,
+            "Linux GNU": 7858,
+            "Windows zip": 1342,
+            "macOS tarball": 522
+          },
+          "name": "v0.7.3",
+          "prerelease": false,
+          "published_at": "2026-04-19T03:55:21Z",
+          "published_date": "2026-04-19",
+          "tag": "v0.7.3"
+        },
+        {
+          "age_days": 85.64086510023148,
+          "asset_count": 9,
+          "downloads": 8621,
+          "downloads_per_week": 704.6519197274771,
+          "mix": {
+            "Android": 305,
+            "DMG": 307,
+            "Install script": 321,
+            "Linux GNU": 5976,
+            "Windows zip": 1463,
+            "macOS tarball": 249
+          },
+          "name": "v0.6.9",
+          "prerelease": false,
+          "published_at": "2026-04-08T06:11:40Z",
+          "published_date": "2026-04-08",
+          "tag": "v0.6.9"
+        },
+        {
+          "age_days": 91.8698350076389,
+          "asset_count": 9,
+          "downloads": 6528,
+          "downloads_per_week": 497.39939117339674,
+          "mix": {
+            "Android": 229,
+            "DMG": 232,
+            "Install script": 219,
+            "Linux GNU": 4503,
+            "Windows zip": 1122,
+            "macOS tarball": 223
+          },
+          "name": "v0.6.8",
+          "prerelease": false,
+          "published_at": "2026-04-02T00:41:57Z",
+          "published_date": "2026-04-02",
+          "tag": "v0.6.8"
+        },
+        {
+          "age_days": 95.01275167430556,
+          "asset_count": 9,
+          "downloads": 359,
+          "downloads_per_week": 26.44908136767072,
+          "mix": {
+            "Android": 15,
+            "DMG": 15,
+            "Install script": 21,
+            "Linux GNU": 156,
+            "Windows zip": 137,
+            "macOS tarball": 15
+          },
+          "name": "v0.6.7",
+          "prerelease": false,
+          "published_at": "2026-03-29T21:16:09Z",
+          "published_date": "2026-03-29",
+          "tag": "v0.6.7"
+        },
+        {
+          "age_days": 97.74390908171296,
+          "asset_count": 9,
+          "downloads": 4414,
+          "downloads_per_week": 316.11176891001537,
+          "mix": {
+            "Android": 152,
+            "DMG": 136,
+            "Install script": 150,
+            "Linux GNU": 3196,
+            "Windows zip": 607,
+            "macOS tarball": 173
+          },
+          "name": "v0.6.5",
+          "prerelease": false,
+          "published_at": "2026-03-27T03:43:17Z",
+          "published_date": "2026-03-27",
+          "tag": "v0.6.5"
+        },
+        {
+          "age_days": 98.29219611875,
+          "asset_count": 8,
+          "downloads": 968,
+          "downloads_per_week": 68.93731412627808,
+          "mix": {
+            "DMG": 31,
+            "Install script": 54,
+            "Linux GNU": 618,
+            "Windows zip": 224,
+            "macOS tarball": 41
+          },
+          "name": "v0.6.3",
+          "prerelease": false,
+          "published_at": "2026-03-26T14:33:45Z",
+          "published_date": "2026-03-26",
+          "tag": "v0.6.3"
+        },
+        {
+          "age_days": 100.06418685949073,
+          "asset_count": 9,
+          "downloads": 1636,
+          "downloads_per_week": 114.44654035994716,
+          "mix": {
+            "Android": 108,
+            "DMG": 59,
+            "Install script": 45,
+            "Linux GNU": 1036,
+            "Windows zip": 311,
+            "macOS tarball": 77
+          },
+          "name": "v0.6.2",
+          "prerelease": false,
+          "published_at": "2026-03-24T20:02:05Z",
+          "published_date": "2026-03-24",
+          "tag": "v0.6.2"
+        }
+      ],
+      "release_count": 150,
+      "stable_downloads_total": 99233,
+      "top_by_rate": [
+        {
+          "age_days": 6.708087322453704,
+          "asset_count": 11,
+          "downloads": 3067,
+          "downloads_per_week": 3200.4651949204217,
+          "mix": {
+            "Android": 81,
+            "DMG": 28,
+            "Install script": 44,
+            "Linux GNU": 2285,
+            "Linux musl": 126,
+            "Windows zip": 379,
+            "macOS tarball": 124
+          },
+          "name": "v0.8.2",
+          "prerelease": false,
+          "published_at": "2026-06-26T04:34:52Z",
+          "published_date": "2026-06-26",
+          "tag": "v0.8.2"
+        },
+        {
+          "age_days": 55.68173315578704,
+          "asset_count": 11,
+          "downloads": 21429,
+          "downloads_per_week": 2693.9355422059107,
+          "mix": {
+            "Android": 494,
+            "DMG": 304,
+            "Install script": 297,
+            "Linux GNU": 16479,
+            "Linux musl": 408,
+            "Windows zip": 2302,
+            "macOS tarball": 1145
+          },
+          "name": "v0.7.5",
+          "prerelease": false,
+          "published_at": "2026-05-08T05:12:49Z",
+          "published_date": "2026-05-08",
+          "tag": "v0.7.5"
+        },
+        {
+          "age_days": 13.814302600231482,
+          "asset_count": 12,
+          "downloads": 3307,
+          "downloads_per_week": 1675.727010613775,
+          "mix": {
+            "Android": 75,
+            "DMG": 23,
+            "Install script": 54,
+            "Linux GNU": 2385,
+            "Linux musl": 115,
+            "Windows zip": 446,
+            "macOS tarball": 209
+          },
+          "name": "v0.8.1",
+          "prerelease": false,
+          "published_at": "2026-06-19T02:01:55Z",
+          "published_date": "2026-06-19",
+          "tag": "v0.8.1"
+        },
+        {
+          "age_days": 20.895818803935185,
+          "asset_count": 10,
+          "downloads": 4024,
+          "downloads_per_week": 1348.0208774922612,
+          "mix": {
+            "Android": 80,
+            "Install script": 54,
+            "Linux GNU": 3087,
+            "Linux musl": 134,
+            "Windows zip": 449,
+            "macOS tarball": 220
+          },
+          "name": "v0.8.0",
+          "prerelease": false,
+          "published_at": "2026-06-12T00:04:32Z",
+          "published_date": "2026-06-12",
+          "tag": "v0.8.0"
+        },
+        {
+          "age_days": 128.52125861874998,
+          "asset_count": 8,
+          "downloads": 18164,
+          "downloads_per_week": 989.3149302029194,
+          "mix": {
+            "Android": 1132,
+            "Linux GNU": 12401,
+            "Windows zip": 3412,
+            "macOS tarball": 1219
+          },
+          "name": "v0.1.7",
+          "prerelease": false,
+          "published_at": "2026-02-24T09:03:54Z",
+          "published_date": "2026-02-24",
+          "tag": "v0.1.7"
+        },
+        {
+          "age_days": 74.73552945208334,
+          "asset_count": 9,
+          "downloads": 10474,
+          "downloads_per_week": 981.0327234920817,
+          "mix": {
+            "Android": 233,
+            "DMG": 283,
+            "Install script": 236,
+            "Linux GNU": 7858,
+            "Windows zip": 1342,
+            "macOS tarball": 522
+          },
+          "name": "v0.7.3",
+          "prerelease": false,
+          "published_at": "2026-04-19T03:55:21Z",
+          "published_date": "2026-04-19",
+          "tag": "v0.7.3"
+        },
+        {
+          "age_days": 62.779510933564815,
+          "asset_count": 9,
+          "downloads": 6705,
+          "downloads_per_week": 747.6165281005142,
+          "mix": {
+            "Android": 119,
+            "DMG": 160,
+            "Install script": 121,
+            "Linux GNU": 5003,
+            "Windows zip": 917,
+            "macOS tarball": 385
+          },
+          "name": "v0.7.4",
+          "prerelease": false,
+          "published_at": "2026-05-01T02:52:01Z",
+          "published_date": "2026-05-01",
+          "tag": "v0.7.4"
+        },
+        {
+          "age_days": 85.64086510023148,
+          "asset_count": 9,
+          "downloads": 8621,
+          "downloads_per_week": 704.6519197274771,
+          "mix": {
+            "Android": 305,
+            "DMG": 307,
+            "Install script": 321,
+            "Linux GNU": 5976,
+            "Windows zip": 1463,
+            "macOS tarball": 249
+          },
+          "name": "v0.6.9",
+          "prerelease": false,
+          "published_at": "2026-04-08T06:11:40Z",
+          "published_date": "2026-04-08",
+          "tag": "v0.6.9"
+        },
+        {
+          "age_days": 91.8698350076389,
+          "asset_count": 9,
+          "downloads": 6528,
+          "downloads_per_week": 497.39939117339674,
+          "mix": {
+            "Android": 229,
+            "DMG": 232,
+            "Install script": 219,
+            "Linux GNU": 4503,
+            "Windows zip": 1122,
+            "macOS tarball": 223
+          },
+          "name": "v0.6.8",
+          "prerelease": false,
+          "published_at": "2026-04-02T00:41:57Z",
+          "published_date": "2026-04-02",
+          "tag": "v0.6.8"
+        },
+        {
+          "age_days": 97.74390908171296,
+          "asset_count": 9,
+          "downloads": 4414,
+          "downloads_per_week": 316.11176891001537,
+          "mix": {
+            "Android": 152,
+            "DMG": 136,
+            "Install script": 150,
+            "Linux GNU": 3196,
+            "Windows zip": 607,
+            "macOS tarball": 173
+          },
+          "name": "v0.6.5",
+          "prerelease": false,
+          "published_at": "2026-03-27T03:43:17Z",
+          "published_date": "2026-03-27",
+          "tag": "v0.6.5"
+        },
+        {
+          "age_days": 130.76055260023148,
+          "asset_count": 6,
+          "downloads": 4134,
+          "downloads_per_week": 221.30527459967902,
+          "mix": {
+            "Linux GNU": 2955,
+            "Windows zip": 903,
+            "macOS tarball": 276
+          },
+          "name": "v0.1.6",
+          "prerelease": false,
+          "published_at": "2026-02-22T03:19:19Z",
+          "published_date": "2026-02-22",
+          "tag": "v0.1.6"
+        },
+        {
+          "age_days": 100.06418685949073,
+          "asset_count": 9,
+          "downloads": 1636,
+          "downloads_per_week": 114.44654035994716,
+          "mix": {
+            "Android": 108,
+            "DMG": 59,
+            "Install script": 45,
+            "Linux GNU": 1036,
+            "Windows zip": 311,
+            "macOS tarball": 77
+          },
+          "name": "v0.6.2",
+          "prerelease": false,
+          "published_at": "2026-03-24T20:02:05Z",
+          "published_date": "2026-03-24",
+          "tag": "v0.6.2"
+        },
+        {
+          "age_days": 98.29219611875,
+          "asset_count": 8,
+          "downloads": 968,
+          "downloads_per_week": 68.93731412627808,
+          "mix": {
+            "DMG": 31,
+            "Install script": 54,
+            "Linux GNU": 618,
+            "Windows zip": 224,
+            "macOS tarball": 41
+          },
+          "name": "v0.6.3",
+          "prerelease": false,
+          "published_at": "2026-03-26T14:33:45Z",
+          "published_date": "2026-03-26",
+          "tag": "v0.6.3"
+        },
+        {
+          "age_days": 113.14081880393518,
+          "asset_count": 4,
+          "downloads": 690,
+          "downloads_per_week": 42.69016302922502,
+          "mix": {
+            "Linux GNU": 570,
+            "Windows zip": 104,
+            "macOS tarball": 16
+          },
+          "name": "v0.1.7-beta.30",
+          "prerelease": true,
+          "published_at": "2026-03-11T18:11:44Z",
+          "published_date": "2026-03-11",
+          "tag": "v0.1.7-beta.30"
+        },
+        {
+          "age_days": 106.62927945208332,
+          "asset_count": 6,
+          "downloads": 486,
+          "downloads_per_week": 31.904932842848087,
+          "mix": {
+            "Android": 20,
+            "Install script": 10,
+            "Linux GNU": 278,
+            "Windows zip": 156,
+            "macOS tarball": 22
+          },
+          "name": "v0.5.0",
+          "prerelease": false,
+          "published_at": "2026-03-18T06:28:21Z",
+          "published_date": "2026-03-18",
+          "tag": "v0.5.0"
+        }
+      ],
+      "with_installable_downloads": 131
+    },
+    "ok": true
+  },
+  "repo": "zeroclaw-labs/zeroclaw",
+  "scoop": {
+    "data": {
+      "download_url": "https://github.com/zeroclaw-labs/zeroclaw/releases/download/v0.7.5/zeroclaw-x86_64-pc-windows-msvc.zip",
+      "manifest_version": "0.7.5",
+      "repo": {
+        "forks": 2,
+        "html_url": "https://github.com/zeroclaw-labs/scoop-zeroclaw",
+        "stars": 1,
+        "updated_at": "2026-05-08T05:13:08Z"
+      },
+      "traffic": {
+        "clones_14d": 192,
+        "clones_uniques_14d": 188,
+        "views_14d": 7,
+        "views_uniques_14d": 4
+      }
+    },
+    "ok": true
+  }
+}

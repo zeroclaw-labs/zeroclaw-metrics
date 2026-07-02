@@ -1,0 +1,874 @@
+#!/usr/bin/env python3
+"""Build the ZeroClaw distribution and repository metrics dashboard.
+
+The live services remain the source of truth. This script writes a timestamped
+snapshot plus a self-contained HTML dashboard into this repository.
+"""
+
+from __future__ import annotations
+
+import datetime as dt
+import html
+import json
+import re
+import subprocess
+import urllib.error
+import urllib.parse
+import urllib.request
+from collections import defaultdict
+from pathlib import Path
+from typing import Any
+
+
+ROOT = Path(__file__).resolve().parents[1]
+DATA_DIR = ROOT / "data"
+SNAPSHOT_DIR = DATA_DIR / "snapshots"
+INDEX_PATH = ROOT / "index.html"
+LATEST_PATH = DATA_DIR / "latest.json"
+NOW = dt.datetime.now(dt.timezone.utc)
+OWNER = "zeroclaw-labs"
+REPO = "zeroclaw"
+FULL_REPO = f"{OWNER}/{REPO}"
+USER_AGENT = "zeroclaw-metrics-dashboard (https://github.com/zeroclaw-labs/zeroclaw)"
+
+
+def run(args: list[str], *, input_text: str | None = None) -> str:
+    return subprocess.check_output(args, cwd=ROOT, input=input_text, text=True)
+
+
+def gh_api(path: str, jq: str | None = None) -> Any:
+    args = ["gh", "api", path]
+    if jq:
+        args += ["--jq", jq]
+    return json.loads(run(args))
+
+
+def gh_api_paginated(path: str) -> list[Any]:
+    raw = run(["gh", "api", path, "--paginate"])
+    decoder = json.JSONDecoder()
+    idx = 0
+    out: list[Any] = []
+    while idx < len(raw):
+        while idx < len(raw) and raw[idx].isspace():
+            idx += 1
+        if idx >= len(raw):
+            break
+        value, idx = decoder.raw_decode(raw, idx)
+        if isinstance(value, list):
+            out.extend(value)
+        else:
+            out.append(value)
+    return out
+
+
+def get_json(url: str, headers: dict[str, str] | None = None) -> Any:
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, **(headers or {})})
+    with urllib.request.urlopen(req, timeout=30) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+
+def get_text(url: str, headers: dict[str, str] | None = None) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, **(headers or {})})
+    with urllib.request.urlopen(req, timeout=30) as response:
+        return response.read().decode("utf-8")
+
+
+def parse_iso(value: str) -> dt.datetime:
+    return dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def is_installable_asset(name: str) -> bool:
+    if name in {"install.sh", "ZeroClaw.dmg"}:
+        return True
+    return (
+        name.startswith("zeroclaw-")
+        and (name.endswith(".tar.gz") or name.endswith(".zip"))
+        and ".sigstore." not in name
+    )
+
+
+def asset_category(name: str) -> str:
+    if name == "install.sh":
+        return "Install script"
+    if name == "ZeroClaw.dmg":
+        return "DMG"
+    if name.endswith(".zip"):
+        return "Windows zip"
+    if "apple-darwin" in name:
+        return "macOS tarball"
+    if "linux-android" in name or "androideabi" in name:
+        return "Android"
+    if "unknown-linux-gnu" in name:
+        return "Linux GNU"
+    if "unknown-linux-musl" in name:
+        return "Linux musl"
+    if "gnueabihf" in name:
+        return "Linux ARM"
+    return "Other installable"
+
+
+def collect_releases() -> dict[str, Any]:
+    releases = gh_api_paginated(f"repos/{FULL_REPO}/releases")
+    rows: list[dict[str, Any]] = []
+    asset_totals: defaultdict[str, int] = defaultdict(int)
+
+    for release in releases:
+        published_at = parse_iso(release["published_at"])
+        age_days = max((NOW - published_at).total_seconds() / 86400, 1 / 24)
+        installable = [a for a in release.get("assets", []) if is_installable_asset(a["name"])]
+        total = sum(int(a["download_count"]) for a in installable)
+        if not total:
+            continue
+
+        mix: defaultdict[str, int] = defaultdict(int)
+        for asset in installable:
+            count = int(asset["download_count"])
+            mix[asset_category(asset["name"])] += count
+            asset_totals[asset_category(asset["name"])] += count
+
+        rows.append(
+            {
+                "tag": release["tag_name"],
+                "name": release.get("name") or release["tag_name"],
+                "published_at": release["published_at"],
+                "published_date": release["published_at"][:10],
+                "prerelease": bool(release["prerelease"]),
+                "asset_count": len(installable),
+                "downloads": total,
+                "age_days": age_days,
+                "downloads_per_week": total / (age_days / 7),
+                "mix": dict(sorted(mix.items(), key=lambda item: item[1], reverse=True)),
+            }
+        )
+
+    top_by_rate = sorted(rows, key=lambda row: (row["downloads_per_week"], row["downloads"]), reverse=True)
+    stable = [row for row in top_by_rate if not row["prerelease"]]
+    recent_stable = sorted(stable, key=lambda row: row["published_at"], reverse=True)
+
+    return {
+        "release_count": len(releases),
+        "with_installable_downloads": len(rows),
+        "installable_downloads_total": sum(row["downloads"] for row in rows),
+        "stable_downloads_total": sum(row["downloads"] for row in rows if not row["prerelease"]),
+        "prerelease_downloads_total": sum(row["downloads"] for row in rows if row["prerelease"]),
+        "top_by_rate": top_by_rate[:15],
+        "recent_stable": recent_stable[:12],
+        "asset_totals": dict(sorted(asset_totals.items(), key=lambda item: item[1], reverse=True)),
+    }
+
+
+def collect_ghcr() -> dict[str, Any]:
+    token = run(["gh", "auth", "token"]).strip()
+    package = gh_api(f"orgs/{OWNER}/packages/container/{REPO}")
+    versions = gh_api_paginated(f"orgs/{OWNER}/packages/container/{REPO}/versions?per_page=100")
+    auth_headers = {"Authorization": f"Bearer {token}"}
+    package_html = get_text(f"https://github.com/orgs/{OWNER}/packages/container/package/{REPO}", auth_headers)
+
+    total_match = re.search(r"Total downloads</span>\s*<h3 title=\"([0-9]+)\">([^<]+)</h3>", package_html)
+    daily_rows = re.findall(r'data-merge-count="([0-9]+)"\s*data-date="([0-9-]+)"', package_html)
+    daily = sorted({date: int(count) for count, date in daily_rows}.items())
+
+    visible_versions: list[dict[str, Any]] = []
+    for item in re.findall(r"<li[^>]*Box-row[^>]*>(.*?)</li>", package_html, re.S):
+        if "Version downloads" not in item:
+            continue
+        labels = re.findall(r"\?tag=([^\"&]+)[^\"]*\">([^<]+)</a>", item)
+        count_match = re.search(r'octicon-download.*?</svg>\s*([0-9,]+)\s*<span class="sr-only">Version downloads', item, re.S)
+        digest_match = re.search(r"value=\"(sha256:[a-f0-9]+)\"", item)
+        if labels and count_match:
+            visible_versions.append(
+                {
+                    "tags": [html.unescape(label_text) for _, label_text in labels],
+                    "downloads": int(count_match.group(1).replace(",", "")),
+                    "digest": digest_match.group(1) if digest_match else None,
+                }
+            )
+
+    tagged_versions = [
+        version
+        for version in versions
+        if version.get("metadata", {}).get("container", {}).get("tags")
+    ]
+    tags = sorted({tag for version in tagged_versions for tag in version["metadata"]["container"]["tags"]})
+
+    return {
+        "package": {
+            "id": package["id"],
+            "visibility": package["visibility"],
+            "created_at": package["created_at"],
+            "updated_at": package["updated_at"],
+            "version_count": package.get("version_count"),
+            "html_url": package["html_url"],
+        },
+        "total_downloads": int(total_match.group(1)) if total_match else None,
+        "total_downloads_display": total_match.group(2) if total_match else None,
+        "last_30_daily": [{"date": date, "downloads": count} for date, count in daily],
+        "last_30_downloads": sum(count for _, count in daily),
+        "last_7_downloads": sum(count for _, count in daily[-7:]),
+        "visible_versions": visible_versions[:12],
+        "tag_count": len(tags),
+        "release_tags_present": [tag for tag in ["latest", "v0.8.2", "debian", "v0.8.2-debian"] if tag in tags],
+    }
+
+
+def search_count(query: str) -> int:
+    encoded = urllib.parse.quote(query, safe="")
+    return int(gh_api(f"search/issues?q={encoded}")["total_count"])
+
+
+def collect_github_repo() -> dict[str, Any]:
+    repo = gh_api(f"repos/{FULL_REPO}")
+    traffic_views = gh_api(f"repos/{FULL_REPO}/traffic/views?per=day")
+    traffic_clones = gh_api(f"repos/{FULL_REPO}/traffic/clones?per=day")
+    since = (NOW - dt.timedelta(days=7)).date().isoformat()
+    commits = gh_api_paginated(f"repos/{FULL_REPO}/commits?sha=master&since={since}T00:00:00Z")
+    contributor_stats = gh_api(f"repos/{FULL_REPO}/stats/contributors")
+    commit_activity = gh_api(f"repos/{FULL_REPO}/stats/commit_activity")
+
+    top_contributors = sorted(
+        [
+            {
+                "login": item["author"]["login"] if item.get("author") else "unknown",
+                "total": item["total"],
+                "last_week": item["weeks"][-1].get("c", 0) if item.get("weeks") else 0,
+            }
+            for item in contributor_stats
+        ],
+        key=lambda item: item["last_week"],
+        reverse=True,
+    )[:10]
+
+    return {
+        "stars": repo["stargazers_count"],
+        "forks": repo["forks_count"],
+        "watchers": repo["subscribers_count"],
+        "open_issues": repo["open_issues_count"],
+        "pushed_at": repo["pushed_at"],
+        "updated_at": repo["updated_at"],
+        "traffic": {
+            "views_14d": traffic_views["count"],
+            "views_uniques_14d": traffic_views["uniques"],
+            "clones_14d": traffic_clones["count"],
+            "clones_uniques_14d": traffic_clones["uniques"],
+            "views_daily": traffic_views["views"],
+            "clones_daily": traffic_clones["clones"],
+        },
+        "pulse_7d": {
+            "since": since,
+            "prs_opened": search_count(f"repo:{FULL_REPO} is:pr created:>={since}"),
+            "prs_merged": search_count(f"repo:{FULL_REPO} is:pr merged:>={since}"),
+            "issues_opened": search_count(f"repo:{FULL_REPO} is:issue created:>={since}"),
+            "issues_closed": search_count(f"repo:{FULL_REPO} is:issue closed:>={since}"),
+            "default_branch_commits": len(commits),
+        },
+        "commit_activity_latest_week": commit_activity[-1] if commit_activity else None,
+        "top_contributors_latest_week": top_contributors,
+    }
+
+
+def collect_homebrew() -> dict[str, Any]:
+    formula = get_json("https://formulae.brew.sh/api/formula/zeroclaw.json")
+
+    def analytics(kind: str, period: str) -> dict[str, Any] | None:
+        try:
+            data = get_json(f"https://formulae.brew.sh/api/analytics/{kind}/{period}.json")
+        except urllib.error.HTTPError:
+            return None
+        for item in data.get("items", []):
+            if item.get("formula") == "zeroclaw":
+                return item
+        return None
+
+    return {
+        "version": formula["versions"]["stable"],
+        "homepage": formula["homepage"],
+        "install": {
+            "30d": analytics("install", "30d"),
+            "90d": analytics("install", "90d"),
+            "365d": analytics("install", "365d"),
+        },
+        "install_on_request": {
+            "30d": analytics("install-on-request", "30d"),
+            "90d": analytics("install-on-request", "90d"),
+            "365d": analytics("install-on-request", "365d"),
+        },
+        "build_error_30d": analytics("build-error", "30d"),
+    }
+
+
+def collect_aur() -> dict[str, Any]:
+    data = get_json("https://aur.archlinux.org/rpc/v5/info?arg[]=zeroclawlabs&arg[]=zeroclaw")
+    return {"packages": sorted(data.get("results", []), key=lambda item: item.get("Name", ""))}
+
+
+def collect_crates() -> dict[str, Any]:
+    crates = []
+    for crate_name in ["zeroclaw", "aardvark-sys"]:
+        crate = get_json(f"https://crates.io/api/v1/crates/{crate_name}")
+        downloads = get_json(f"https://crates.io/api/v1/crates/{crate_name}/downloads")
+        rows = downloads.get("version_downloads", [])
+        if rows:
+            latest = max(dt.date.fromisoformat(row["date"]) for row in rows)
+        else:
+            latest = NOW.date()
+
+        def window(days: int) -> int:
+            start = latest - dt.timedelta(days=days - 1)
+            return sum(
+                int(row["downloads"])
+                for row in rows
+                if start <= dt.date.fromisoformat(row["date"]) <= latest
+            )
+
+        crates.append(
+            {
+                "name": crate_name,
+                "description": crate["crate"].get("description"),
+                "repository": crate["crate"].get("repository"),
+                "downloads": crate["crate"]["downloads"],
+                "recent_downloads": crate["crate"]["recent_downloads"],
+                "max_version": crate["crate"]["max_version"],
+                "latest_daily_date": latest.isoformat(),
+                "last_7_downloads": window(7),
+                "last_30_downloads": window(30),
+                "last_90_downloads": window(90),
+            }
+        )
+    return {"crates": crates}
+
+
+def collect_scoop() -> dict[str, Any]:
+    repo = gh_api("repos/zeroclaw-labs/scoop-zeroclaw")
+    views = gh_api("repos/zeroclaw-labs/scoop-zeroclaw/traffic/views?per=day")
+    clones = gh_api("repos/zeroclaw-labs/scoop-zeroclaw/traffic/clones?per=day")
+    manifest_content = run(
+        ["gh", "api", "repos/zeroclaw-labs/scoop-zeroclaw/contents/bucket/zeroclaw.json", "--jq", ".content"]
+    )
+    manifest = json.loads(subprocess.check_output(["base64", "-d"], input=manifest_content, text=True))
+    return {
+        "repo": {
+            "stars": repo["stargazers_count"],
+            "forks": repo["forks_count"],
+            "updated_at": repo["updated_at"],
+            "html_url": repo["html_url"],
+        },
+        "manifest_version": manifest.get("version"),
+        "download_url": manifest.get("architecture", {}).get("64bit", {}).get("url"),
+        "traffic": {
+            "views_14d": views["count"],
+            "views_uniques_14d": views["uniques"],
+            "clones_14d": clones["count"],
+            "clones_uniques_14d": clones["uniques"],
+        },
+    }
+
+
+def collect_docker_hub() -> dict[str, Any]:
+    official_candidates = []
+    for namespace in ["zeroclaw-labs", "zeroclawlabs", "zeroclaw", "jordanthejet"]:
+        name = f"{namespace}/zeroclaw"
+        try:
+            data = get_json(f"https://hub.docker.com/v2/repositories/{name}/")
+            official_candidates.append(data)
+        except urllib.error.HTTPError:
+            continue
+    search = get_json("https://hub.docker.com/v2/search/repositories/?query=zeroclaw&page_size=25")
+    return {
+        "official_candidates": official_candidates,
+        "search_count": search.get("count"),
+        "top_community_results": [
+            {
+                "repo_name": item.get("repo_name"),
+                "pull_count": item.get("pull_count"),
+                "star_count": item.get("star_count"),
+                "short_description": item.get("short_description"),
+            }
+            for item in search.get("results", [])[:10]
+        ],
+    }
+
+
+def safe_collect(name: str, fn) -> dict[str, Any]:
+    try:
+        return {"ok": True, "data": fn()}
+    except Exception as exc:  # Keep dashboard useful if one source flakes.
+        return {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+
+
+def metric(value: Any) -> str:
+    if value is None:
+        return "n/a"
+    if isinstance(value, float):
+        return f"{value:,.1f}"
+    if isinstance(value, int):
+        return f"{value:,}"
+    return html.escape(str(value))
+
+
+def compact(value: int | None) -> str:
+    if value is None:
+        return "n/a"
+    value = int(value)
+    if abs(value) >= 1_000_000:
+        return f"{value / 1_000_000:.1f}M"
+    if abs(value) >= 1_000:
+        return f"{value / 1_000:.1f}K"
+    return str(value)
+
+
+def table(headers: list[str], rows: list[list[Any]]) -> str:
+    body = "\n".join(
+        "<tr>" + "".join(f"<td>{metric(cell)}</td>" for cell in row) + "</tr>" for row in rows
+    )
+    head = "".join(f"<th>{html.escape(header)}</th>" for header in headers)
+    return f"<div class=\"table-wrap\"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>"
+
+
+def svg_bars(rows: list[dict[str, Any]], *, date_key: str, value_key: str, height: int = 92) -> str:
+    if not rows:
+        return "<p class=\"muted\">No daily data available.</p>"
+    max_value = max(max(int(row[value_key]) for row in rows), 1)
+    bar_gap = 3
+    bar_width = 9
+    width = len(rows) * (bar_width + bar_gap)
+    bars = []
+    for index, row in enumerate(rows):
+        value = int(row[value_key])
+        bar_height = max(2, round((value / max_value) * (height - 20)))
+        x = index * (bar_width + bar_gap)
+        y = height - bar_height - 14
+        date = html.escape(str(row[date_key]))
+        bars.append(
+            f'<rect x="{x}" y="{y}" width="{bar_width}" height="{bar_height}" rx="2">'
+            f'<title>{date}: {value:,}</title></rect>'
+        )
+    return f'<svg class="bars" viewBox="0 0 {width} {height}" role="img" aria-label="Daily downloads">{"" .join(bars)}</svg>'
+
+
+def render_dashboard(snapshot: dict[str, Any]) -> str:
+    github = snapshot["github_repo"]
+    releases = snapshot["releases"]
+    ghcr = snapshot["ghcr"]
+    homebrew = snapshot["homebrew"]
+    aur = snapshot["aur"]
+    crates = snapshot["crates_io"]
+    scoop = snapshot["scoop"]
+    docker_hub = snapshot["docker_hub"]
+
+    release_data = releases["data"] if releases["ok"] else {}
+    ghcr_data = ghcr["data"] if ghcr["ok"] else {}
+    github_data = github["data"] if github["ok"] else {}
+    homebrew_data = homebrew["data"] if homebrew["ok"] else {}
+    aur_data = aur["data"] if aur["ok"] else {}
+    crates_data = crates["data"] if crates["ok"] else {}
+    scoop_data = scoop["data"] if scoop["ok"] else {}
+    docker_hub_data = docker_hub["data"] if docker_hub["ok"] else {}
+
+    cards = [
+        ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Total container package downloads"),
+        ("GHCR 30d", compact(ghcr_data.get("last_30_downloads")), "Scraped from authenticated package chart"),
+        ("Release Assets", compact(release_data.get("installable_downloads_total")), "Installable GitHub release asset downloads"),
+        ("Homebrew 30d", metric((homebrew_data.get("install", {}).get("30d") or {}).get("count")), "Homebrew Core installs"),
+        ("Repo Stars", compact(github_data.get("stars")), "GitHub repository stars"),
+        ("Traffic 14d", compact(github_data.get("traffic", {}).get("views_14d")), "Repository page views"),
+        ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
+        ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
+    ]
+
+    release_rows = [
+        [
+            row["tag"],
+            "pre" if row["prerelease"] else "stable",
+            row["published_date"],
+            f"{row['age_days']:.1f}d",
+            row["downloads"],
+            f"{row['downloads_per_week']:.0f}",
+        ]
+        for row in release_data.get("top_by_rate", [])[:10]
+    ]
+
+    ghcr_version_rows = [
+        [", ".join(item["tags"]), item["downloads"], item.get("digest", "")[:19] + "..."]
+        for item in ghcr_data.get("visible_versions", [])[:8]
+    ]
+
+    hb_rows = []
+    for period in ["30d", "90d", "365d"]:
+        install = (homebrew_data.get("install") or {}).get(period) or {}
+        request = (homebrew_data.get("install_on_request") or {}).get(period) or {}
+        hb_rows.append([period, install.get("count"), request.get("count")])
+
+    aur_rows = [
+        [
+            item.get("Name"),
+            item.get("Version"),
+            item.get("NumVotes"),
+            f"{item.get('Popularity', 0):.6f}",
+            item.get("Maintainer"),
+        ]
+        for item in aur_data.get("packages", [])
+    ]
+
+    crate_rows = [
+        [
+            item["name"],
+            item["max_version"],
+            item["downloads"],
+            item["last_7_downloads"],
+            item["last_30_downloads"],
+            item["last_90_downloads"],
+        ]
+        for item in crates_data.get("crates", [])
+    ]
+
+    pulse = github_data.get("pulse_7d", {})
+    pulse_rows = [
+        ["PRs opened", pulse.get("prs_opened")],
+        ["PRs merged", pulse.get("prs_merged")],
+        ["Issues opened", pulse.get("issues_opened")],
+        ["Issues closed", pulse.get("issues_closed")],
+        ["Default-branch commits", pulse.get("default_branch_commits")],
+    ]
+
+    contributor_rows = [
+        [item["login"], item["last_week"], item["total"]]
+        for item in github_data.get("top_contributors_latest_week", [])
+    ]
+
+    docker_rows = [
+        [item["repo_name"], item["pull_count"], item["star_count"], item.get("short_description") or ""]
+        for item in docker_hub_data.get("top_community_results", [])[:8]
+    ]
+
+    status_rows = [
+        ["GitHub repo + traffic", "ok" if github["ok"] else github.get("error")],
+        ["GitHub releases", "ok" if releases["ok"] else releases.get("error")],
+        ["GHCR package UI", "ok" if ghcr["ok"] else ghcr.get("error")],
+        ["Homebrew", "ok" if homebrew["ok"] else homebrew.get("error")],
+        ["AUR", "ok" if aur["ok"] else aur.get("error")],
+        ["crates.io", "ok" if crates["ok"] else crates.get("error")],
+        ["Scoop", "ok" if scoop["ok"] else scoop.get("error")],
+        ["Docker Hub search", "ok" if docker_hub["ok"] else docker_hub.get("error")],
+    ]
+
+    css = """
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fa;
+      --panel: #ffffff;
+      --ink: #17202a;
+      --muted: #667085;
+      --line: #d8dee8;
+      --blue: #2563eb;
+      --green: #168a5b;
+      --amber: #b7791f;
+      --red: #c24132;
+      --teal: #0f766e;
+      --shadow: 0 1px 2px rgb(16 24 40 / 7%);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header {
+      background: #17202a;
+      color: white;
+      padding: 28px max(24px, calc((100vw - 1180px) / 2));
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font-size: 28px; font-weight: 700; letter-spacing: 0; }
+    header p { color: #d6dde8; margin-top: 8px; max-width: 840px; }
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 24px auto 48px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card, section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    .card {
+      min-height: 112px;
+      padding: 16px;
+    }
+    .label {
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      font-weight: 700;
+    }
+    .value {
+      display: block;
+      margin: 8px 0 4px;
+      font-size: 30px;
+      line-height: 1.05;
+      font-weight: 760;
+      white-space: nowrap;
+    }
+    .note, .muted { color: var(--muted); }
+    .note { font-size: 13px; }
+    section {
+      margin-top: 16px;
+      padding: 18px;
+    }
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+    h2 { font-size: 18px; }
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(300px, .9fr);
+      gap: 16px;
+      align-items: start;
+    }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+    table { width: 100%; border-collapse: collapse; min-width: 560px; }
+    th, td { padding: 10px 12px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: #f1f4f8; color: #344054; font-size: 12px; text-transform: uppercase; letter-spacing: 0; }
+    tr:last-child td { border-bottom: 0; }
+    .bars {
+      width: 100%;
+      height: 108px;
+      display: block;
+      overflow: visible;
+    }
+    .bars rect { fill: var(--teal); }
+    .bars rect:nth-child(3n) { fill: var(--blue); }
+    .bars rect:nth-child(5n) { fill: var(--green); }
+    .callout {
+      border-left: 4px solid var(--amber);
+      padding: 12px 14px;
+      background: #fff8e8;
+      border-radius: 6px;
+      margin-top: 12px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #3342a0;
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 6px;
+      margin-top: 6px;
+    }
+    footer {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto 32px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    @media (max-width: 960px) {
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .split { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      header { padding: 22px 16px; }
+      main { width: calc(100% - 24px); margin-top: 16px; }
+      .grid { grid-template-columns: 1fr; }
+      .value { font-size: 26px; }
+      section { padding: 14px; }
+      .section-head { display: block; }
+      .section-head .muted { margin-top: 4px; }
+    }
+    """
+
+    cards_html = "\n".join(
+        f'<article class="card"><span class="label">{html.escape(title)}</span>'
+        f'<span class="value">{value}</span><p class="note">{html.escape(note)}</p></article>'
+        for title, value, note in cards
+    )
+
+    ghcr_daily_rows = ghcr_data.get("last_30_daily", [])
+    repo_view_rows = github_data.get("traffic", {}).get("views_daily", [])
+    repo_clone_rows = github_data.get("traffic", {}).get("clones_daily", [])
+
+    release_mix = release_data.get("asset_totals", {})
+    mix_rows = [[name, count, f"{count / max(sum(release_mix.values()), 1) * 100:.1f}%"] for name, count in release_mix.items()]
+
+    error_banner = ""
+    failed = [name for name, wrapped in snapshot.items() if isinstance(wrapped, dict) and wrapped.get("ok") is False]
+    if failed:
+        error_banner = (
+            '<section><h2>Partial Data</h2><p class="callout">'
+            f'Some sources failed: {html.escape(", ".join(failed))}. See source status for details.'
+            "</p></section>"
+        )
+
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ZeroClaw Metrics Dashboard</title>
+  <style>{css}</style>
+</head>
+<body>
+  <header>
+    <h1>ZeroClaw Metrics Dashboard</h1>
+    <p>Distribution, release, repository, and package-manager metrics snapshot for {html.escape(FULL_REPO)}. Generated {html.escape(snapshot["generated_at"])}.</p>
+  </header>
+  <main>
+    {error_banner}
+    <div class="grid">{cards_html}</div>
+
+    <section>
+      <div class="section-head">
+        <h2>GHCR Container Downloads</h2>
+        <p class="muted">Total {metric(ghcr_data.get("total_downloads"))}; last 7 days {metric(ghcr_data.get("last_7_downloads"))}</p>
+      </div>
+      <div class="split">
+        <div>
+          {svg_bars(ghcr_daily_rows, date_key="date", value_key="downloads")}
+          <p class="note">Daily values are scraped from the authenticated GitHub Packages chart because REST package objects omit pull/download counts.</p>
+        </div>
+        <div>
+          {table(["Tags", "Downloads", "Digest"], ghcr_version_rows)}
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>GitHub Release Assets</h2>
+        <p class="muted">Average rate since publication; installable assets only</p>
+      </div>
+      <div class="split">
+        <div>{table(["Release", "Type", "Published", "Age", "Downloads", "Downloads/week"], release_rows)}</div>
+        <div>{table(["Asset category", "Downloads", "Share"], mix_rows)}</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Repository Activity</h2>
+        <p class="muted">Pulse-like window since {html.escape(str(pulse.get("since", "n/a")))}</p>
+      </div>
+      <div class="split">
+        <div>
+          <h3>Traffic</h3>
+          {svg_bars(repo_view_rows, date_key="timestamp", value_key="count")}
+          <p class="note">Views: {metric(github_data.get("traffic", {}).get("views_14d"))} total, {metric(github_data.get("traffic", {}).get("views_uniques_14d"))} unique. Clones: {metric(github_data.get("traffic", {}).get("clones_14d"))} total, {metric(github_data.get("traffic", {}).get("clones_uniques_14d"))} unique.</p>
+        </div>
+        <div>
+          {table(["Pulse metric", "Count"], pulse_rows)}
+          {table(["Contributor", "Latest week commits", "Total commits"], contributor_rows)}
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Package Managers</h2>
+        <p class="muted">External package surfaces with usable metrics</p>
+      </div>
+      <div class="split">
+        <div>
+          <h3>Homebrew Core</h3>
+          {table(["Window", "Installs", "Install on request"], hb_rows)}
+          <h3 style="margin-top:16px;">crates.io</h3>
+          {table(["Crate", "Version", "Total", "7d", "30d", "90d"], crate_rows)}
+        </div>
+        <div>
+          <h3>AUR</h3>
+          {table(["Package", "Version", "Votes", "Popularity", "Maintainer"], aur_rows)}
+          <h3 style="margin-top:16px;">Scoop Bucket</h3>
+          {table(["Metric", "Value"], [
+              ["Manifest version", scoop_data.get("manifest_version")],
+              ["Repo views 14d", scoop_data.get("traffic", {}).get("views_14d")],
+              ["Repo clones 14d", scoop_data.get("traffic", {}).get("clones_14d")],
+              ["Stars", scoop_data.get("repo", {}).get("stars")],
+          ])}
+        </div>
+      </div>
+      <p class="callout">Do not add package-manager counts together as unique users. Homebrew, Scoop, and installers can ultimately fetch GitHub release assets, and GHCR counts image pulls rather than people.</p>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Docker Hub Search</h2>
+        <p class="muted">No official Docker Hub image found; these are community results</p>
+      </div>
+      {table(["Repository", "Pulls", "Stars", "Description"], docker_rows)}
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Recommended Permanent Home</h2>
+        <p class="muted">Keep snapshots separate from source code</p>
+      </div>
+      <p>This repository is the durable home for ZeroClaw metrics. The collector runs from <code>scripts/build_dashboard.py</code>, writes immutable snapshots under <code>data/snapshots/</code>, refreshes <code>data/latest.json</code>, and publishes this static <code>index.html</code> through GitHub Pages. The main application repository should link here rather than storing metrics snapshots in product source.</p>
+      <div>
+        <span class="pill">Collector: scripts/metrics</span>
+        <span class="pill">Snapshots: separate metrics store</span>
+        <span class="pill">Dashboard: GitHub Pages /metrics</span>
+        <span class="pill">Docs link: maintainer docs</span>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>Source Status</h2>
+        <p class="muted">Collector health for this snapshot</p>
+      </div>
+      {table(["Source", "Status"], status_rows)}
+    </section>
+  </main>
+  <footer>
+    Source snapshot: <code>data/latest.json</code>. The live platforms remain canonical; this dashboard is a point-in-time operational view.
+  </footer>
+</body>
+</html>
+"""
+
+
+def main() -> int:
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
+    snapshot = {
+        "generated_at": NOW.isoformat(),
+        "repo": FULL_REPO,
+        "github_repo": safe_collect("github_repo", collect_github_repo),
+        "releases": safe_collect("releases", collect_releases),
+        "ghcr": safe_collect("ghcr", collect_ghcr),
+        "homebrew": safe_collect("homebrew", collect_homebrew),
+        "aur": safe_collect("aur", collect_aur),
+        "crates_io": safe_collect("crates_io", collect_crates),
+        "scoop": safe_collect("scoop", collect_scoop),
+        "docker_hub": safe_collect("docker_hub", collect_docker_hub),
+        "notes": [
+            "GHCR download counts are scraped from authenticated GitHub package HTML because REST objects omit those fields.",
+            "GitHub release downloads are cumulative per asset; downloads/week is an average since release publication.",
+            "Traffic endpoints expose only the last 14 days.",
+            "Scoop installs ultimately hit GitHub release assets, so avoid double-counting with release downloads.",
+            "npm packages named zeroclaw/zerocode are unrelated and intentionally excluded.",
+        ],
+    }
+    snapshot_text = json.dumps(snapshot, indent=2, sort_keys=True) + "\n"
+    snapshot_name = NOW.isoformat(timespec="seconds").replace(":", "-").replace("+", "-") + ".json"
+    (SNAPSHOT_DIR / snapshot_name).write_text(snapshot_text)
+    LATEST_PATH.write_text(snapshot_text)
+    INDEX_PATH.write_text(render_dashboard(snapshot))
+    print(INDEX_PATH)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
