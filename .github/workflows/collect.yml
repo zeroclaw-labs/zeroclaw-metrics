@@ -19,7 +19,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.ZEROCLAW_METRICS_TOKEN || github.token }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Build dashboard
         run: python3 scripts/build_dashboard.py
