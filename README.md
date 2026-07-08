@@ -60,6 +60,9 @@ back to this repository, but it is not enough for all upstream ZeroClaw metrics.
   because REST package objects omit those fields.
 - GitHub release downloads are cumulative per asset; downloads/week is an
   average since release publication unless computed from stored snapshots.
+- Release velocity comparisons use stored snapshots for observed first-21-day
+  and latest-stable windows. Windows that predate this repository's snapshots
+  are intentionally shown as unavailable instead of inferred.
 - Homebrew exposes anonymous install analytics over rolling 30d, 90d, and 365d
   windows. These are install event counts, not download counts or lifetime
   totals.

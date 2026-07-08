@@ -153,6 +153,7 @@ def collect_releases() -> dict[str, Any]:
         "prerelease_downloads_total": sum(row["downloads"] for row in rows if row["prerelease"]),
         "top_by_rate": top_by_rate[:15],
         "recent_stable": recent_stable[:12],
+        "all_installable": sorted(rows, key=lambda row: row["published_at"], reverse=True),
         "asset_totals": dict(sorted(asset_totals.items(), key=lambda item: item[1], reverse=True)),
     }
 
@@ -510,6 +511,41 @@ def load_snapshot_history() -> list[dict[str, Any]]:
     return sorted(by_timestamp.values(), key=lambda item: item["generated_at"])
 
 
+def release_rows_from_snapshot(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
+    releases = data_for(snapshot, "releases")
+    by_tag: dict[str, dict[str, Any]] = {}
+    for key in ["all_installable", "recent_stable", "top_by_rate"]:
+        for row in releases.get(key, []):
+            if row.get("tag") and row.get("published_at") and as_int(row.get("downloads")) is not None:
+                by_tag[row["tag"]] = row
+    return list(by_tag.values())
+
+
+def load_release_history() -> dict[str, list[dict[str, Any]]]:
+    history: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
+    for path in sorted(SNAPSHOT_DIR.glob("*.json")):
+        try:
+            snapshot = json.loads(path.read_text())
+        except json.JSONDecodeError:
+            continue
+        generated_at = snapshot.get("generated_at")
+        if not generated_at:
+            continue
+        for row in release_rows_from_snapshot(snapshot):
+            history[row["tag"]].append(
+                {
+                    "generated_at": generated_at,
+                    "downloads": as_int(row.get("downloads")),
+                    "published_at": row["published_at"],
+                    "prerelease": bool(row.get("prerelease")),
+                }
+            )
+    return {
+        tag: sorted(points, key=lambda item: item["generated_at"])
+        for tag, points in history.items()
+    }
+
+
 def history_delta(history: list[dict[str, Any]], key: str) -> tuple[int | None, int | None, int | None]:
     latest = history[-1].get(key) if history else None
     first = history[0].get(key) if history else None
@@ -527,6 +563,78 @@ def observed_distribution_delta(history: list[dict[str, Any]], *, latest_interva
     if any(piece is None for piece in pieces):
         return None
     return sum(piece or 0 for piece in pieces)
+
+
+def weekly_observed_release_rate(
+    points: list[dict[str, Any]],
+    start: dt.datetime,
+    end: dt.datetime,
+) -> dict[str, Any]:
+    window = [
+        point
+        for point in points
+        if start <= parse_iso(point["generated_at"]) <= end and as_int(point.get("downloads")) is not None
+    ]
+    if len(window) < 2:
+        return {"rate": None, "downloads": None, "days": None, "points": len(window)}
+    first = window[0]
+    last = window[-1]
+    elapsed_days = (parse_iso(last["generated_at"]) - parse_iso(first["generated_at"])).total_seconds() / 86400
+    if elapsed_days <= 0:
+        return {"rate": None, "downloads": None, "days": None, "points": len(window)}
+    downloads = (as_int(last["downloads"]) or 0) - (as_int(first["downloads"]) or 0)
+    return {
+        "rate": downloads / elapsed_days * 7,
+        "downloads": downloads,
+        "days": elapsed_days,
+        "points": len(window),
+    }
+
+
+def release_velocity_rows(
+    current_rows: list[dict[str, Any]],
+    release_history: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    stable_rows = sorted(
+        [row for row in current_rows if not row.get("prerelease")],
+        key=lambda row: row["published_at"],
+    )
+    next_stable_by_tag = {
+        row["tag"]: stable_rows[index + 1]["published_at"] if index + 1 < len(stable_rows) else None
+        for index, row in enumerate(stable_rows)
+    }
+
+    out = []
+    for row in sorted(stable_rows, key=lambda item: item["published_at"], reverse=True):
+        published = parse_iso(row["published_at"])
+        latest_until = parse_iso(next_stable_by_tag[row["tag"]]) if next_stable_by_tag[row["tag"]] else NOW
+        points = release_history.get(row["tag"], [])
+        first_21d = weekly_observed_release_rate(points, published, min(published + dt.timedelta(days=21), NOW))
+        latest_stable = weekly_observed_release_rate(points, published, min(latest_until, NOW))
+        out.append(
+            {
+                **row,
+                "first_21d_observed": first_21d,
+                "latest_stable_observed": latest_stable,
+                "latest_stable_until": latest_until.isoformat(),
+            }
+        )
+    return out
+
+
+def rate_cell(rate: dict[str, Any]) -> str:
+    if rate.get("rate") is None:
+        points = rate.get("points")
+        if points:
+            return "n/a (1 point)"
+        return "n/a"
+    return f"{rate['rate']:.0f}"
+
+
+def coverage_cell(rate: dict[str, Any]) -> str:
+    if rate.get("days") is None:
+        return "n/a"
+    return f"{rate['downloads']:+,} over {rate['days']:.1f}d"
 
 
 def table(headers: list[str], rows: list[list[Any]]) -> str:
@@ -617,6 +725,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     docker_hub_data = docker_hub["data"] if docker_hub["ok"] else {}
 
     history = load_snapshot_history()
+    release_history = load_release_history()
     first_point = history[0] if history else {}
     latest_point = history[-1] if history else {}
     tracking_days = 0.0
@@ -643,16 +752,20 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ("Stars Δ", signed(history_delta(history, "stars")[1]), "GitHub stars since first snapshot"),
     ]
 
+    current_release_rows = release_rows_from_snapshot(snapshot)
+    release_velocity = release_velocity_rows(current_release_rows, release_history)
     release_rows = [
         [
             row["tag"],
-            "pre" if row["prerelease"] else "stable",
             row["published_date"],
             f"{row['age_days']:.1f}d",
             row["downloads"],
             f"{row['downloads_per_week']:.0f}",
+            rate_cell(row["first_21d_observed"]),
+            rate_cell(row["latest_stable_observed"]),
+            coverage_cell(row["latest_stable_observed"]),
         ]
-        for row in release_data.get("top_by_rate", [])[:10]
+        for row in release_velocity[:12]
     ]
 
     ghcr_version_rows = [
@@ -1000,12 +1113,13 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     <section>
       <div class="section-head">
         <h2>GitHub Release Assets</h2>
-        <p class="muted">Average rate since publication; installable assets only</p>
+        <p class="muted">Installable assets only; observed rates use stored snapshots instead of lifetime averages</p>
       </div>
       <div class="split">
-        <div>{table(["Release", "Type", "Published", "Age", "Downloads", "Downloads/week"], release_rows)}</div>
+        <div>{table(["Release", "Published", "Age", "Downloads", "Lifetime avg/wk", "Observed first 21d/wk", "Observed latest-stable/wk", "Observed latest-stable delta"], release_rows)}</div>
         <div>{table(["Asset category", "Downloads", "Share"], mix_rows)}</div>
       </div>
+      <p class="callout">GitHub only exposes cumulative release asset counters. First-21-day and latest-stable rates are computed only from snapshots we actually stored, so older releases may show <code>n/a</code> rather than a fabricated historical rate.</p>
     </section>
 
     <section>
