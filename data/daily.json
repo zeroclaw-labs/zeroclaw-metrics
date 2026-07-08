@@ -1,0 +1,255 @@
+{
+  "cumulative_delta_keys": [
+    "ghcr_downloads",
+    "release_downloads",
+    "crates_downloads",
+    "stars",
+    "forks",
+    "watchers",
+    "open_issues"
+  ],
+  "day_boundary": "UTC",
+  "generated_at": "2026-07-08T16:26:09.569706+00:00",
+  "method": "latest snapshot per UTC day, diffed against prior UTC day close",
+  "rolling_window_delta_keys": [
+    "homebrew_installs_365d",
+    "repo_views_14d",
+    "repo_clones_14d",
+    "prs_merged_7d",
+    "issues_opened_7d"
+  ],
+  "rows": [
+    {
+      "aggregate_distribution_delta": null,
+      "counters": {
+        "crates_downloads": 6339,
+        "forks": 4789,
+        "ghcr_downloads": 361022,
+        "homebrew_installs_365d": 7514,
+        "issues_opened_7d": 82,
+        "open_issues": 434,
+        "prs_merged_7d": 236,
+        "release_downloads": 102609,
+        "repo_clones_14d": 67219,
+        "repo_views_14d": 38739,
+        "stars": 32119,
+        "watchers": 76
+      },
+      "day": "2026-07-02",
+      "deltas": {
+        "crates_downloads": null,
+        "forks": null,
+        "ghcr_downloads": null,
+        "homebrew_installs_365d": null,
+        "issues_opened_7d": null,
+        "open_issues": null,
+        "prs_merged_7d": null,
+        "release_downloads": null,
+        "repo_clones_14d": null,
+        "repo_views_14d": null,
+        "stars": null,
+        "watchers": null
+      },
+      "snapshot_at": "2026-07-02T22:22:59.901986+00:00"
+    },
+    {
+      "aggregate_distribution_delta": 729,
+      "counters": {
+        "crates_downloads": 6341,
+        "forks": 4792,
+        "ghcr_downloads": 361518,
+        "homebrew_installs_365d": 7515,
+        "issues_opened_7d": 85,
+        "open_issues": 446,
+        "prs_merged_7d": 213,
+        "release_downloads": 102840,
+        "repo_clones_14d": 67814,
+        "repo_views_14d": 38071,
+        "stars": 32126,
+        "watchers": 76
+      },
+      "day": "2026-07-03",
+      "deltas": {
+        "crates_downloads": 2,
+        "forks": 3,
+        "ghcr_downloads": 496,
+        "homebrew_installs_365d": 1,
+        "issues_opened_7d": 3,
+        "open_issues": 12,
+        "prs_merged_7d": -23,
+        "release_downloads": 231,
+        "repo_clones_14d": 595,
+        "repo_views_14d": -668,
+        "stars": 7,
+        "watchers": 0
+      },
+      "snapshot_at": "2026-07-03T09:34:41.764411+00:00"
+    },
+    {
+      "aggregate_distribution_delta": 1948,
+      "counters": {
+        "crates_downloads": 6350,
+        "forks": 4796,
+        "ghcr_downloads": 362818,
+        "homebrew_installs_365d": 7522,
+        "issues_opened_7d": 83,
+        "open_issues": 463,
+        "prs_merged_7d": 196,
+        "release_downloads": 103479,
+        "repo_clones_14d": 70098,
+        "repo_views_14d": 38077,
+        "stars": 32149,
+        "watchers": 77
+      },
+      "day": "2026-07-04",
+      "deltas": {
+        "crates_downloads": 9,
+        "forks": 4,
+        "ghcr_downloads": 1300,
+        "homebrew_installs_365d": 7,
+        "issues_opened_7d": -2,
+        "open_issues": 17,
+        "prs_merged_7d": -17,
+        "release_downloads": 639,
+        "repo_clones_14d": 2284,
+        "repo_views_14d": 6,
+        "stars": 23,
+        "watchers": 1
+      },
+      "snapshot_at": "2026-07-04T15:19:45.024484+00:00"
+    },
+    {
+      "aggregate_distribution_delta": 1065,
+      "counters": {
+        "crates_downloads": 6352,
+        "forks": 4793,
+        "ghcr_downloads": 363572,
+        "homebrew_installs_365d": 7523,
+        "issues_opened_7d": 72,
+        "open_issues": 470,
+        "prs_merged_7d": 199,
+        "release_downloads": 103788,
+        "repo_clones_14d": 71623,
+        "repo_views_14d": 37856,
+        "stars": 32152,
+        "watchers": 77
+      },
+      "day": "2026-07-05",
+      "deltas": {
+        "crates_downloads": 2,
+        "forks": -3,
+        "ghcr_downloads": 754,
+        "homebrew_installs_365d": 1,
+        "issues_opened_7d": -11,
+        "open_issues": 7,
+        "prs_merged_7d": 3,
+        "release_downloads": 309,
+        "repo_clones_14d": 1525,
+        "repo_views_14d": -221,
+        "stars": 3,
+        "watchers": 0
+      },
+      "snapshot_at": "2026-07-05T09:22:13.719837+00:00"
+    },
+    {
+      "aggregate_distribution_delta": 1711,
+      "counters": {
+        "crates_downloads": 6363,
+        "forks": 4793,
+        "ghcr_downloads": 364766,
+        "homebrew_installs_365d": 7530,
+        "issues_opened_7d": 66,
+        "open_issues": 469,
+        "prs_merged_7d": 177,
+        "release_downloads": 104294,
+        "repo_clones_14d": 70308,
+        "repo_views_14d": 37075,
+        "stars": 32165,
+        "watchers": 77
+      },
+      "day": "2026-07-06",
+      "deltas": {
+        "crates_downloads": 11,
+        "forks": 0,
+        "ghcr_downloads": 1194,
+        "homebrew_installs_365d": 7,
+        "issues_opened_7d": -6,
+        "open_issues": -1,
+        "prs_merged_7d": -22,
+        "release_downloads": 506,
+        "repo_clones_14d": -1315,
+        "repo_views_14d": -781,
+        "stars": 13,
+        "watchers": 0
+      },
+      "snapshot_at": "2026-07-06T11:01:50.960835+00:00"
+    },
+    {
+      "aggregate_distribution_delta": 1498,
+      "counters": {
+        "crates_downloads": 6372,
+        "forks": 4797,
+        "ghcr_downloads": 365774,
+        "homebrew_installs_365d": 7533,
+        "issues_opened_7d": 74,
+        "open_issues": 480,
+        "prs_merged_7d": 149,
+        "release_downloads": 104775,
+        "repo_clones_14d": 70464,
+        "repo_views_14d": 35609,
+        "stars": 32174,
+        "watchers": 77
+      },
+      "day": "2026-07-07",
+      "deltas": {
+        "crates_downloads": 9,
+        "forks": 4,
+        "ghcr_downloads": 1008,
+        "homebrew_installs_365d": 3,
+        "issues_opened_7d": 8,
+        "open_issues": 11,
+        "prs_merged_7d": -28,
+        "release_downloads": 481,
+        "repo_clones_14d": 156,
+        "repo_views_14d": -1466,
+        "stars": 9,
+        "watchers": 0
+      },
+      "snapshot_at": "2026-07-07T09:59:58.648423+00:00"
+    },
+    {
+      "aggregate_distribution_delta": 1898,
+      "counters": {
+        "crates_downloads": 6387,
+        "forks": 4801,
+        "ghcr_downloads": 366955,
+        "homebrew_installs_365d": 7536,
+        "issues_opened_7d": 76,
+        "open_issues": 489,
+        "prs_merged_7d": 144,
+        "release_downloads": 105477,
+        "repo_clones_14d": 68984,
+        "repo_views_14d": 34661,
+        "stars": 32196,
+        "watchers": 79
+      },
+      "day": "2026-07-08",
+      "deltas": {
+        "crates_downloads": 15,
+        "forks": 4,
+        "ghcr_downloads": 1181,
+        "homebrew_installs_365d": 3,
+        "issues_opened_7d": 2,
+        "open_issues": 9,
+        "prs_merged_7d": -5,
+        "release_downloads": 702,
+        "repo_clones_14d": -1480,
+        "repo_views_14d": -948,
+        "stars": 22,
+        "watchers": 2
+      },
+      "snapshot_at": "2026-07-08T16:26:09.569706+00:00"
+    }
+  ],
+  "source": "data/snapshots"
+}

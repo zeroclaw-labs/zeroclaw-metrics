@@ -25,6 +25,7 @@ DATA_DIR = ROOT / "data"
 SNAPSHOT_DIR = DATA_DIR / "snapshots"
 INDEX_PATH = ROOT / "index.html"
 LATEST_PATH = DATA_DIR / "latest.json"
+DAILY_PATH = DATA_DIR / "daily.json"
 NOW = dt.datetime.now(dt.timezone.utc)
 OWNER = "zeroclaw-labs"
 REPO = "zeroclaw"
@@ -565,6 +566,73 @@ def observed_distribution_delta(history: list[dict[str, Any]], *, latest_interva
     return sum(piece or 0 for piece in pieces)
 
 
+DAILY_CUMULATIVE_KEYS = [
+    "ghcr_downloads",
+    "release_downloads",
+    "crates_downloads",
+    "stars",
+    "forks",
+    "watchers",
+    "open_issues",
+]
+
+DAILY_ROLLING_KEYS = [
+    "homebrew_installs_365d",
+    "repo_views_14d",
+    "repo_clones_14d",
+    "prs_merged_7d",
+    "issues_opened_7d",
+]
+
+
+def close_by_utc_day(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    closes: dict[str, dict[str, Any]] = {}
+    for point in history:
+        day = point.get("day")
+        if day:
+            closes[day] = point
+    return [closes[day] for day in sorted(closes)]
+
+
+def daily_metrics(history: list[dict[str, Any]]) -> dict[str, Any]:
+    closes = close_by_utc_day(history)
+    rows = []
+    for index, point in enumerate(closes):
+        previous = closes[index - 1] if index > 0 else {}
+        counters = {
+            key: as_int(point.get(key))
+            for key in [*DAILY_CUMULATIVE_KEYS, *DAILY_ROLLING_KEYS]
+        }
+        deltas = {
+            key: delta(as_int(point.get(key)), as_int(previous.get(key)))
+            for key in [*DAILY_CUMULATIVE_KEYS, *DAILY_ROLLING_KEYS]
+        }
+        distribution_delta_parts = [deltas.get(key) for key in ["ghcr_downloads", "release_downloads", "crates_downloads"]]
+        distribution_delta = None
+        if all(part is not None for part in distribution_delta_parts):
+            distribution_delta = sum(part or 0 for part in distribution_delta_parts)
+
+        rows.append(
+            {
+                "day": point["day"],
+                "snapshot_at": point["generated_at"],
+                "counters": counters,
+                "deltas": deltas,
+                "aggregate_distribution_delta": distribution_delta,
+            }
+        )
+
+    return {
+        "generated_at": NOW.isoformat(),
+        "source": "data/snapshots",
+        "day_boundary": "UTC",
+        "method": "latest snapshot per UTC day, diffed against prior UTC day close",
+        "cumulative_delta_keys": DAILY_CUMULATIVE_KEYS,
+        "rolling_window_delta_keys": DAILY_ROLLING_KEYS,
+        "rows": rows,
+    }
+
+
 def weekly_observed_release_rate(
     points: list[dict[str, Any]],
     start: dt.datetime,
@@ -725,6 +793,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     docker_hub_data = docker_hub["data"] if docker_hub["ok"] else {}
 
     history = load_snapshot_history()
+    daily = daily_metrics(history)
     release_history = load_release_history()
     first_point = history[0] if history else {}
     latest_point = history[-1] if history else {}
@@ -855,6 +924,20 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         latest = history[-1]
         for label, key in cumulative_metrics[:5]:
             latest_interval_rows.append([label, signed(delta(as_int(latest.get(key)), as_int(previous.get(key))))])
+
+    daily_diff_rows = [
+        [
+            row["day"],
+            signed(row.get("aggregate_distribution_delta")),
+            signed(row["deltas"].get("ghcr_downloads")),
+            signed(row["deltas"].get("release_downloads")),
+            signed(row["deltas"].get("crates_downloads")),
+            signed(row["deltas"].get("stars")),
+            signed(row["deltas"].get("forks")),
+            signed(row["deltas"].get("homebrew_installs_365d")),
+        ]
+        for row in daily["rows"][-14:]
+    ]
 
     rolling_metric_rows = []
     for label, key in [
@@ -1091,6 +1174,9 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       <h3 style="margin-top:16px;">Rolling windows</h3>
       <p class="note">Homebrew and GitHub traffic/pulse APIs expose rolling windows, not lifetime totals. Their changes show movement in the reported window.</p>
       {table(["Metric", "Current window", "Change since first snapshot", "Latest interval"], rolling_metric_rows)}
+      <h3 style="margin-top:16px;">Day-by-day diffs</h3>
+      <p class="note">UTC day rows use the latest stored snapshot for each day, then diff cumulative counters against the prior day. Homebrew is included as a rolling-window change, not lifetime growth.</p>
+      {table(["UTC day", "Distribution Δ", "GHCR Δ", "Release Δ", "crates.io Δ", "Stars Δ", "Forks Δ", "Homebrew 365d Δ"], daily_diff_rows)}
       {table(["Snapshot", "GHCR", "Δ", "Release assets", "Δ", "Stars", "Δ"], recent_history_rows)}
     </section>
 
@@ -1231,6 +1317,7 @@ def main() -> int:
     snapshot_name = NOW.isoformat(timespec="seconds").replace(":", "-").replace("+", "-") + ".json"
     (SNAPSHOT_DIR / snapshot_name).write_text(snapshot_text)
     LATEST_PATH.write_text(snapshot_text)
+    DAILY_PATH.write_text(json.dumps(daily_metrics(load_snapshot_history()), indent=2, sort_keys=True) + "\n")
     INDEX_PATH.write_text(render_dashboard(snapshot))
     print(INDEX_PATH)
     return 0

@@ -10,6 +10,7 @@ timestamped, point-in-time snapshots so trends can be computed over time.
 
 - `index.html` - static dashboard for GitHub Pages.
 - `data/latest.json` - latest metrics snapshot.
+- `data/daily.json` - generated day-by-day close and delta view.
 - `data/snapshots/` - immutable historical snapshots.
 - `scripts/build_dashboard.py` - collector and dashboard renderer.
 
@@ -23,6 +24,9 @@ and publishes the result to GitHub Pages.
 The dashboard's historical deltas are generated from `data/snapshots/` at build
 time. There is no second aggregate database; the immutable snapshots are the
 stored history.
+
+`data/daily.json` is a derived view. It uses the latest snapshot for each UTC
+day as that day's close, then computes deltas against the prior UTC day close.
 
 A remote ZeroClaw cron job can be used as an operational watchdog. It should
 dispatch the same `Collect Metrics` workflow when the published snapshot is
