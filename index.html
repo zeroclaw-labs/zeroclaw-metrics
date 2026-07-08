@@ -102,6 +102,21 @@
     .bars rect { fill: var(--teal); }
     .bars rect:nth-child(3n) { fill: var(--blue); }
     .bars rect:nth-child(5n) { fill: var(--green); }
+    .line-chart {
+      width: 100%;
+      height: 132px;
+      display: block;
+      overflow: visible;
+    }
+    .line-chart polyline {
+      fill: none;
+      stroke: var(--blue);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .line-chart circle { fill: var(--green); stroke: white; stroke-width: 1.5; }
+    .line-chart text { fill: var(--muted); font-size: 11px; }
     .callout {
       border-left: 4px solid var(--amber);
       padding: 12px 14px;
@@ -146,33 +161,81 @@
 <body>
   <header>
     <h1>ZeroClaw Metrics Dashboard</h1>
-    <p>Distribution, release, repository, and package-manager metrics snapshot for zeroclaw-labs/zeroclaw. Generated 2026-07-08T08:43:29.973200+00:00.</p>
+    <p>Distribution, release, repository, and package-manager metrics snapshot for zeroclaw-labs/zeroclaw. Generated 2026-07-08T16:03:06.580067+00:00.</p>
   </header>
   <main>
     
-    <div class="grid"><article class="card"><span class="label">GHCR Downloads</span><span class="value">366.7K</span><p class="note">Total container package downloads</p></article>
-<article class="card"><span class="label">GHCR 30d</span><span class="value">31.8K</span><p class="note">Scraped from authenticated package chart</p></article>
-<article class="card"><span class="label">Release Assets</span><span class="value">105.3K</span><p class="note">Installable GitHub release asset downloads</p></article>
-<article class="card"><span class="label">Homebrew 30d</span><span class="value">395</span><p class="note">Homebrew Core installs</p></article>
+    <div class="grid"><article class="card"><span class="label">GHCR Downloads</span><span class="value">366.9K</span><p class="note">Total container package downloads</p></article>
+<article class="card"><span class="label">GHCR 30d</span><span class="value">32.1K</span><p class="note">Scraped from authenticated package chart</p></article>
+<article class="card"><span class="label">Release Assets</span><span class="value">105.5K</span><p class="note">Installable GitHub release asset downloads</p></article>
+<article class="card"><span class="label">Homebrew 30d</span><span class="value">393</span><p class="note">Homebrew Core installs</p></article>
 <article class="card"><span class="label">Repo Stars</span><span class="value">32.2K</span><p class="note">GitHub repository stars</p></article>
 <article class="card"><span class="label">Traffic 14d</span><span class="value">34.7K</span><p class="note">Repository page views</p></article>
 <article class="card"><span class="label">Clones 14d</span><span class="value">69.0K</span><p class="note">Repository clones</p></article>
-<article class="card"><span class="label">PRs Merged 7d</span><span class="value">118</span><p class="note">Pulse-like activity</p></article></div>
+<article class="card"><span class="label">PRs Merged 7d</span><span class="value">138</span><p class="note">Pulse-like activity</p></article>
+<article class="card"><span class="label">Snapshots</span><span class="value">10</span><p class="note">Tracking window 5.8 days</p></article>
+<article class="card"><span class="label">Observed Δ</span><span class="value">+8,898</span><p class="note">GHCR + releases + crates since first snapshot</p></article>
+<article class="card"><span class="label">Latest Δ</span><span class="value">+476</span><p class="note">Same cumulative counters since previous snapshot</p></article>
+<article class="card"><span class="label">Stars Δ</span><span class="value">+77</span><p class="note">GitHub stars since first snapshot</p></article></div>
+
+    <section>
+      <div class="section-head">
+        <h2>Aggregate Over Time</h2>
+        <p class="muted">Computed from 10 immutable snapshots in <code>data/snapshots/</code></p>
+      </div>
+      <div class="split">
+        <div>
+          <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Current</th><th>Since first snapshot</th><th>Latest interval</th></tr></thead><tbody><tr><td>GHCR downloads</td><td>366,946</td><td>+5,977</td><td>+293</td></tr>
+<tr><td>GitHub release asset downloads</td><td>105,466</td><td>+2,873</td><td>+172</td></tr>
+<tr><td>crates.io downloads</td><td>6,387</td><td>+48</td><td>+11</td></tr>
+<tr><td>Repo stars</td><td>32,196</td><td>+77</td><td>+5</td></tr>
+<tr><td>Repo forks</td><td>4,801</td><td>+12</td><td>-1</td></tr></tbody></table></div>
+          <p class="callout">The observed distribution delta adds only cumulative counters: GHCR downloads, GitHub release asset downloads, and crates.io downloads. It is useful momentum, not unique users.</p>
+        </div>
+        <div>
+          <h3>GHCR cumulative downloads</h3>
+          <svg class="line-chart" viewBox="0 0 432 118" role="img" aria-label="ghcr_downloads over time"><polyline points="10.0,96.0 55.8,95.2 101.6,88.1 147.3,74.1 193.1,69.4 238.9,58.5 284.7,41.4 330.4,26.9 376.2,14.2 422.0,10.0"></polyline><circle cx="10.0" cy="96.0" r="3"><title>2026-07-02: 360,969</title></circle><circle cx="55.8" cy="95.2" r="3"><title>2026-07-02: 361,022</title></circle><circle cx="101.6" cy="88.1" r="3"><title>2026-07-03: 361,518</title></circle><circle cx="147.3" cy="74.1" r="3"><title>2026-07-04: 362,490</title></circle><circle cx="193.1" cy="69.4" r="3"><title>2026-07-04: 362,818</title></circle><circle cx="238.9" cy="58.5" r="3"><title>2026-07-05: 363,572</title></circle><circle cx="284.7" cy="41.4" r="3"><title>2026-07-06: 364,766</title></circle><circle cx="330.4" cy="26.9" r="3"><title>2026-07-07: 365,774</title></circle><circle cx="376.2" cy="14.2" r="3"><title>2026-07-08: 366,653</title></circle><circle cx="422.0" cy="10.0" r="3"><title>2026-07-08: 366,946</title></circle><text x="10" y="114">2026-07-02</text><text x="422" y="114" text-anchor="end">2026-07-08</text></svg>
+          <h3 style="margin-top:16px;">Latest interval deltas</h3>
+          <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Delta</th></tr></thead><tbody><tr><td>GHCR downloads</td><td>+293</td></tr>
+<tr><td>GitHub release asset downloads</td><td>+172</td></tr>
+<tr><td>crates.io downloads</td><td>+11</td></tr>
+<tr><td>Repo stars</td><td>+5</td></tr>
+<tr><td>Repo forks</td><td>-1</td></tr></tbody></table></div>
+        </div>
+      </div>
+      <h3 style="margin-top:16px;">Rolling windows</h3>
+      <p class="note">Homebrew and GitHub traffic/pulse APIs expose rolling windows, not lifetime totals. Their changes show movement in the reported window.</p>
+      <div class="table-wrap"><table><thead><tr><th>Metric</th><th>Current window</th><th>Change since first snapshot</th><th>Latest interval</th></tr></thead><tbody><tr><td>Homebrew installs 365d</td><td>7,536</td><td>+22</td><td>+0</td></tr>
+<tr><td>Repo views 14d</td><td>34,661</td><td>-4,078</td><td>+0</td></tr>
+<tr><td>Repo clones 14d</td><td>68,984</td><td>+1,765</td><td>+0</td></tr>
+<tr><td>PRs merged 7d</td><td>138</td><td>-98</td><td>+20</td></tr>
+<tr><td>Issues opened 7d</td><td>76</td><td>-5</td><td>+8</td></tr></tbody></table></div>
+      <div class="table-wrap"><table><thead><tr><th>Snapshot</th><th>GHCR</th><th>Δ</th><th>Release assets</th><th>Δ</th><th>Stars</th><th>Δ</th></tr></thead><tbody><tr><td>2026-07-02</td><td>360,969</td><td>n/a</td><td>102,593</td><td>n/a</td><td>32,119</td><td>n/a</td></tr>
+<tr><td>2026-07-02</td><td>361,022</td><td>+53</td><td>102,609</td><td>+16</td><td>32,119</td><td>+0</td></tr>
+<tr><td>2026-07-03</td><td>361,518</td><td>+496</td><td>102,840</td><td>+231</td><td>32,126</td><td>+7</td></tr>
+<tr><td>2026-07-04</td><td>362,490</td><td>+972</td><td>103,354</td><td>+514</td><td>32,144</td><td>+18</td></tr>
+<tr><td>2026-07-04</td><td>362,818</td><td>+328</td><td>103,479</td><td>+125</td><td>32,149</td><td>+5</td></tr>
+<tr><td>2026-07-05</td><td>363,572</td><td>+754</td><td>103,788</td><td>+309</td><td>32,152</td><td>+3</td></tr>
+<tr><td>2026-07-06</td><td>364,766</td><td>+1,194</td><td>104,294</td><td>+506</td><td>32,165</td><td>+13</td></tr>
+<tr><td>2026-07-07</td><td>365,774</td><td>+1,008</td><td>104,775</td><td>+481</td><td>32,174</td><td>+9</td></tr>
+<tr><td>2026-07-08</td><td>366,653</td><td>+879</td><td>105,294</td><td>+519</td><td>32,191</td><td>+17</td></tr>
+<tr><td>2026-07-08</td><td>366,946</td><td>+293</td><td>105,466</td><td>+172</td><td>32,196</td><td>+5</td></tr></tbody></table></div>
+    </section>
 
     <section>
       <div class="section-head">
         <h2>GHCR Container Downloads</h2>
-        <p class="muted">Total 366,653; last 7 days 6,562</p>
+        <p class="muted">Total 366,946; last 7 days 6,855</p>
       </div>
       <div class="split">
         <div>
-          <svg class="bars" viewBox="0 0 360 92" role="img" aria-label="Daily downloads"><rect x="0" y="40" width="9" height="38" rx="2"><title>2026-06-09: 843</title></rect><rect x="12" y="35" width="9" height="43" rx="2"><title>2026-06-10: 949</title></rect><rect x="24" y="38" width="9" height="40" rx="2"><title>2026-06-11: 886</title></rect><rect x="36" y="31" width="9" height="47" rx="2"><title>2026-06-12: 1,039</title></rect><rect x="48" y="21" width="9" height="57" rx="2"><title>2026-06-13: 1,264</title></rect><rect x="60" y="33" width="9" height="45" rx="2"><title>2026-06-14: 1,008</title></rect><rect x="72" y="33" width="9" height="45" rx="2"><title>2026-06-15: 1,006</title></rect><rect x="84" y="19" width="9" height="59" rx="2"><title>2026-06-16: 1,305</title></rect><rect x="96" y="6" width="9" height="72" rx="2"><title>2026-06-17: 1,602</title></rect><rect x="108" y="13" width="9" height="65" rx="2"><title>2026-06-18: 1,445</title></rect><rect x="120" y="16" width="9" height="62" rx="2"><title>2026-06-19: 1,378</title></rect><rect x="132" y="29" width="9" height="49" rx="2"><title>2026-06-20: 1,081</title></rect><rect x="144" y="38" width="9" height="40" rx="2"><title>2026-06-21: 893</title></rect><rect x="156" y="35" width="9" height="43" rx="2"><title>2026-06-22: 954</title></rect><rect x="168" y="11" width="9" height="67" rx="2"><title>2026-06-23: 1,494</title></rect><rect x="180" y="30" width="9" height="48" rx="2"><title>2026-06-24: 1,078</title></rect><rect x="192" y="34" width="9" height="44" rx="2"><title>2026-06-25: 976</title></rect><rect x="204" y="32" width="9" height="46" rx="2"><title>2026-06-26: 1,020</title></rect><rect x="216" y="36" width="9" height="42" rx="2"><title>2026-06-27: 934</title></rect><rect x="228" y="34" width="9" height="44" rx="2"><title>2026-06-28: 989</title></rect><rect x="240" y="27" width="9" height="51" rx="2"><title>2026-06-29: 1,127</title></rect><rect x="252" y="32" width="9" height="46" rx="2"><title>2026-06-30: 1,015</title></rect><rect x="264" y="36" width="9" height="42" rx="2"><title>2026-07-01: 935</title></rect><rect x="276" y="35" width="9" height="43" rx="2"><title>2026-07-02: 967</title></rect><rect x="288" y="31" width="9" height="47" rx="2"><title>2026-07-03: 1,043</title></rect><rect x="300" y="29" width="9" height="49" rx="2"><title>2026-07-04: 1,080</title></rect><rect x="312" y="29" width="9" height="49" rx="2"><title>2026-07-05: 1,088</title></rect><rect x="324" y="32" width="9" height="46" rx="2"><title>2026-07-06: 1,019</title></rect><rect x="336" y="33" width="9" height="45" rx="2"><title>2026-07-07: 994</title></rect><rect x="348" y="61" width="9" height="17" rx="2"><title>2026-07-08: 371</title></rect></svg>
+          <svg class="bars" viewBox="0 0 360 92" role="img" aria-label="Daily downloads"><rect x="0" y="40" width="9" height="38" rx="2"><title>2026-06-09: 843</title></rect><rect x="12" y="35" width="9" height="43" rx="2"><title>2026-06-10: 949</title></rect><rect x="24" y="38" width="9" height="40" rx="2"><title>2026-06-11: 886</title></rect><rect x="36" y="31" width="9" height="47" rx="2"><title>2026-06-12: 1,039</title></rect><rect x="48" y="21" width="9" height="57" rx="2"><title>2026-06-13: 1,264</title></rect><rect x="60" y="33" width="9" height="45" rx="2"><title>2026-06-14: 1,008</title></rect><rect x="72" y="33" width="9" height="45" rx="2"><title>2026-06-15: 1,006</title></rect><rect x="84" y="19" width="9" height="59" rx="2"><title>2026-06-16: 1,305</title></rect><rect x="96" y="6" width="9" height="72" rx="2"><title>2026-06-17: 1,602</title></rect><rect x="108" y="13" width="9" height="65" rx="2"><title>2026-06-18: 1,445</title></rect><rect x="120" y="16" width="9" height="62" rx="2"><title>2026-06-19: 1,378</title></rect><rect x="132" y="29" width="9" height="49" rx="2"><title>2026-06-20: 1,081</title></rect><rect x="144" y="38" width="9" height="40" rx="2"><title>2026-06-21: 893</title></rect><rect x="156" y="35" width="9" height="43" rx="2"><title>2026-06-22: 954</title></rect><rect x="168" y="11" width="9" height="67" rx="2"><title>2026-06-23: 1,494</title></rect><rect x="180" y="30" width="9" height="48" rx="2"><title>2026-06-24: 1,078</title></rect><rect x="192" y="34" width="9" height="44" rx="2"><title>2026-06-25: 976</title></rect><rect x="204" y="32" width="9" height="46" rx="2"><title>2026-06-26: 1,020</title></rect><rect x="216" y="36" width="9" height="42" rx="2"><title>2026-06-27: 934</title></rect><rect x="228" y="34" width="9" height="44" rx="2"><title>2026-06-28: 989</title></rect><rect x="240" y="27" width="9" height="51" rx="2"><title>2026-06-29: 1,127</title></rect><rect x="252" y="32" width="9" height="46" rx="2"><title>2026-06-30: 1,015</title></rect><rect x="264" y="36" width="9" height="42" rx="2"><title>2026-07-01: 935</title></rect><rect x="276" y="35" width="9" height="43" rx="2"><title>2026-07-02: 967</title></rect><rect x="288" y="31" width="9" height="47" rx="2"><title>2026-07-03: 1,043</title></rect><rect x="300" y="29" width="9" height="49" rx="2"><title>2026-07-04: 1,080</title></rect><rect x="312" y="29" width="9" height="49" rx="2"><title>2026-07-05: 1,088</title></rect><rect x="324" y="32" width="9" height="46" rx="2"><title>2026-07-06: 1,019</title></rect><rect x="336" y="33" width="9" height="45" rx="2"><title>2026-07-07: 994</title></rect><rect x="348" y="48" width="9" height="30" rx="2"><title>2026-07-08: 664</title></rect></svg>
           <p class="note">Daily values are scraped from the authenticated GitHub Packages chart because REST package objects omit pull/download counts.</p>
         </div>
         <div>
-          <div class="table-wrap"><table><thead><tr><th>Tags</th><th>Downloads</th><th>Digest</th></tr></thead><tbody><tr><td>v0.8.2-debian, debian</td><td>2,431</td><td>sha256:8d80a80293f3...</td></tr>
-<tr><td>latest, v0.8.2</td><td>5,316</td><td>sha256:eae321dac2d3...</td></tr>
-<tr><td>v0.8.1-debian</td><td>1,533</td><td>sha256:414cbe73b618...</td></tr>
+          <div class="table-wrap"><table><thead><tr><th>Tags</th><th>Downloads</th><th>Digest</th></tr></thead><tbody><tr><td>v0.8.2-debian, debian</td><td>2,490</td><td>sha256:8d80a80293f3...</td></tr>
+<tr><td>latest, v0.8.2</td><td>5,455</td><td>sha256:eae321dac2d3...</td></tr>
+<tr><td>v0.8.1-debian</td><td>1,541</td><td>sha256:414cbe73b618...</td></tr>
 <tr><td>v0.8.1</td><td>3,739</td><td>sha256:61756adcc378...</td></tr>
 <tr><td>v0.8.0-debian</td><td>1,225</td><td>sha256:3d9733778c67...</td></tr></tbody></table></div>
         </div>
@@ -185,23 +248,23 @@
         <p class="muted">Average rate since publication; installable assets only</p>
       </div>
       <div class="split">
-        <div><div class="table-wrap"><table><thead><tr><th>Release</th><th>Type</th><th>Published</th><th>Age</th><th>Downloads</th><th>Downloads/week</th></tr></thead><tbody><tr><td>v0.8.2</td><td>stable</td><td>2026-06-26</td><td>12.2d</td><td>5,496</td><td>3161</td></tr>
-<tr><td>v0.7.5</td><td>stable</td><td>2026-05-08</td><td>61.1d</td><td>21,451</td><td>2456</td></tr>
-<tr><td>v0.8.1</td><td>stable</td><td>2026-06-19</td><td>19.3d</td><td>3,340</td><td>1213</td></tr>
-<tr><td>v0.8.0</td><td>stable</td><td>2026-06-12</td><td>26.4d</td><td>4,033</td><td>1071</td></tr>
-<tr><td>v0.1.7</td><td>stable</td><td>2026-02-24</td><td>134.0d</td><td>18,173</td><td>949</td></tr>
-<tr><td>v0.7.3</td><td>stable</td><td>2026-04-19</td><td>80.2d</td><td>10,485</td><td>915</td></tr>
-<tr><td>v0.7.4</td><td>stable</td><td>2026-05-01</td><td>68.2d</td><td>6,719</td><td>689</td></tr>
-<tr><td>v0.6.9</td><td>stable</td><td>2026-04-08</td><td>91.1d</td><td>8,629</td><td>663</td></tr>
-<tr><td>v0.6.8</td><td>stable</td><td>2026-04-02</td><td>97.3d</td><td>6,535</td><td>470</td></tr>
-<tr><td>v0.6.5</td><td>stable</td><td>2026-03-27</td><td>103.2d</td><td>4,423</td><td>300</td></tr></tbody></table></div></div>
-        <div><div class="table-wrap"><table><thead><tr><th>Asset category</th><th>Downloads</th><th>Share</th></tr></thead><tbody><tr><td>Linux GNU</td><td>74,590</td><td>70.8%</td></tr>
-<tr><td>Windows zip</td><td>16,984</td><td>16.1%</td></tr>
-<tr><td>macOS tarball</td><td>5,553</td><td>5.3%</td></tr>
-<tr><td>Android</td><td>3,497</td><td>3.3%</td></tr>
-<tr><td>Install script</td><td>2,176</td><td>2.1%</td></tr>
+        <div><div class="table-wrap"><table><thead><tr><th>Release</th><th>Type</th><th>Published</th><th>Age</th><th>Downloads</th><th>Downloads/week</th></tr></thead><tbody><tr><td>v0.8.2</td><td>stable</td><td>2026-06-26</td><td>12.5d</td><td>5,665</td><td>3178</td></tr>
+<tr><td>v0.7.5</td><td>stable</td><td>2026-05-08</td><td>61.5d</td><td>21,452</td><td>2444</td></tr>
+<tr><td>v0.8.1</td><td>stable</td><td>2026-06-19</td><td>19.6d</td><td>3,341</td><td>1194</td></tr>
+<tr><td>v0.8.0</td><td>stable</td><td>2026-06-12</td><td>26.7d</td><td>4,034</td><td>1059</td></tr>
+<tr><td>v0.1.7</td><td>stable</td><td>2026-02-24</td><td>134.3d</td><td>18,173</td><td>947</td></tr>
+<tr><td>v0.7.3</td><td>stable</td><td>2026-04-19</td><td>80.5d</td><td>10,485</td><td>912</td></tr>
+<tr><td>v0.7.4</td><td>stable</td><td>2026-05-01</td><td>68.5d</td><td>6,719</td><td>686</td></tr>
+<tr><td>v0.6.9</td><td>stable</td><td>2026-04-08</td><td>91.4d</td><td>8,629</td><td>661</td></tr>
+<tr><td>v0.6.8</td><td>stable</td><td>2026-04-02</td><td>97.6d</td><td>6,535</td><td>469</td></tr>
+<tr><td>v0.6.5</td><td>stable</td><td>2026-03-27</td><td>103.5d</td><td>4,423</td><td>299</td></tr></tbody></table></div></div>
+        <div><div class="table-wrap"><table><thead><tr><th>Asset category</th><th>Downloads</th><th>Share</th></tr></thead><tbody><tr><td>Linux GNU</td><td>74,730</td><td>70.9%</td></tr>
+<tr><td>Windows zip</td><td>16,993</td><td>16.1%</td></tr>
+<tr><td>macOS tarball</td><td>5,560</td><td>5.3%</td></tr>
+<tr><td>Android</td><td>3,505</td><td>3.3%</td></tr>
+<tr><td>Install script</td><td>2,181</td><td>2.1%</td></tr>
 <tr><td>DMG</td><td>1,644</td><td>1.6%</td></tr>
-<tr><td>Linux musl</td><td>850</td><td>0.8%</td></tr></tbody></table></div></div>
+<tr><td>Linux musl</td><td>853</td><td>0.8%</td></tr></tbody></table></div></div>
       </div>
     </section>
 
@@ -217,21 +280,12 @@
           <p class="note">Views: 34,661 total, 7,240 unique. Clones: 68,984 total, 3,817 unique.</p>
         </div>
         <div>
-          <div class="table-wrap"><table><thead><tr><th>Pulse metric</th><th>Count</th></tr></thead><tbody><tr><td>PRs opened</td><td>194</td></tr>
-<tr><td>PRs merged</td><td>118</td></tr>
-<tr><td>Issues opened</td><td>68</td></tr>
-<tr><td>Issues closed</td><td>33</td></tr>
-<tr><td>Default-branch commits</td><td>118</td></tr></tbody></table></div>
-          <div class="table-wrap"><table><thead><tr><th>Contributor</th><th>Latest week commits</th><th>Total commits</th></tr></thead><tbody><tr><td>Nillth</td><td>16</td><td>99</td></tr>
-<tr><td>JordanTheJet</td><td>5</td><td>90</td></tr>
-<tr><td>singlerider</td><td>5</td><td>310</td></tr>
-<tr><td>wangmiao0668000666</td><td>3</td><td>27</td></tr>
-<tr><td>ConYel</td><td>2</td><td>16</td></tr>
-<tr><td>NiuBlibing</td><td>2</td><td>29</td></tr>
-<tr><td>Audacity88</td><td>2</td><td>289</td></tr>
-<tr><td>FTDGRT</td><td>1</td><td>6</td></tr>
-<tr><td>LiLan0125</td><td>1</td><td>7</td></tr>
-<tr><td>IftekharUddin</td><td>1</td><td>7</td></tr></tbody></table></div>
+          <div class="table-wrap"><table><thead><tr><th>Pulse metric</th><th>Count</th></tr></thead><tbody><tr><td>PRs opened</td><td>208</td></tr>
+<tr><td>PRs merged</td><td>138</td></tr>
+<tr><td>Issues opened</td><td>76</td></tr>
+<tr><td>Issues closed</td><td>42</td></tr>
+<tr><td>Default-branch commits</td><td>138</td></tr></tbody></table></div>
+          <div class="table-wrap"><table><thead><tr><th>Contributor</th><th>Latest week commits</th><th>Total commits</th></tr></thead><tbody></tbody></table></div>
         </div>
       </div>
     </section>
@@ -244,12 +298,12 @@
       <div class="split">
         <div>
           <h3>Homebrew Core</h3>
-          <div class="table-wrap"><table><thead><tr><th>Window</th><th>Installs</th><th>Install on request</th></tr></thead><tbody><tr><td>30d</td><td>395</td><td>395</td></tr>
-<tr><td>90d</td><td>1,756</td><td>1,756</td></tr>
+          <div class="table-wrap"><table><thead><tr><th>Window</th><th>Installs</th><th>Install on request</th></tr></thead><tbody><tr><td>30d</td><td>393</td><td>393</td></tr>
+<tr><td>90d</td><td>1,731</td><td>1,731</td></tr>
 <tr><td>365d</td><td>7,536</td><td>7,536</td></tr></tbody></table></div>
           <h3 style="margin-top:16px;">crates.io</h3>
-          <div class="table-wrap"><table><thead><tr><th>Crate</th><th>Version</th><th>Total</th><th>7d</th><th>30d</th><th>90d</th></tr></thead><tbody><tr><td>zeroclaw</td><td>0.1.7</td><td>4,018</td><td>26</td><td>445</td><td>1,063</td></tr>
-<tr><td>aardvark-sys</td><td>0.1.0</td><td>2,358</td><td>24</td><td>303</td><td>1,904</td></tr></tbody></table></div>
+          <div class="table-wrap"><table><thead><tr><th>Crate</th><th>Version</th><th>Total</th><th>7d</th><th>30d</th><th>90d</th></tr></thead><tbody><tr><td>zeroclaw</td><td>0.1.7</td><td>4,022</td><td>26</td><td>445</td><td>1,063</td></tr>
+<tr><td>aardvark-sys</td><td>0.1.0</td><td>2,365</td><td>25</td><td>304</td><td>1,905</td></tr></tbody></table></div>
         </div>
         <div>
           <h3>AUR</h3>
@@ -275,8 +329,8 @@
 <tr><td>ilteoood/zeroclaw</td><td>2,967</td><td>0</td><td></td></tr>
 <tr><td>cardellier/zeroclaw</td><td>2,707</td><td>0</td><td></td></tr>
 <tr><td>nphung/zeroclaw</td><td>1,481</td><td>0</td><td></td></tr>
-<tr><td>mlown/zeroclaw</td><td>982</td><td>0</td><td></td></tr>
 <tr><td>jyasu/zeroclaw</td><td>1,198</td><td>0</td><td></td></tr>
+<tr><td>mlown/zeroclaw</td><td>982</td><td>0</td><td></td></tr>
 <tr><td>mos4/zeroclaw</td><td>1,103</td><td>0</td><td></td></tr></tbody></table></div>
     </section>
 

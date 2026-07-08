@@ -416,6 +416,119 @@ def compact(value: int | None) -> str:
     return str(value)
 
 
+def as_int(value: Any) -> int | None:
+    if value is None:
+        return None
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str):
+        cleaned = value.replace(",", "").strip()
+        if cleaned and re.fullmatch(r"-?\d+", cleaned):
+            return int(cleaned)
+    return None
+
+
+def delta(current: int | None, previous: int | None) -> int | None:
+    if current is None or previous is None:
+        return None
+    return current - previous
+
+
+def signed(value: int | None) -> str:
+    if value is None:
+        return "n/a"
+    return f"{value:+,}"
+
+
+def data_for(snapshot: dict[str, Any], source: str) -> dict[str, Any]:
+    wrapped = snapshot.get(source, {})
+    if isinstance(wrapped, dict) and wrapped.get("ok") and isinstance(wrapped.get("data"), dict):
+        return wrapped["data"]
+    return {}
+
+
+def first_crate_downloads(crates_data: dict[str, Any], name: str) -> int | None:
+    for item in crates_data.get("crates", []):
+        if item.get("name") == name:
+            return as_int(item.get("downloads"))
+    return None
+
+
+def snapshot_point(snapshot: dict[str, Any]) -> dict[str, Any]:
+    github = data_for(snapshot, "github_repo")
+    ghcr = data_for(snapshot, "ghcr")
+    releases = data_for(snapshot, "releases")
+    homebrew = data_for(snapshot, "homebrew")
+    crates = data_for(snapshot, "crates_io")
+
+    generated_at = snapshot.get("generated_at", "")
+    try:
+        generated_day = parse_iso(generated_at).date().isoformat()
+    except ValueError:
+        generated_day = generated_at[:10]
+
+    crates_total = sum(
+        as_int(item.get("downloads")) or 0 for item in crates.get("crates", [])
+    )
+    homebrew_365d = as_int(
+        ((homebrew.get("install") or {}).get("365d") or {}).get("count")
+    )
+
+    return {
+        "generated_at": generated_at,
+        "day": generated_day,
+        "stars": as_int(github.get("stars")),
+        "forks": as_int(github.get("forks")),
+        "watchers": as_int(github.get("watchers")),
+        "open_issues": as_int(github.get("open_issues")),
+        "repo_views_14d": as_int(github.get("traffic", {}).get("views_14d")),
+        "repo_clones_14d": as_int(github.get("traffic", {}).get("clones_14d")),
+        "prs_merged_7d": as_int(github.get("pulse_7d", {}).get("prs_merged")),
+        "issues_opened_7d": as_int(github.get("pulse_7d", {}).get("issues_opened")),
+        "ghcr_downloads": as_int(ghcr.get("total_downloads")),
+        "release_downloads": as_int(releases.get("installable_downloads_total")),
+        "stable_release_downloads": as_int(releases.get("stable_downloads_total")),
+        "homebrew_installs_365d": homebrew_365d,
+        "crates_downloads": crates_total if crates.get("crates") else None,
+        "zeroclaw_crate_downloads": first_crate_downloads(crates, "zeroclaw"),
+        "aardvark_sys_crate_downloads": first_crate_downloads(crates, "aardvark-sys"),
+    }
+
+
+def load_snapshot_history() -> list[dict[str, Any]]:
+    by_timestamp: dict[str, dict[str, Any]] = {}
+    for path in sorted(SNAPSHOT_DIR.glob("*.json")):
+        try:
+            snapshot = json.loads(path.read_text())
+        except json.JSONDecodeError:
+            continue
+        point = snapshot_point(snapshot)
+        if point["generated_at"]:
+            by_timestamp[point["generated_at"]] = point
+    return sorted(by_timestamp.values(), key=lambda item: item["generated_at"])
+
+
+def history_delta(history: list[dict[str, Any]], key: str) -> tuple[int | None, int | None, int | None]:
+    latest = history[-1].get(key) if history else None
+    first = history[0].get(key) if history else None
+    previous = history[-2].get(key) if len(history) > 1 else None
+    return as_int(latest), delta(as_int(latest), as_int(first)), delta(as_int(latest), as_int(previous))
+
+
+def observed_distribution_delta(history: list[dict[str, Any]], *, latest_interval: bool = False) -> int | None:
+    keys = ["ghcr_downloads", "release_downloads", "crates_downloads"]
+    if len(history) < 2:
+        return None
+    previous = history[-2] if latest_interval else history[0]
+    latest = history[-1]
+    pieces = [delta(as_int(latest.get(key)), as_int(previous.get(key))) for key in keys]
+    if any(piece is None for piece in pieces):
+        return None
+    return sum(piece or 0 for piece in pieces)
+
+
 def table(headers: list[str], rows: list[list[Any]]) -> str:
     body = "\n".join(
         "<tr>" + "".join(f"<td>{metric(cell)}</td>" for cell in row) + "</tr>" for row in rows
@@ -445,6 +558,45 @@ def svg_bars(rows: list[dict[str, Any]], *, date_key: str, value_key: str, heigh
     return f'<svg class="bars" viewBox="0 0 {width} {height}" role="img" aria-label="Daily downloads">{"" .join(bars)}</svg>'
 
 
+def svg_line(rows: list[dict[str, Any]], *, date_key: str, value_key: str, height: int = 118) -> str:
+    points = [
+        (str(row[date_key]), as_int(row.get(value_key)))
+        for row in rows
+        if as_int(row.get(value_key)) is not None
+    ]
+    if len(points) < 2:
+        return "<p class=\"muted\">Not enough historical snapshots yet.</p>"
+
+    values = [value for _, value in points if value is not None]
+    min_value = min(values)
+    max_value = max(values)
+    span = max(max_value - min_value, 1)
+    width = max(220, (len(points) - 1) * 48)
+    left = 10
+    right = width - 10
+    top = 10
+    bottom = height - 22
+    x_step = (right - left) / max(len(points) - 1, 1)
+    coords = []
+    dots = []
+    for index, (date, value) in enumerate(points):
+        if value is None:
+            continue
+        x = left + index * x_step
+        y = bottom - ((value - min_value) / span) * (bottom - top)
+        coords.append(f"{x:.1f},{y:.1f}")
+        dots.append(
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3"><title>{html.escape(date)}: {value:,}</title></circle>'
+        )
+    return (
+        f'<svg class="line-chart" viewBox="0 0 {width} {height}" role="img" aria-label="{html.escape(value_key)} over time">'
+        f'<polyline points="{" ".join(coords)}"></polyline>{"".join(dots)}'
+        f'<text x="{left}" y="{height - 4}">{html.escape(points[0][0])}</text>'
+        f'<text x="{right}" y="{height - 4}" text-anchor="end">{html.escape(points[-1][0])}</text>'
+        "</svg>"
+    )
+
+
 def render_dashboard(snapshot: dict[str, Any]) -> str:
     github = snapshot["github_repo"]
     releases = snapshot["releases"]
@@ -464,6 +616,18 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     scoop_data = scoop["data"] if scoop["ok"] else {}
     docker_hub_data = docker_hub["data"] if docker_hub["ok"] else {}
 
+    history = load_snapshot_history()
+    first_point = history[0] if history else {}
+    latest_point = history[-1] if history else {}
+    tracking_days = 0.0
+    if first_point.get("generated_at") and latest_point.get("generated_at"):
+        tracking_days = max(
+            (parse_iso(latest_point["generated_at"]) - parse_iso(first_point["generated_at"])).total_seconds() / 86400,
+            0.0,
+        )
+    observed_delta_total = observed_distribution_delta(history)
+    observed_delta_latest = observed_distribution_delta(history, latest_interval=True)
+
     cards = [
         ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Total container package downloads"),
         ("GHCR 30d", compact(ghcr_data.get("last_30_downloads")), "Scraped from authenticated package chart"),
@@ -473,6 +637,10 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ("Traffic 14d", compact(github_data.get("traffic", {}).get("views_14d")), "Repository page views"),
         ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
         ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
+        ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
+        ("Observed Δ", signed(observed_delta_total), "GHCR + releases + crates since first snapshot"),
+        ("Latest Δ", signed(observed_delta_latest), "Same cumulative counters since previous snapshot"),
+        ("Stars Δ", signed(history_delta(history, "stars")[1]), "GitHub stars since first snapshot"),
     ]
 
     release_rows = [
@@ -539,6 +707,52 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         [item["repo_name"], item["pull_count"], item["star_count"], item.get("short_description") or ""]
         for item in docker_hub_data.get("top_community_results", [])[:8]
     ]
+
+    cumulative_metrics = [
+        ("GHCR downloads", "ghcr_downloads"),
+        ("GitHub release asset downloads", "release_downloads"),
+        ("crates.io downloads", "crates_downloads"),
+        ("Repo stars", "stars"),
+        ("Repo forks", "forks"),
+    ]
+    growth_rows = []
+    for label, key in cumulative_metrics:
+        current, since_first, latest_delta = history_delta(history, key)
+        growth_rows.append([label, current, signed(since_first), signed(latest_delta)])
+
+    recent_history_rows = []
+    history_start = max(len(history) - 10, 0)
+    for index, point in enumerate(history[history_start:], start=history_start):
+        previous = history[index - 1] if index > 0 else {}
+        recent_history_rows.append(
+            [
+                point["day"],
+                point.get("ghcr_downloads"),
+                signed(delta(as_int(point.get("ghcr_downloads")), as_int(previous.get("ghcr_downloads")))),
+                point.get("release_downloads"),
+                signed(delta(as_int(point.get("release_downloads")), as_int(previous.get("release_downloads")))),
+                point.get("stars"),
+                signed(delta(as_int(point.get("stars")), as_int(previous.get("stars")))),
+            ]
+        )
+
+    latest_interval_rows = []
+    if len(history) >= 2:
+        previous = history[-2]
+        latest = history[-1]
+        for label, key in cumulative_metrics[:5]:
+            latest_interval_rows.append([label, signed(delta(as_int(latest.get(key)), as_int(previous.get(key))))])
+
+    rolling_metric_rows = []
+    for label, key in [
+        ("Homebrew installs 365d", "homebrew_installs_365d"),
+        ("Repo views 14d", "repo_views_14d"),
+        ("Repo clones 14d", "repo_clones_14d"),
+        ("PRs merged 7d", "prs_merged_7d"),
+        ("Issues opened 7d", "issues_opened_7d"),
+    ]:
+        current, since_first, latest_delta = history_delta(history, key)
+        rolling_metric_rows.append([label, current, signed(since_first), signed(latest_delta)])
 
     status_rows = [
         ["GitHub repo + traffic", "ok" if github["ok"] else github.get("error")],
@@ -649,6 +863,21 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     .bars rect { fill: var(--teal); }
     .bars rect:nth-child(3n) { fill: var(--blue); }
     .bars rect:nth-child(5n) { fill: var(--green); }
+    .line-chart {
+      width: 100%;
+      height: 132px;
+      display: block;
+      overflow: visible;
+    }
+    .line-chart polyline {
+      fill: none;
+      stroke: var(--blue);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    .line-chart circle { fill: var(--green); stroke: white; stroke-width: 1.5; }
+    .line-chart text { fill: var(--muted); font-size: 11px; }
     .callout {
       border-left: 4px solid var(--amber);
       padding: 12px 14px;
@@ -728,6 +957,29 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
   <main>
     {error_banner}
     <div class="grid">{cards_html}</div>
+
+    <section>
+      <div class="section-head">
+        <h2>Aggregate Over Time</h2>
+        <p class="muted">Computed from {metric(len(history))} immutable snapshots in <code>data/snapshots/</code></p>
+      </div>
+      <div class="split">
+        <div>
+          {table(["Metric", "Current", "Since first snapshot", "Latest interval"], growth_rows)}
+          <p class="callout">The observed distribution delta adds only cumulative counters: GHCR downloads, GitHub release asset downloads, and crates.io downloads. It is useful momentum, not unique users.</p>
+        </div>
+        <div>
+          <h3>GHCR cumulative downloads</h3>
+          {svg_line(history, date_key="day", value_key="ghcr_downloads")}
+          <h3 style="margin-top:16px;">Latest interval deltas</h3>
+          {table(["Metric", "Delta"], latest_interval_rows)}
+        </div>
+      </div>
+      <h3 style="margin-top:16px;">Rolling windows</h3>
+      <p class="note">Homebrew and GitHub traffic/pulse APIs expose rolling windows, not lifetime totals. Their changes show movement in the reported window.</p>
+      {table(["Metric", "Current window", "Change since first snapshot", "Latest interval"], rolling_metric_rows)}
+      {table(["Snapshot", "GHCR", "Δ", "Release assets", "Δ", "Stars", "Δ"], recent_history_rows)}
+    </section>
 
     <section>
       <div class="section-head">

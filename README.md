@@ -13,6 +13,21 @@ timestamped, point-in-time snapshots so trends can be computed over time.
 - `data/snapshots/` - immutable historical snapshots.
 - `scripts/build_dashboard.py` - collector and dashboard renderer.
 
+## Update Model
+
+The `Collect Metrics` GitHub Actions workflow is the primary updater. It runs
+daily, calls `scripts/build_dashboard.py`, commits a new timestamped snapshot
+under `data/snapshots/`, refreshes `data/latest.json`, rebuilds `index.html`,
+and publishes the result to GitHub Pages.
+
+The dashboard's historical deltas are generated from `data/snapshots/` at build
+time. There is no second aggregate database; the immutable snapshots are the
+stored history.
+
+A remote ZeroClaw cron job can be used as an operational watchdog. It should
+dispatch the same `Collect Metrics` workflow when the published snapshot is
+stale rather than maintaining a separate metrics store.
+
 ## Sources
 
 - GitHub Releases asset download counters.
@@ -45,6 +60,9 @@ back to this repository, but it is not enough for all upstream ZeroClaw metrics.
   because REST package objects omit those fields.
 - GitHub release downloads are cumulative per asset; downloads/week is an
   average since release publication unless computed from stored snapshots.
+- Homebrew exposes anonymous install analytics over rolling 30d, 90d, and 365d
+  windows. These are install event counts, not download counts or lifetime
+  totals.
 - GitHub traffic endpoints expose only the last 14 days.
 - Do not add package-manager counts together as unique users. Homebrew, Scoop,
   installers, and release assets can overlap.
