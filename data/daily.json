@@ -9,7 +9,7 @@
     "open_issues"
   ],
   "day_boundary": "UTC",
-  "generated_at": "2026-07-08T16:26:09.569706+00:00",
+  "generated_at": "2026-07-08T16:33:40.052276+00:00",
   "method": "latest snapshot per UTC day, diffed against prior UTC day close",
   "rolling_window_delta_keys": [
     "homebrew_installs_365d",
@@ -218,16 +218,16 @@
       "snapshot_at": "2026-07-07T09:59:58.648423+00:00"
     },
     {
-      "aggregate_distribution_delta": 1898,
+      "aggregate_distribution_delta": 1904,
       "counters": {
         "crates_downloads": 6387,
         "forks": 4801,
-        "ghcr_downloads": 366955,
-        "homebrew_installs_365d": 7536,
+        "ghcr_downloads": 366959,
+        "homebrew_installs_365d": 7537,
         "issues_opened_7d": 76,
         "open_issues": 489,
         "prs_merged_7d": 144,
-        "release_downloads": 105477,
+        "release_downloads": 105479,
         "repo_clones_14d": 68984,
         "repo_views_14d": 34661,
         "stars": 32196,
@@ -237,18 +237,18 @@
       "deltas": {
         "crates_downloads": 15,
         "forks": 4,
-        "ghcr_downloads": 1181,
-        "homebrew_installs_365d": 3,
+        "ghcr_downloads": 1185,
+        "homebrew_installs_365d": 4,
         "issues_opened_7d": 2,
         "open_issues": 9,
         "prs_merged_7d": -5,
-        "release_downloads": 702,
+        "release_downloads": 704,
         "repo_clones_14d": -1480,
         "repo_views_14d": -948,
         "stars": 22,
         "watchers": 2
       },
-      "snapshot_at": "2026-07-08T16:26:09.569706+00:00"
+      "snapshot_at": "2026-07-08T16:33:40.052276+00:00"
     }
   ],
   "source": "data/snapshots"

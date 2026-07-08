@@ -11,6 +11,7 @@ import datetime as dt
 import html
 import json
 import re
+import sqlite3
 import subprocess
 import urllib.error
 import urllib.parse
@@ -26,6 +27,7 @@ SNAPSHOT_DIR = DATA_DIR / "snapshots"
 INDEX_PATH = ROOT / "index.html"
 LATEST_PATH = DATA_DIR / "latest.json"
 DAILY_PATH = DATA_DIR / "daily.json"
+DATABASE_PATH = DATA_DIR / "metrics.sqlite"
 NOW = dt.datetime.now(dt.timezone.utc)
 OWNER = "zeroclaw-labs"
 REPO = "zeroclaw"
@@ -631,6 +633,402 @@ def daily_metrics(history: list[dict[str, Any]]) -> dict[str, Any]:
         "rolling_window_delta_keys": DAILY_ROLLING_KEYS,
         "rows": rows,
     }
+
+
+def json_blob(value: Any) -> str:
+    return json.dumps(value, sort_keys=True, separators=(",", ":"))
+
+
+def count_value(row: dict[str, Any] | None) -> int | None:
+    if not row:
+        return None
+    return as_int(row.get("count"))
+
+
+def load_snapshot_documents() -> list[tuple[Path, dict[str, Any]]]:
+    documents = []
+    for path in sorted(SNAPSHOT_DIR.glob("*.json")):
+        try:
+            documents.append((path, json.loads(path.read_text())))
+        except json.JSONDecodeError:
+            continue
+    return documents
+
+
+def build_sqlite_database(daily: dict[str, Any]) -> None:
+    tmp_path = DATABASE_PATH.with_suffix(".sqlite.tmp")
+    if tmp_path.exists():
+        tmp_path.unlink()
+
+    conn = sqlite3.connect(tmp_path)
+    conn.execute("PRAGMA journal_mode=OFF")
+    conn.execute("PRAGMA synchronous=OFF")
+    conn.executescript(
+        """
+        CREATE TABLE metadata (
+          key TEXT PRIMARY KEY,
+          value TEXT NOT NULL
+        );
+        CREATE TABLE snapshots (
+          snapshot_at TEXT PRIMARY KEY,
+          day TEXT NOT NULL,
+          repo TEXT,
+          path TEXT NOT NULL,
+          raw_json TEXT NOT NULL
+        );
+        CREATE TABLE source_status (
+          snapshot_at TEXT NOT NULL,
+          source TEXT NOT NULL,
+          ok INTEGER NOT NULL,
+          error TEXT,
+          data_json TEXT,
+          PRIMARY KEY (snapshot_at, source)
+        );
+        CREATE TABLE metric_points (
+          snapshot_at TEXT NOT NULL,
+          day TEXT NOT NULL,
+          metric TEXT NOT NULL,
+          value INTEGER,
+          PRIMARY KEY (snapshot_at, metric)
+        );
+        CREATE TABLE daily_metrics (
+          day TEXT PRIMARY KEY,
+          snapshot_at TEXT NOT NULL,
+          aggregate_distribution_delta INTEGER,
+          counters_json TEXT NOT NULL,
+          deltas_json TEXT NOT NULL
+        );
+        CREATE TABLE daily_deltas (
+          day TEXT NOT NULL,
+          metric TEXT NOT NULL,
+          value INTEGER,
+          PRIMARY KEY (day, metric)
+        );
+        CREATE TABLE release_totals (
+          snapshot_at TEXT NOT NULL,
+          tag TEXT NOT NULL,
+          published_at TEXT,
+          published_date TEXT,
+          prerelease INTEGER NOT NULL,
+          downloads INTEGER,
+          downloads_per_week REAL,
+          age_days REAL,
+          asset_count INTEGER,
+          mix_json TEXT,
+          PRIMARY KEY (snapshot_at, tag)
+        );
+        CREATE TABLE ghcr_daily_chart (
+          snapshot_at TEXT NOT NULL,
+          day TEXT NOT NULL,
+          downloads INTEGER,
+          PRIMARY KEY (snapshot_at, day)
+        );
+        CREATE TABLE ghcr_versions (
+          snapshot_at TEXT NOT NULL,
+          tags_json TEXT NOT NULL,
+          downloads INTEGER,
+          digest TEXT,
+          PRIMARY KEY (snapshot_at, tags_json, digest)
+        );
+        CREATE TABLE github_traffic (
+          snapshot_at TEXT NOT NULL,
+          kind TEXT NOT NULL,
+          timestamp TEXT NOT NULL,
+          count INTEGER,
+          uniques INTEGER,
+          PRIMARY KEY (snapshot_at, kind, timestamp)
+        );
+        CREATE TABLE homebrew_analytics (
+          snapshot_at TEXT NOT NULL,
+          kind TEXT NOT NULL,
+          period TEXT NOT NULL,
+          formula TEXT,
+          count INTEGER,
+          number INTEGER,
+          percent TEXT,
+          PRIMARY KEY (snapshot_at, kind, period)
+        );
+        CREATE TABLE crates (
+          snapshot_at TEXT NOT NULL,
+          name TEXT NOT NULL,
+          version TEXT,
+          downloads INTEGER,
+          recent_downloads INTEGER,
+          last_7_downloads INTEGER,
+          last_30_downloads INTEGER,
+          last_90_downloads INTEGER,
+          latest_daily_date TEXT,
+          description TEXT,
+          repository TEXT,
+          PRIMARY KEY (snapshot_at, name)
+        );
+        CREATE TABLE aur_packages (
+          snapshot_at TEXT NOT NULL,
+          name TEXT NOT NULL,
+          version TEXT,
+          votes INTEGER,
+          popularity REAL,
+          maintainer TEXT,
+          raw_json TEXT NOT NULL,
+          PRIMARY KEY (snapshot_at, name)
+        );
+        CREATE TABLE scoop_metrics (
+          snapshot_at TEXT NOT NULL,
+          metric TEXT NOT NULL,
+          value TEXT,
+          PRIMARY KEY (snapshot_at, metric)
+        );
+        CREATE TABLE docker_hub_results (
+          snapshot_at TEXT NOT NULL,
+          repo_name TEXT NOT NULL,
+          pull_count INTEGER,
+          star_count INTEGER,
+          description TEXT,
+          raw_json TEXT NOT NULL,
+          PRIMARY KEY (snapshot_at, repo_name)
+        );
+        CREATE INDEX idx_metric_points_metric_day ON metric_points(metric, day);
+        CREATE INDEX idx_daily_deltas_metric_day ON daily_deltas(metric, day);
+        CREATE INDEX idx_release_totals_tag ON release_totals(tag, snapshot_at);
+        """
+    )
+
+    conn.executemany(
+        "INSERT INTO metadata(key, value) VALUES (?, ?)",
+        [
+            ("generated_at", NOW.isoformat()),
+            ("repo", FULL_REPO),
+            ("source", "data/snapshots"),
+            ("method", "derived from immutable JSON snapshots"),
+        ],
+    )
+
+    source_names = ["github_repo", "releases", "ghcr", "homebrew", "aur", "crates_io", "scoop", "docker_hub"]
+    for path, snapshot in load_snapshot_documents():
+        generated_at = snapshot.get("generated_at")
+        if not generated_at:
+            continue
+        day = snapshot_point(snapshot)["day"]
+        conn.execute(
+            "INSERT INTO snapshots(snapshot_at, day, repo, path, raw_json) VALUES (?, ?, ?, ?, ?)",
+            (generated_at, day, snapshot.get("repo"), str(path.relative_to(ROOT)), json_blob(snapshot)),
+        )
+
+        for source in source_names:
+            wrapped = snapshot.get(source, {})
+            if isinstance(wrapped, dict):
+                conn.execute(
+                    """
+                    INSERT INTO source_status(snapshot_at, source, ok, error, data_json)
+                    VALUES (?, ?, ?, ?, ?)
+                    """,
+                    (
+                        generated_at,
+                        source,
+                        1 if wrapped.get("ok") else 0,
+                        wrapped.get("error"),
+                        json_blob(wrapped.get("data")) if "data" in wrapped else None,
+                    ),
+                )
+
+        point = snapshot_point(snapshot)
+        for metric_name, value in point.items():
+            if metric_name in {"generated_at", "day"}:
+                continue
+            int_value = as_int(value)
+            if int_value is not None:
+                conn.execute(
+                    "INSERT INTO metric_points(snapshot_at, day, metric, value) VALUES (?, ?, ?, ?)",
+                    (generated_at, day, metric_name, int_value),
+                )
+
+        for row in release_rows_from_snapshot(snapshot):
+            conn.execute(
+                """
+                INSERT INTO release_totals(
+                  snapshot_at, tag, published_at, published_date, prerelease,
+                  downloads, downloads_per_week, age_days, asset_count, mix_json
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    generated_at,
+                    row.get("tag"),
+                    row.get("published_at"),
+                    row.get("published_date"),
+                    1 if row.get("prerelease") else 0,
+                    as_int(row.get("downloads")),
+                    row.get("downloads_per_week"),
+                    row.get("age_days"),
+                    as_int(row.get("asset_count")),
+                    json_blob(row.get("mix", {})),
+                ),
+            )
+
+        ghcr = data_for(snapshot, "ghcr")
+        for row in ghcr.get("last_30_daily", []):
+            conn.execute(
+                "INSERT OR REPLACE INTO ghcr_daily_chart(snapshot_at, day, downloads) VALUES (?, ?, ?)",
+                (generated_at, row.get("date"), as_int(row.get("downloads"))),
+            )
+        for row in ghcr.get("visible_versions", []):
+            conn.execute(
+                "INSERT OR REPLACE INTO ghcr_versions(snapshot_at, tags_json, downloads, digest) VALUES (?, ?, ?, ?)",
+                (generated_at, json_blob(row.get("tags", [])), as_int(row.get("downloads")), row.get("digest")),
+            )
+
+        github = data_for(snapshot, "github_repo")
+        traffic = github.get("traffic", {})
+        for kind, rows in [("views", traffic.get("views_daily", [])), ("clones", traffic.get("clones_daily", []))]:
+            for row in rows:
+                conn.execute(
+                    "INSERT OR REPLACE INTO github_traffic(snapshot_at, kind, timestamp, count, uniques) VALUES (?, ?, ?, ?, ?)",
+                    (
+                        generated_at,
+                        kind,
+                        row.get("timestamp"),
+                        as_int(row.get("count")),
+                        as_int(row.get("uniques")),
+                    ),
+                )
+
+        homebrew = data_for(snapshot, "homebrew")
+        for kind in ["install", "install_on_request"]:
+            for period, row in (homebrew.get(kind) or {}).items():
+                conn.execute(
+                    """
+                    INSERT OR REPLACE INTO homebrew_analytics(snapshot_at, kind, period, formula, count, number, percent)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        generated_at,
+                        kind,
+                        period,
+                        row.get("formula"),
+                        count_value(row),
+                        as_int(row.get("number")),
+                        row.get("percent"),
+                    ),
+                )
+        build_error = homebrew.get("build_error_30d")
+        if build_error:
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO homebrew_analytics(snapshot_at, kind, period, formula, count, number, percent)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    generated_at,
+                    "build_error",
+                    "30d",
+                    build_error.get("formula"),
+                    count_value(build_error),
+                    as_int(build_error.get("number")),
+                    build_error.get("percent"),
+                ),
+            )
+
+        for row in data_for(snapshot, "crates_io").get("crates", []):
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO crates(
+                  snapshot_at, name, version, downloads, recent_downloads,
+                  last_7_downloads, last_30_downloads, last_90_downloads,
+                  latest_daily_date, description, repository
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    generated_at,
+                    row.get("name"),
+                    row.get("max_version"),
+                    as_int(row.get("downloads")),
+                    as_int(row.get("recent_downloads")),
+                    as_int(row.get("last_7_downloads")),
+                    as_int(row.get("last_30_downloads")),
+                    as_int(row.get("last_90_downloads")),
+                    row.get("latest_daily_date"),
+                    row.get("description"),
+                    row.get("repository"),
+                ),
+            )
+
+        for row in data_for(snapshot, "aur").get("packages", []):
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO aur_packages(snapshot_at, name, version, votes, popularity, maintainer, raw_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    generated_at,
+                    row.get("Name"),
+                    row.get("Version"),
+                    as_int(row.get("NumVotes")),
+                    row.get("Popularity"),
+                    row.get("Maintainer"),
+                    json_blob(row),
+                ),
+            )
+
+        scoop = data_for(snapshot, "scoop")
+        for metric_name, value in [
+            ("manifest_version", scoop.get("manifest_version")),
+            ("download_url", scoop.get("download_url")),
+            ("repo_stars", scoop.get("repo", {}).get("stars")),
+            ("repo_forks", scoop.get("repo", {}).get("forks")),
+            ("traffic_views_14d", scoop.get("traffic", {}).get("views_14d")),
+            ("traffic_clones_14d", scoop.get("traffic", {}).get("clones_14d")),
+        ]:
+            if value is not None:
+                conn.execute(
+                    "INSERT OR REPLACE INTO scoop_metrics(snapshot_at, metric, value) VALUES (?, ?, ?)",
+                    (generated_at, metric_name, str(value)),
+                )
+
+        for row in data_for(snapshot, "docker_hub").get("top_community_results", []):
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO docker_hub_results(snapshot_at, repo_name, pull_count, star_count, description, raw_json)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    generated_at,
+                    row.get("repo_name"),
+                    as_int(row.get("pull_count")),
+                    as_int(row.get("star_count")),
+                    row.get("short_description"),
+                    json_blob(row),
+                ),
+            )
+
+    for row in daily.get("rows", []):
+        conn.execute(
+            """
+            INSERT OR REPLACE INTO daily_metrics(day, snapshot_at, aggregate_distribution_delta, counters_json, deltas_json)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                row["day"],
+                row["snapshot_at"],
+                as_int(row.get("aggregate_distribution_delta")),
+                json_blob(row.get("counters", {})),
+                json_blob(row.get("deltas", {})),
+            ),
+        )
+        for metric_name, value in row.get("deltas", {}).items():
+            conn.execute(
+                "INSERT OR REPLACE INTO daily_deltas(day, metric, value) VALUES (?, ?, ?)",
+                (row["day"], metric_name, as_int(value)),
+            )
+        conn.execute(
+            "INSERT OR REPLACE INTO daily_deltas(day, metric, value) VALUES (?, ?, ?)",
+            (row["day"], "aggregate_distribution_delta", as_int(row.get("aggregate_distribution_delta"))),
+        )
+
+    conn.commit()
+    conn.execute("VACUUM")
+    conn.close()
+    tmp_path.replace(DATABASE_PATH)
 
 
 def weekly_observed_release_rate(
@@ -1266,10 +1664,11 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         <h2>Recommended Permanent Home</h2>
         <p class="muted">Keep snapshots separate from source code</p>
       </div>
-      <p>This repository is the durable home for ZeroClaw metrics. The collector runs from <code>scripts/build_dashboard.py</code>, writes immutable snapshots under <code>data/snapshots/</code>, refreshes <code>data/latest.json</code>, and publishes this static <code>index.html</code> through GitHub Pages. The main application repository should link here rather than storing metrics snapshots in product source.</p>
+      <p>This repository is the durable home for ZeroClaw metrics. The collector runs from <code>scripts/build_dashboard.py</code>, writes immutable snapshots under <code>data/snapshots/</code>, refreshes <code>data/latest.json</code>, derives <code>data/daily.json</code> and <code>data/metrics.sqlite</code>, and publishes this static <code>index.html</code> through GitHub Pages. The main application repository should link here rather than storing metrics snapshots in product source.</p>
       <div>
         <span class="pill">Collector: scripts/metrics</span>
         <span class="pill">Snapshots: separate metrics store</span>
+        <span class="pill">SQLite: data/metrics.sqlite</span>
         <span class="pill">Dashboard: GitHub Pages /metrics</span>
         <span class="pill">Docs link: maintainer docs</span>
       </div>
@@ -1284,7 +1683,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     </section>
   </main>
   <footer>
-    Source snapshot: <code>data/latest.json</code>. The live platforms remain canonical; this dashboard is a point-in-time operational view.
+    Source snapshot: <code>data/latest.json</code>. Daily diffs: <code>data/daily.json</code>. Query database: <code>data/metrics.sqlite</code>. The live platforms remain canonical; this dashboard is a point-in-time operational view.
   </footer>
 </body>
 </html>
@@ -1317,7 +1716,9 @@ def main() -> int:
     snapshot_name = NOW.isoformat(timespec="seconds").replace(":", "-").replace("+", "-") + ".json"
     (SNAPSHOT_DIR / snapshot_name).write_text(snapshot_text)
     LATEST_PATH.write_text(snapshot_text)
-    DAILY_PATH.write_text(json.dumps(daily_metrics(load_snapshot_history()), indent=2, sort_keys=True) + "\n")
+    daily = daily_metrics(load_snapshot_history())
+    DAILY_PATH.write_text(json.dumps(daily, indent=2, sort_keys=True) + "\n")
+    build_sqlite_database(daily)
     INDEX_PATH.write_text(render_dashboard(snapshot))
     print(INDEX_PATH)
     return 0
