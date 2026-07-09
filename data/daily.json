@@ -2,6 +2,8 @@
   "cumulative_delta_keys": [
     "ghcr_downloads",
     "release_downloads",
+    "release_payload_downloads",
+    "release_bootstrap_downloads",
     "crates_downloads",
     "stars",
     "forks",
@@ -9,7 +11,7 @@
     "open_issues"
   ],
   "day_boundary": "UTC",
-  "generated_at": "2026-07-08T16:33:40.052276+00:00",
+  "generated_at": "2026-07-09T00:05:40.752275+00:00",
   "method": "latest snapshot per UTC day, diffed against prior UTC day close",
   "rolling_window_delta_keys": [
     "homebrew_installs_365d",
@@ -29,7 +31,9 @@
         "issues_opened_7d": 82,
         "open_issues": 434,
         "prs_merged_7d": 236,
+        "release_bootstrap_downloads": 2142,
         "release_downloads": 102609,
+        "release_payload_downloads": 100467,
         "repo_clones_14d": 67219,
         "repo_views_14d": 38739,
         "stars": 32119,
@@ -44,7 +48,9 @@
         "issues_opened_7d": null,
         "open_issues": null,
         "prs_merged_7d": null,
+        "release_bootstrap_downloads": null,
         "release_downloads": null,
+        "release_payload_downloads": null,
         "repo_clones_14d": null,
         "repo_views_14d": null,
         "stars": null,
@@ -53,7 +59,7 @@
       "snapshot_at": "2026-07-02T22:22:59.901986+00:00"
     },
     {
-      "aggregate_distribution_delta": 729,
+      "aggregate_distribution_delta": 727,
       "counters": {
         "crates_downloads": 6341,
         "forks": 4792,
@@ -62,7 +68,9 @@
         "issues_opened_7d": 85,
         "open_issues": 446,
         "prs_merged_7d": 213,
+        "release_bootstrap_downloads": 2144,
         "release_downloads": 102840,
+        "release_payload_downloads": 100696,
         "repo_clones_14d": 67814,
         "repo_views_14d": 38071,
         "stars": 32126,
@@ -77,7 +85,9 @@
         "issues_opened_7d": 3,
         "open_issues": 12,
         "prs_merged_7d": -23,
+        "release_bootstrap_downloads": 2,
         "release_downloads": 231,
+        "release_payload_downloads": 229,
         "repo_clones_14d": 595,
         "repo_views_14d": -668,
         "stars": 7,
@@ -86,7 +96,7 @@
       "snapshot_at": "2026-07-03T09:34:41.764411+00:00"
     },
     {
-      "aggregate_distribution_delta": 1948,
+      "aggregate_distribution_delta": 1945,
       "counters": {
         "crates_downloads": 6350,
         "forks": 4796,
@@ -95,7 +105,9 @@
         "issues_opened_7d": 83,
         "open_issues": 463,
         "prs_merged_7d": 196,
+        "release_bootstrap_downloads": 2147,
         "release_downloads": 103479,
+        "release_payload_downloads": 101332,
         "repo_clones_14d": 70098,
         "repo_views_14d": 38077,
         "stars": 32149,
@@ -110,7 +122,9 @@
         "issues_opened_7d": -2,
         "open_issues": 17,
         "prs_merged_7d": -17,
+        "release_bootstrap_downloads": 3,
         "release_downloads": 639,
+        "release_payload_downloads": 636,
         "repo_clones_14d": 2284,
         "repo_views_14d": 6,
         "stars": 23,
@@ -119,7 +133,7 @@
       "snapshot_at": "2026-07-04T15:19:45.024484+00:00"
     },
     {
-      "aggregate_distribution_delta": 1065,
+      "aggregate_distribution_delta": 1063,
       "counters": {
         "crates_downloads": 6352,
         "forks": 4793,
@@ -128,7 +142,9 @@
         "issues_opened_7d": 72,
         "open_issues": 470,
         "prs_merged_7d": 199,
+        "release_bootstrap_downloads": 2149,
         "release_downloads": 103788,
+        "release_payload_downloads": 101639,
         "repo_clones_14d": 71623,
         "repo_views_14d": 37856,
         "stars": 32152,
@@ -143,7 +159,9 @@
         "issues_opened_7d": -11,
         "open_issues": 7,
         "prs_merged_7d": 3,
+        "release_bootstrap_downloads": 2,
         "release_downloads": 309,
+        "release_payload_downloads": 307,
         "repo_clones_14d": 1525,
         "repo_views_14d": -221,
         "stars": 3,
@@ -152,7 +170,7 @@
       "snapshot_at": "2026-07-05T09:22:13.719837+00:00"
     },
     {
-      "aggregate_distribution_delta": 1711,
+      "aggregate_distribution_delta": 1704,
       "counters": {
         "crates_downloads": 6363,
         "forks": 4793,
@@ -161,7 +179,9 @@
         "issues_opened_7d": 66,
         "open_issues": 469,
         "prs_merged_7d": 177,
+        "release_bootstrap_downloads": 2156,
         "release_downloads": 104294,
+        "release_payload_downloads": 102138,
         "repo_clones_14d": 70308,
         "repo_views_14d": 37075,
         "stars": 32165,
@@ -176,7 +196,9 @@
         "issues_opened_7d": -6,
         "open_issues": -1,
         "prs_merged_7d": -22,
+        "release_bootstrap_downloads": 7,
         "release_downloads": 506,
+        "release_payload_downloads": 499,
         "repo_clones_14d": -1315,
         "repo_views_14d": -781,
         "stars": 13,
@@ -185,7 +207,7 @@
       "snapshot_at": "2026-07-06T11:01:50.960835+00:00"
     },
     {
-      "aggregate_distribution_delta": 1498,
+      "aggregate_distribution_delta": 1485,
       "counters": {
         "crates_downloads": 6372,
         "forks": 4797,
@@ -194,7 +216,9 @@
         "issues_opened_7d": 74,
         "open_issues": 480,
         "prs_merged_7d": 149,
+        "release_bootstrap_downloads": 2169,
         "release_downloads": 104775,
+        "release_payload_downloads": 102606,
         "repo_clones_14d": 70464,
         "repo_views_14d": 35609,
         "stars": 32174,
@@ -209,7 +233,9 @@
         "issues_opened_7d": 8,
         "open_issues": 11,
         "prs_merged_7d": -28,
+        "release_bootstrap_downloads": 13,
         "release_downloads": 481,
+        "release_payload_downloads": 468,
         "repo_clones_14d": 156,
         "repo_views_14d": -1466,
         "stars": 9,
@@ -218,7 +244,7 @@
       "snapshot_at": "2026-07-07T09:59:58.648423+00:00"
     },
     {
-      "aggregate_distribution_delta": 1904,
+      "aggregate_distribution_delta": 1892,
       "counters": {
         "crates_downloads": 6387,
         "forks": 4801,
@@ -227,7 +253,9 @@
         "issues_opened_7d": 76,
         "open_issues": 489,
         "prs_merged_7d": 144,
+        "release_bootstrap_downloads": 2181,
         "release_downloads": 105479,
+        "release_payload_downloads": 103298,
         "repo_clones_14d": 68984,
         "repo_views_14d": 34661,
         "stars": 32196,
@@ -242,13 +270,52 @@
         "issues_opened_7d": 2,
         "open_issues": 9,
         "prs_merged_7d": -5,
+        "release_bootstrap_downloads": 12,
         "release_downloads": 704,
+        "release_payload_downloads": 692,
         "repo_clones_14d": -1480,
         "repo_views_14d": -948,
         "stars": 22,
         "watchers": 2
       },
       "snapshot_at": "2026-07-08T16:33:40.052276+00:00"
+    },
+    {
+      "aggregate_distribution_delta": 466,
+      "counters": {
+        "crates_downloads": 6390,
+        "forks": 4801,
+        "ghcr_downloads": 367297,
+        "homebrew_installs_365d": 7537,
+        "issues_opened_7d": 69,
+        "open_issues": 467,
+        "prs_merged_7d": 149,
+        "release_bootstrap_downloads": 2182,
+        "release_downloads": 105605,
+        "release_payload_downloads": 103423,
+        "repo_clones_14d": 68984,
+        "repo_views_14d": 34661,
+        "stars": 32200,
+        "watchers": 79
+      },
+      "day": "2026-07-09",
+      "deltas": {
+        "crates_downloads": 3,
+        "forks": 0,
+        "ghcr_downloads": 338,
+        "homebrew_installs_365d": 0,
+        "issues_opened_7d": -7,
+        "open_issues": -22,
+        "prs_merged_7d": 5,
+        "release_bootstrap_downloads": 1,
+        "release_downloads": 126,
+        "release_payload_downloads": 125,
+        "repo_clones_14d": 0,
+        "repo_views_14d": 0,
+        "stars": 4,
+        "watchers": 0
+      },
+      "snapshot_at": "2026-07-09T00:05:40.752275+00:00"
     }
   ],
   "source": "data/snapshots"

@@ -81,6 +81,11 @@ back to this repository, but it is not enough for all upstream ZeroClaw metrics.
   because REST package objects omit those fields.
 - GitHub release downloads are cumulative per asset; downloads/week is an
   average since release publication unless computed from stored snapshots.
+- `install.sh` is tracked as a bootstrap release asset, not a payload install.
+  The default source-install path clones and builds the repository, so GitHub
+  repo clone traffic is the better proxy for that path.
+- Distribution deltas exclude `install.sh` and include prebuilt release payload
+  downloads instead, alongside GHCR and crates.io.
 - Release velocity comparisons use stored snapshots for observed first-21-day
   and latest-stable windows. Windows that predate this repository's snapshots
   are intentionally shown as unavailable instead of inferred.

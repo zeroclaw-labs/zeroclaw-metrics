@@ -110,6 +110,10 @@ def asset_category(name: str) -> str:
     return "Other installable"
 
 
+def is_payload_asset(name: str) -> bool:
+    return is_installable_asset(name) and name != "install.sh"
+
+
 def collect_releases() -> dict[str, Any]:
     releases = gh_api_paginated(f"repos/{FULL_REPO}/releases")
     rows: list[dict[str, Any]] = []
@@ -119,7 +123,10 @@ def collect_releases() -> dict[str, Any]:
         published_at = parse_iso(release["published_at"])
         age_days = max((NOW - published_at).total_seconds() / 86400, 1 / 24)
         installable = [a for a in release.get("assets", []) if is_installable_asset(a["name"])]
+        payload_assets = [a for a in installable if is_payload_asset(a["name"])]
         total = sum(int(a["download_count"]) for a in installable)
+        payload_total = sum(int(a["download_count"]) for a in payload_assets)
+        bootstrap_total = sum(int(a["download_count"]) for a in installable if a["name"] == "install.sh")
         if not total:
             continue
 
@@ -138,8 +145,11 @@ def collect_releases() -> dict[str, Any]:
                 "prerelease": bool(release["prerelease"]),
                 "asset_count": len(installable),
                 "downloads": total,
+                "payload_downloads": payload_total,
+                "bootstrap_downloads": bootstrap_total,
                 "age_days": age_days,
                 "downloads_per_week": total / (age_days / 7),
+                "payload_downloads_per_week": payload_total / (age_days / 7),
                 "mix": dict(sorted(mix.items(), key=lambda item: item[1], reverse=True)),
             }
         )
@@ -152,6 +162,8 @@ def collect_releases() -> dict[str, Any]:
         "release_count": len(releases),
         "with_installable_downloads": len(rows),
         "installable_downloads_total": sum(row["downloads"] for row in rows),
+        "payload_downloads_total": sum(row["payload_downloads"] for row in rows),
+        "bootstrap_downloads_total": sum(row["bootstrap_downloads"] for row in rows),
         "stable_downloads_total": sum(row["downloads"] for row in rows if not row["prerelease"]),
         "prerelease_downloads_total": sum(row["downloads"] for row in rows if row["prerelease"]),
         "top_by_rate": top_by_rate[:15],
@@ -460,6 +472,55 @@ def first_crate_downloads(crates_data: dict[str, Any], name: str) -> int | None:
     return None
 
 
+def release_bootstrap_downloads(row: dict[str, Any]) -> int | None:
+    explicit = as_int(row.get("bootstrap_downloads"))
+    if explicit is not None:
+        return explicit
+    mix = row.get("mix") if isinstance(row.get("mix"), dict) else {}
+    return as_int(mix.get("Install script"))
+
+
+def release_payload_downloads(row: dict[str, Any]) -> int | None:
+    explicit = as_int(row.get("payload_downloads"))
+    if explicit is not None:
+        return explicit
+    total = as_int(row.get("downloads"))
+    bootstrap = release_bootstrap_downloads(row)
+    if total is None:
+        return None
+    return total - (bootstrap or 0)
+
+
+def release_payload_rate(row: dict[str, Any]) -> float | None:
+    explicit = row.get("payload_downloads_per_week")
+    if isinstance(explicit, int | float):
+        return float(explicit)
+    payload = release_payload_downloads(row)
+    age_days = row.get("age_days")
+    if payload is None or not isinstance(age_days, int | float) or age_days <= 0:
+        return None
+    return payload / (age_days / 7)
+
+
+def release_payload_total(releases: dict[str, Any]) -> int | None:
+    explicit = as_int(releases.get("payload_downloads_total"))
+    if explicit is not None:
+        return explicit
+    total = as_int(releases.get("installable_downloads_total"))
+    bootstrap = release_bootstrap_total(releases)
+    if total is None:
+        return None
+    return total - (bootstrap or 0)
+
+
+def release_bootstrap_total(releases: dict[str, Any]) -> int | None:
+    explicit = as_int(releases.get("bootstrap_downloads_total"))
+    if explicit is not None:
+        return explicit
+    asset_totals = releases.get("asset_totals") if isinstance(releases.get("asset_totals"), dict) else {}
+    return as_int(asset_totals.get("Install script"))
+
+
 def snapshot_point(snapshot: dict[str, Any]) -> dict[str, Any]:
     github = data_for(snapshot, "github_repo")
     ghcr = data_for(snapshot, "ghcr")
@@ -493,6 +554,8 @@ def snapshot_point(snapshot: dict[str, Any]) -> dict[str, Any]:
         "issues_opened_7d": as_int(github.get("pulse_7d", {}).get("issues_opened")),
         "ghcr_downloads": as_int(ghcr.get("total_downloads")),
         "release_downloads": as_int(releases.get("installable_downloads_total")),
+        "release_payload_downloads": release_payload_total(releases),
+        "release_bootstrap_downloads": release_bootstrap_total(releases),
         "stable_release_downloads": as_int(releases.get("stable_downloads_total")),
         "homebrew_installs_365d": homebrew_365d,
         "crates_downloads": crates_total if crates.get("crates") else None,
@@ -538,7 +601,7 @@ def load_release_history() -> dict[str, list[dict[str, Any]]]:
             history[row["tag"]].append(
                 {
                     "generated_at": generated_at,
-                    "downloads": as_int(row.get("downloads")),
+                    "downloads": release_payload_downloads(row),
                     "published_at": row["published_at"],
                     "prerelease": bool(row.get("prerelease")),
                 }
@@ -557,7 +620,7 @@ def history_delta(history: list[dict[str, Any]], key: str) -> tuple[int | None, 
 
 
 def observed_distribution_delta(history: list[dict[str, Any]], *, latest_interval: bool = False) -> int | None:
-    keys = ["ghcr_downloads", "release_downloads", "crates_downloads"]
+    keys = ["ghcr_downloads", "release_payload_downloads", "crates_downloads"]
     if len(history) < 2:
         return None
     previous = history[-2] if latest_interval else history[0]
@@ -571,6 +634,8 @@ def observed_distribution_delta(history: list[dict[str, Any]], *, latest_interva
 DAILY_CUMULATIVE_KEYS = [
     "ghcr_downloads",
     "release_downloads",
+    "release_payload_downloads",
+    "release_bootstrap_downloads",
     "crates_downloads",
     "stars",
     "forks",
@@ -609,7 +674,7 @@ def daily_metrics(history: list[dict[str, Any]]) -> dict[str, Any]:
             key: delta(as_int(point.get(key)), as_int(previous.get(key)))
             for key in [*DAILY_CUMULATIVE_KEYS, *DAILY_ROLLING_KEYS]
         }
-        distribution_delta_parts = [deltas.get(key) for key in ["ghcr_downloads", "release_downloads", "crates_downloads"]]
+        distribution_delta_parts = [deltas.get(key) for key in ["ghcr_downloads", "release_payload_downloads", "crates_downloads"]]
         distribution_delta = None
         if all(part is not None for part in distribution_delta_parts):
             distribution_delta = sum(part or 0 for part in distribution_delta_parts)
@@ -711,7 +776,10 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
           published_date TEXT,
           prerelease INTEGER NOT NULL,
           downloads INTEGER,
+          payload_downloads INTEGER,
+          bootstrap_downloads INTEGER,
           downloads_per_week REAL,
+          payload_downloads_per_week REAL,
           age_days REAL,
           asset_count INTEGER,
           mix_json TEXT,
@@ -847,9 +915,11 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
                 """
                 INSERT INTO release_totals(
                   snapshot_at, tag, published_at, published_date, prerelease,
-                  downloads, downloads_per_week, age_days, asset_count, mix_json
+                  downloads, payload_downloads, bootstrap_downloads,
+                  downloads_per_week, payload_downloads_per_week,
+                  age_days, asset_count, mix_json
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     generated_at,
@@ -858,7 +928,10 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
                     row.get("published_date"),
                     1 if row.get("prerelease") else 0,
                     as_int(row.get("downloads")),
+                    as_int(row.get("payload_downloads")),
+                    as_int(row.get("bootstrap_downloads")),
                     row.get("downloads_per_week"),
+                    row.get("payload_downloads_per_week"),
                     row.get("age_days"),
                     as_int(row.get("asset_count")),
                     json_blob(row.get("mix", {})),
@@ -1207,14 +1280,15 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     cards = [
         ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Total container package downloads"),
         ("GHCR 30d", compact(ghcr_data.get("last_30_downloads")), "Scraped from authenticated package chart"),
-        ("Release Assets", compact(release_data.get("installable_downloads_total")), "Installable GitHub release asset downloads"),
+        ("Prebuilt Payloads", compact(release_data.get("payload_downloads_total")), "Release assets excluding install.sh bootstrap"),
+        ("Bootstrap Script", compact(release_data.get("bootstrap_downloads_total")), "install.sh release asset downloads"),
         ("Homebrew 30d", metric((homebrew_data.get("install", {}).get("30d") or {}).get("count")), "Homebrew Core installs"),
         ("Repo Stars", compact(github_data.get("stars")), "GitHub repository stars"),
         ("Traffic 14d", compact(github_data.get("traffic", {}).get("views_14d")), "Repository page views"),
         ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
         ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
-        ("Observed Δ", signed(observed_delta_total), "GHCR + releases + crates since first snapshot"),
+        ("Observed Δ", signed(observed_delta_total), "GHCR + payload releases + crates since first snapshot"),
         ("Latest Δ", signed(observed_delta_latest), "Same cumulative counters since previous snapshot"),
         ("Stars Δ", signed(history_delta(history, "stars")[1]), "GitHub stars since first snapshot"),
     ]
@@ -1226,8 +1300,9 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
             row["tag"],
             row["published_date"],
             f"{row['age_days']:.1f}d",
-            row["downloads"],
-            f"{row['downloads_per_week']:.0f}",
+            release_payload_downloads(row),
+            release_bootstrap_downloads(row),
+            f"{release_payload_rate(row) or 0:.0f}",
             rate_cell(row["first_21d_observed"]),
             rate_cell(row["latest_stable_observed"]),
             coverage_cell(row["latest_stable_observed"]),
@@ -1290,7 +1365,8 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 
     cumulative_metrics = [
         ("GHCR downloads", "ghcr_downloads"),
-        ("GitHub release asset downloads", "release_downloads"),
+        ("Prebuilt release payload downloads", "release_payload_downloads"),
+        ("Bootstrap install.sh downloads", "release_bootstrap_downloads"),
         ("crates.io downloads", "crates_downloads"),
         ("Repo stars", "stars"),
         ("Repo forks", "forks"),
@@ -1309,8 +1385,13 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
                 point["day"],
                 point.get("ghcr_downloads"),
                 signed(delta(as_int(point.get("ghcr_downloads")), as_int(previous.get("ghcr_downloads")))),
-                point.get("release_downloads"),
-                signed(delta(as_int(point.get("release_downloads")), as_int(previous.get("release_downloads")))),
+                point.get("release_payload_downloads"),
+                signed(
+                    delta(
+                        as_int(point.get("release_payload_downloads")),
+                        as_int(previous.get("release_payload_downloads")),
+                    )
+                ),
                 point.get("stars"),
                 signed(delta(as_int(point.get("stars")), as_int(previous.get("stars")))),
             ]
@@ -1328,7 +1409,8 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
             row["day"],
             signed(row.get("aggregate_distribution_delta")),
             signed(row["deltas"].get("ghcr_downloads")),
-            signed(row["deltas"].get("release_downloads")),
+            signed(row["deltas"].get("release_payload_downloads")),
+            signed(row["deltas"].get("release_bootstrap_downloads")),
             signed(row["deltas"].get("crates_downloads")),
             signed(row["deltas"].get("stars")),
             signed(row["deltas"].get("forks")),
@@ -1560,7 +1642,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       <div class="split">
         <div>
           {table(["Metric", "Current", "Since first snapshot", "Latest interval"], growth_rows)}
-          <p class="callout">The observed distribution delta adds only cumulative counters: GHCR downloads, GitHub release asset downloads, and crates.io downloads. It is useful momentum, not unique users.</p>
+          <p class="callout">The observed distribution delta adds only cumulative counters for GHCR downloads, prebuilt release payload downloads, and crates.io downloads. It excludes <code>install.sh</code> because default source installs clone and build the repo, which is reflected in GitHub clone traffic.</p>
         </div>
         <div>
           <h3>GHCR cumulative downloads</h3>
@@ -1574,8 +1656,8 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       {table(["Metric", "Current window", "Change since first snapshot", "Latest interval"], rolling_metric_rows)}
       <h3 style="margin-top:16px;">Day-by-day diffs</h3>
       <p class="note">UTC day rows use the latest stored snapshot for each day, then diff cumulative counters against the prior day. Homebrew is included as a rolling-window change, not lifetime growth.</p>
-      {table(["UTC day", "Distribution Δ", "GHCR Δ", "Release Δ", "crates.io Δ", "Stars Δ", "Forks Δ", "Homebrew 365d Δ"], daily_diff_rows)}
-      {table(["Snapshot", "GHCR", "Δ", "Release assets", "Δ", "Stars", "Δ"], recent_history_rows)}
+      {table(["UTC day", "Distribution Δ", "GHCR Δ", "Payload Δ", "install.sh Δ", "crates.io Δ", "Stars Δ", "Forks Δ", "Homebrew 365d Δ"], daily_diff_rows)}
+      {table(["Snapshot", "GHCR", "Δ", "Payload assets", "Δ", "Stars", "Δ"], recent_history_rows)}
     </section>
 
     <section>
@@ -1597,13 +1679,13 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     <section>
       <div class="section-head">
         <h2>GitHub Release Assets</h2>
-        <p class="muted">Installable assets only; observed rates use stored snapshots instead of lifetime averages</p>
+        <p class="muted">Prebuilt payloads are separated from install.sh bootstrap downloads</p>
       </div>
       <div class="split">
-        <div>{table(["Release", "Published", "Age", "Downloads", "Lifetime avg/wk", "Observed first 21d/wk", "Observed latest-stable/wk", "Observed latest-stable delta"], release_rows)}</div>
+        <div>{table(["Release", "Published", "Age", "Payload downloads", "install.sh", "Payload avg/wk", "Observed first 21d/wk", "Observed latest-stable/wk", "Observed latest-stable delta"], release_rows)}</div>
         <div>{table(["Asset category", "Downloads", "Share"], mix_rows)}</div>
       </div>
-      <p class="callout">GitHub only exposes cumulative release asset counters. First-21-day and latest-stable rates are computed only from snapshots we actually stored, so older releases may show <code>n/a</code> rather than a fabricated historical rate.</p>
+      <p class="callout"><code>install.sh</code> is a bootstrap path: default installs clone and build the repo, while <code>--prebuilt</code> downloads release payload assets. Treat repo clone traffic as the better proxy for source-build installs. First-21-day and latest-stable rates are computed only from stored snapshots.</p>
     </section>
 
     <section>
@@ -1707,6 +1789,7 @@ def main() -> int:
         "notes": [
             "GHCR download counts are scraped from authenticated GitHub package HTML because REST objects omit those fields.",
             "GitHub release downloads are cumulative per asset; downloads/week is an average since release publication.",
+            "install.sh is a bootstrap asset; default source installs clone and build the repo, so clone traffic is the better proxy for that path.",
             "Traffic endpoints expose only the last 14 days.",
             "Scoop installs ultimately hit GitHub release assets, so avoid double-counting with release downloads.",
             "npm packages named zeroclaw/zerocode are unrelated and intentionally excluded.",
