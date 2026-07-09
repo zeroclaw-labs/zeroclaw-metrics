@@ -1505,8 +1505,6 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
             (parse_iso(latest_point["generated_at"]) - parse_iso(first_point["generated_at"])).total_seconds() / 86400,
             0.0,
         )
-    observed_delta_total = observed_distribution_delta(history)
-    observed_delta_latest = observed_distribution_delta(history, latest_interval=True)
     scorecard_available = bool(scorecard_data.get("available"))
     scorecard_value = metric(scorecard_data.get("score")) if scorecard_available else "n/a"
     scorecard_note = (
@@ -1528,9 +1526,6 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ("OpenSSF Scorecard", scorecard_value, scorecard_note),
         ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
-        ("Observed Δ", signed(observed_delta_total), "GHCR + payload releases + crates since first snapshot"),
-        ("Latest Δ", signed(observed_delta_latest), "Same cumulative counters since previous snapshot"),
-        ("Stars Δ", signed(history_delta(history, "stars")[1]), "GitHub stars since first snapshot"),
     ]
 
     current_release_rows = release_rows_from_snapshot(snapshot)
@@ -1642,60 +1637,18 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     ]
 
     cumulative_metrics = [
-        ("GHCR downloads", "ghcr_downloads"),
-        ("Prebuilt release payload downloads", "release_payload_downloads"),
-        ("Bootstrap install.sh downloads", "release_bootstrap_downloads"),
-        ("crates.io downloads", "crates_downloads"),
-        ("Repo stars", "stars"),
-        ("Repo forks", "forks"),
+        ("GHCR downloads", "ghcr_downloads", "Cumulative GitHub Container Registry package counter"),
+        ("Prebuilt release payload downloads", "release_payload_downloads", "Cumulative GitHub release payload asset counter"),
+        ("Bootstrap install.sh downloads", "release_bootstrap_downloads", "Cumulative bootstrap script release asset counter"),
+        ("crates.io downloads", "crates_downloads", "Cumulative crate download counters"),
+        ("Repo stars", "stars", "Current GitHub repository stars"),
+        ("Repo forks", "forks", "Current GitHub repository forks"),
     ]
     growth_rows = []
-    for label, key in cumulative_metrics:
-        current, since_first, latest_delta = history_delta(history, key)
-        growth_rows.append([label, current, signed(since_first), signed(latest_delta)])
+    for label, key, note in cumulative_metrics:
+        current = latest_point.get(key) if latest_point else None
+        growth_rows.append([label, current, note])
 
-    recent_history_rows = []
-    history_start = max(len(history) - 10, 0)
-    for index, point in enumerate(history[history_start:], start=history_start):
-        previous = history[index - 1] if index > 0 else {}
-        recent_history_rows.append(
-            [
-                point["day"],
-                point.get("ghcr_downloads"),
-                signed(delta(as_int(point.get("ghcr_downloads")), as_int(previous.get("ghcr_downloads")))),
-                point.get("release_payload_downloads"),
-                signed(
-                    delta(
-                        as_int(point.get("release_payload_downloads")),
-                        as_int(previous.get("release_payload_downloads")),
-                    )
-                ),
-                point.get("stars"),
-                signed(delta(as_int(point.get("stars")), as_int(previous.get("stars")))),
-            ]
-        )
-
-    latest_interval_rows = []
-    if len(history) >= 2:
-        previous = history[-2]
-        latest = history[-1]
-        for label, key in cumulative_metrics[:5]:
-            latest_interval_rows.append([label, signed(delta(as_int(latest.get(key)), as_int(previous.get(key))))])
-
-    daily_diff_rows = [
-        [
-            row["day"],
-            signed(row.get("aggregate_distribution_delta")),
-            signed(row["deltas"].get("ghcr_downloads")),
-            signed(row["deltas"].get("release_payload_downloads")),
-            signed(row["deltas"].get("release_bootstrap_downloads")),
-            signed(row["deltas"].get("crates_downloads")),
-            signed(row["deltas"].get("stars")),
-            signed(row["deltas"].get("forks")),
-            signed(row["deltas"].get("homebrew_installs_365d")),
-        ]
-        for row in daily["rows"][-14:]
-    ]
     clone_history_rows = [
         [
             row["day"],
@@ -1707,15 +1660,15 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     ]
 
     rolling_metric_rows = []
-    for label, key in [
-        ("Homebrew installs 365d", "homebrew_installs_365d"),
-        ("Repo views 14d", "repo_views_14d"),
-        ("Repo clones 14d", "repo_clones_14d"),
-        ("PRs merged 7d", "prs_merged_7d"),
-        ("Issues opened 7d", "issues_opened_7d"),
+    for label, key, note in [
+        ("Homebrew installs 365d", "homebrew_installs_365d", "Rolling 365-day Homebrew install events"),
+        ("Repo views 14d", "repo_views_14d", "Rolling 14-day GitHub repository views"),
+        ("Repo clones 14d", "repo_clones_14d", "Rolling 14-day GitHub repository clone events"),
+        ("PRs merged 7d", "prs_merged_7d", "Rolling 7-day merged pull requests"),
+        ("Issues opened 7d", "issues_opened_7d", "Rolling 7-day opened issues"),
     ]:
-        current, since_first, latest_delta = history_delta(history, key)
-        rolling_metric_rows.append([label, current, signed(since_first), signed(latest_delta)])
+        current = latest_point.get(key) if latest_point else None
+        rolling_metric_rows.append([label, current, note])
 
     methodology_rows = [
         ["GitHub stars/forks", "CHAOSS-style project popularity", "Cumulative", "GitHub repository metadata counters."],
@@ -1912,7 +1865,10 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     repo_clone_rows = github_data.get("traffic", {}).get("clones_daily", [])
 
     release_mix = release_data.get("asset_totals", {})
-    mix_rows = [[name, count, f"{count / max(sum(release_mix.values()), 1) * 100:.1f}%"] for name, count in release_mix.items()]
+    mix_rows = [
+        [name, count, f"{count / max(sum(release_mix.values()), 1) * 100:.1f}%"]
+        for name, count in sorted(release_mix.items(), key=lambda item: item[1], reverse=True)
+    ]
 
     error_banner = ""
     failed = [name for name, wrapped in snapshot.items() if isinstance(wrapped, dict) and wrapped.get("ok") is False]
@@ -1940,34 +1896,28 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     {error_banner}
     <div class="grid">{cards_html}</div>
 
-    <section>
-      <div class="section-head">
-        <h2>Aggregate Over Time</h2>
-        <p class="muted">Computed from {metric(len(history))} immutable snapshots in <code>data/snapshots/</code></p>
-      </div>
-      <div class="split">
-        <div>
-          {table(["Metric", "Current", "Since first snapshot", "Latest interval"], growth_rows)}
-          <p class="callout">The observed distribution delta adds only cumulative counters for GHCR downloads, prebuilt release payload downloads, and crates.io downloads. It excludes <code>install.sh</code> because default source installs clone and build the repo, which is reflected in GitHub clone traffic.</p>
-        </div>
-        <div>
-          <h3>GHCR cumulative downloads</h3>
-          {svg_line(history, date_key="day", value_key="ghcr_downloads")}
-          <h3 style="margin-top:16px;">Latest interval deltas</h3>
-          {table(["Metric", "Delta"], latest_interval_rows)}
-        </div>
-      </div>
-      <h3 style="margin-top:16px;">Rolling windows</h3>
-      <p class="note">Homebrew and GitHub traffic/pulse APIs expose rolling windows, not lifetime totals. Their changes show movement in the reported window.</p>
-      {table(["Metric", "Current window", "Change since first snapshot", "Latest interval"], rolling_metric_rows)}
-      <h3 style="margin-top:16px;">Observed clone history</h3>
-      <p class="note">GitHub does not expose lifetime clone totals. This table deduplicates the stored daily rows from the rolling 14-day traffic API, so the cumulative count starts at {html.escape(clone_first_day or "the first stored clone day")} and currently ends at {html.escape(clone_latest_day or "n/a")}. Daily uniques are not globally deduplicated.</p>
-      {table(["UTC day", "Clone events", "Daily unique cloners", "Observed cumulative"], clone_history_rows)}
-      <h3 style="margin-top:16px;">Day-by-day diffs</h3>
-      <p class="note">UTC day rows use the latest stored snapshot for each day, then diff cumulative counters against the prior day. Homebrew is included as a rolling-window change, not lifetime growth.</p>
-      {table(["UTC day", "Distribution Δ", "GHCR Δ", "Payload Δ", "install.sh Δ", "crates.io Δ", "Stars Δ", "Forks Δ", "Homebrew 365d Δ"], daily_diff_rows)}
-      {table(["Snapshot", "GHCR", "Δ", "Payload assets", "Δ", "Stars", "Δ"], recent_history_rows)}
-    </section>
+	    <section>
+	      <div class="section-head">
+	        <h2>Current Scale</h2>
+	        <p class="muted">Latest snapshot values from {metric(len(history))} immutable snapshots in <code>data/snapshots/</code></p>
+	      </div>
+	      <div class="split">
+	        <div>
+	          {table(["Metric", "Current", "Meaning"], growth_rows)}
+	          <p class="callout">Snapshot-to-snapshot change columns are intentionally excluded from the main dashboard because this tracking repository started recently and short-interval movement understates project scale. Raw day-by-day change rows remain available in <code>data/daily.json</code> and <code>data/metrics.sqlite</code>.</p>
+	        </div>
+	        <div>
+	          <h3>GHCR cumulative downloads</h3>
+	          {svg_line(history, date_key="day", value_key="ghcr_downloads")}
+	        </div>
+	      </div>
+	      <h3 style="margin-top:16px;">Rolling windows</h3>
+	      <p class="note">Homebrew and GitHub traffic/pulse APIs expose rolling windows, not lifetime totals. These rows show the latest reported window value only.</p>
+	      {table(["Metric", "Current window", "Window"], rolling_metric_rows)}
+	      <h3 style="margin-top:16px;">Observed clone history</h3>
+	      <p class="note">GitHub does not expose lifetime clone totals. This table deduplicates the stored daily rows from the rolling 14-day traffic API, so the cumulative count starts at {html.escape(clone_first_day or "the first stored clone day")} and currently ends at {html.escape(clone_latest_day or "n/a")}. Daily uniques are not globally deduplicated.</p>
+	      {table(["UTC day", "Clone events", "Daily unique cloners", "Observed cumulative"], clone_history_rows)}
+	    </section>
 
     <section>
       <div class="section-head">
@@ -1991,7 +1941,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         <p class="muted">Prebuilt payloads are separated from install.sh bootstrap downloads</p>
       </div>
       <div class="split">
-        <div>{table(["Release", "Published", "Age", "Payload downloads", "install.sh", "Payload avg/wk", "Observed first 21d/wk", "Observed latest-stable/wk", "Observed latest-stable delta"], release_rows)}</div>
+	        <div>{table(["Release", "Published", "Age", "Payload downloads", "install.sh", "Payload avg/wk", "Observed first 21d/wk", "Observed latest-stable/wk", "Observed latest-stable window"], release_rows)}</div>
         <div>{table(["Asset category", "Downloads", "Share"], mix_rows)}</div>
       </div>
       <p class="callout"><code>install.sh</code> is a bootstrap path: default installs clone and build the repo, while <code>--prebuilt</code> downloads release payload assets. Treat repo clone traffic as the better proxy for source-build installs. First-21-day and latest-stable rates are computed only from stored snapshots.</p>
