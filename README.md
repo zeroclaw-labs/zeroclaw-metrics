@@ -49,6 +49,14 @@ order by snapshot_at;
 select day, count, cumulative_count
 from observed_clone_history
 order by day;
+
+select snapshot_at, referrer, count, uniques
+from github_traffic_referrers
+order by snapshot_at desc, rank;
+
+select snapshot_at, available, score, date
+from openssf_scorecard
+order by snapshot_at desc;
 ```
 
 A remote ZeroClaw cron job can be used as an operational watchdog. It should
@@ -59,12 +67,68 @@ stale rather than maintaining a separate metrics store.
 
 - GitHub Releases asset download counters.
 - GitHub Container Registry package page download counters.
-- GitHub repo counters, traffic, search, commit, and contributor endpoints.
+- GitHub repo counters, traffic, referrer, popular-path, search, commit, and
+  contributor endpoints.
 - Homebrew Formulae analytics.
 - AUR RPC package metadata.
 - crates.io crate download endpoints.
 - Scoop bucket repository traffic.
 - Docker Hub search, used only to confirm no official Docker Hub image exists.
+- OpenSSF Scorecard API, when a published result is available for the main
+  repository.
+
+## Methodology
+
+This dashboard uses a snapshot-first model aligned with CHAOSS-style project
+health reporting. Raw platform responses are stored under `data/snapshots/`, and
+the dashboard, `data/daily.json`, and `data/metrics.sqlite` are regenerated from
+those snapshots.
+
+Open standards and external frameworks used for vocabulary:
+
+- CHAOSS-style project health categories for popularity, activity, adoption, and
+  responsiveness.
+- OpenSSF Scorecard for security posture, once the main repository publishes
+  Scorecard results.
+- GitHub REST traffic windows for repository views, clones, referrers, and
+  popular content.
+
+To publish OpenSSF Scorecard results for `zeroclaw-labs/zeroclaw`, add this
+workflow to the main repository:
+
+```yaml
+name: OpenSSF Scorecard
+
+on:
+  branch_protection_rule:
+  schedule:
+    - cron: "34 3 * * 2"
+  push:
+    branches: ["master"]
+
+jobs:
+  scorecard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+      checks: read
+      security-events: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: ossf/scorecard-action@v2.4.3
+        with:
+          results_file: scorecard-results.sarif
+          results_format: sarif
+          publish_results: true
+      - uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: scorecard-results.sarif
+```
 
 ## Token Setup
 
@@ -102,6 +166,10 @@ back to this repository, but it is not enough for all upstream ZeroClaw metrics.
   an all-time clone total. Observed clone history is a cumulative clone-event
   count built from stored daily traffic rows; it cannot backfill traffic before
   the first saved rows, and summed daily uniques are not globally unique users.
+- GitHub referrers and popular paths are top-10 rolling-window Insights metrics,
+  not complete attribution logs.
+- OpenSSF Scorecard is unavailable until `zeroclaw-labs/zeroclaw` publishes
+  Scorecard results with `publish_results: true`.
 - Do not add package-manager counts together as unique users. Homebrew, Scoop,
   installers, and release assets can overlap.
 - npm packages named `zeroclaw` or `zerocode` are unrelated and excluded.

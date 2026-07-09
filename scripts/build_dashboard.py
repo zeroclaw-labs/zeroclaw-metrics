@@ -33,6 +33,9 @@ OWNER = "zeroclaw-labs"
 REPO = "zeroclaw"
 FULL_REPO = f"{OWNER}/{REPO}"
 USER_AGENT = "zeroclaw-metrics-dashboard (https://github.com/zeroclaw-labs/zeroclaw)"
+SCORECARD_PROJECT = f"github.com/{FULL_REPO}"
+SCORECARD_API_URL = f"https://api.scorecard.dev/projects/{SCORECARD_PROJECT}"
+SCORECARD_VIEWER_URL = f"https://scorecard.dev/viewer/?uri={urllib.parse.quote(SCORECARD_PROJECT, safe='')}"
 
 
 def run(args: list[str], *, input_text: str | None = None) -> str:
@@ -236,6 +239,8 @@ def collect_github_repo() -> dict[str, Any]:
     repo = gh_api(f"repos/{FULL_REPO}")
     traffic_views = gh_api(f"repos/{FULL_REPO}/traffic/views?per=day")
     traffic_clones = gh_api(f"repos/{FULL_REPO}/traffic/clones?per=day")
+    traffic_referrers = gh_api(f"repos/{FULL_REPO}/traffic/popular/referrers")
+    traffic_paths = gh_api(f"repos/{FULL_REPO}/traffic/popular/paths")
     since = (NOW - dt.timedelta(days=7)).date().isoformat()
     commits = gh_api_paginated(f"repos/{FULL_REPO}/commits?sha=master&since={since}T00:00:00Z")
     contributor_stats = gh_api(f"repos/{FULL_REPO}/stats/contributors")
@@ -268,6 +273,8 @@ def collect_github_repo() -> dict[str, Any]:
             "clones_uniques_14d": traffic_clones["uniques"],
             "views_daily": traffic_views["views"],
             "clones_daily": traffic_clones["clones"],
+            "top_referrers": traffic_referrers,
+            "popular_paths": traffic_paths,
         },
         "pulse_7d": {
             "since": since,
@@ -279,6 +286,35 @@ def collect_github_repo() -> dict[str, Any]:
         },
         "commit_activity_latest_week": commit_activity[-1] if commit_activity else None,
         "top_contributors_latest_week": top_contributors,
+    }
+
+
+def collect_openssf_scorecard() -> dict[str, Any]:
+    try:
+        result = get_json(SCORECARD_API_URL)
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
+            return {
+                "available": False,
+                "api_url": SCORECARD_API_URL,
+                "viewer_url": SCORECARD_VIEWER_URL,
+                "publish_hint": "No published OpenSSF Scorecard result yet. Add scorecard-action with publish_results: true in zeroclaw-labs/zeroclaw.",
+            }
+        raise
+
+    checks = result.get("checks") or []
+    scored_checks = [check for check in checks if isinstance(check.get("score"), int | float)]
+    lowest_checks = sorted(scored_checks, key=lambda check: check["score"])[:8]
+    return {
+        "available": True,
+        "api_url": SCORECARD_API_URL,
+        "viewer_url": SCORECARD_VIEWER_URL,
+        "date": result.get("date"),
+        "repo": result.get("repo"),
+        "scorecard": result.get("scorecard"),
+        "score": result.get("score"),
+        "checks": checks,
+        "lowest_checks": lowest_checks,
     }
 
 
@@ -856,6 +892,43 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
           uniques INTEGER,
           PRIMARY KEY (snapshot_at, kind, timestamp)
         );
+        CREATE TABLE github_traffic_referrers (
+          snapshot_at TEXT NOT NULL,
+          rank INTEGER NOT NULL,
+          referrer TEXT NOT NULL,
+          count INTEGER,
+          uniques INTEGER,
+          PRIMARY KEY (snapshot_at, referrer)
+        );
+        CREATE TABLE github_traffic_paths (
+          snapshot_at TEXT NOT NULL,
+          rank INTEGER NOT NULL,
+          path TEXT NOT NULL,
+          title TEXT,
+          count INTEGER,
+          uniques INTEGER,
+          PRIMARY KEY (snapshot_at, path)
+        );
+        CREATE TABLE openssf_scorecard (
+          snapshot_at TEXT PRIMARY KEY,
+          available INTEGER NOT NULL,
+          score REAL,
+          date TEXT,
+          commit_sha TEXT,
+          scorecard_version TEXT,
+          api_url TEXT NOT NULL,
+          viewer_url TEXT NOT NULL,
+          raw_json TEXT NOT NULL
+        );
+        CREATE TABLE openssf_scorecard_checks (
+          snapshot_at TEXT NOT NULL,
+          name TEXT NOT NULL,
+          score REAL,
+          reason TEXT,
+          documentation_url TEXT,
+          details_json TEXT,
+          PRIMARY KEY (snapshot_at, name)
+        );
         CREATE TABLE homebrew_analytics (
           snapshot_at TEXT NOT NULL,
           kind TEXT NOT NULL,
@@ -921,7 +994,17 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
         ],
     )
 
-    source_names = ["github_repo", "releases", "ghcr", "homebrew", "aur", "crates_io", "scoop", "docker_hub"]
+    source_names = [
+        "github_repo",
+        "releases",
+        "ghcr",
+        "homebrew",
+        "aur",
+        "crates_io",
+        "scoop",
+        "docker_hub",
+        "openssf_scorecard",
+    ]
     for path, snapshot in load_snapshot_documents():
         generated_at = snapshot.get("generated_at")
         if not generated_at:
@@ -1012,6 +1095,78 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
                         row.get("timestamp"),
                         as_int(row.get("count")),
                         as_int(row.get("uniques")),
+                    ),
+                )
+        for rank, row in enumerate(traffic.get("top_referrers", []), start=1):
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO github_traffic_referrers(snapshot_at, rank, referrer, count, uniques)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (
+                    generated_at,
+                    rank,
+                    row.get("referrer"),
+                    as_int(row.get("count")),
+                    as_int(row.get("uniques")),
+                ),
+            )
+        for rank, row in enumerate(traffic.get("popular_paths", []), start=1):
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO github_traffic_paths(snapshot_at, rank, path, title, count, uniques)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    generated_at,
+                    rank,
+                    row.get("path"),
+                    row.get("title"),
+                    as_int(row.get("count")),
+                    as_int(row.get("uniques")),
+                ),
+            )
+
+        scorecard = data_for(snapshot, "openssf_scorecard")
+        if scorecard:
+            repo = scorecard.get("repo") if isinstance(scorecard.get("repo"), dict) else {}
+            scorecard_meta = scorecard.get("scorecard") if isinstance(scorecard.get("scorecard"), dict) else {}
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO openssf_scorecard(
+                  snapshot_at, available, score, date, commit_sha, scorecard_version,
+                  api_url, viewer_url, raw_json
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    generated_at,
+                    1 if scorecard.get("available") else 0,
+                    scorecard.get("score"),
+                    scorecard.get("date"),
+                    repo.get("commit"),
+                    scorecard_meta.get("version"),
+                    scorecard.get("api_url") or SCORECARD_API_URL,
+                    scorecard.get("viewer_url") or SCORECARD_VIEWER_URL,
+                    json_blob(scorecard),
+                ),
+            )
+            for row in scorecard.get("checks", []):
+                documentation = row.get("documentation") if isinstance(row.get("documentation"), dict) else {}
+                conn.execute(
+                    """
+                    INSERT OR REPLACE INTO openssf_scorecard_checks(
+                      snapshot_at, name, score, reason, documentation_url, details_json
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        generated_at,
+                        row.get("name"),
+                        row.get("score"),
+                        row.get("reason"),
+                        documentation.get("url"),
+                        json_blob(row.get("details")),
                     ),
                 )
 
@@ -1323,6 +1478,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     crates = snapshot["crates_io"]
     scoop = snapshot["scoop"]
     docker_hub = snapshot["docker_hub"]
+    openssf_scorecard = snapshot["openssf_scorecard"]
 
     release_data = releases["data"] if releases["ok"] else {}
     ghcr_data = ghcr["data"] if ghcr["ok"] else {}
@@ -1332,6 +1488,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     crates_data = crates["data"] if crates["ok"] else {}
     scoop_data = scoop["data"] if scoop["ok"] else {}
     docker_hub_data = docker_hub["data"] if docker_hub["ok"] else {}
+    scorecard_data = openssf_scorecard["data"] if openssf_scorecard["ok"] else {}
 
     history = load_snapshot_history()
     daily = daily_metrics(history)
@@ -1350,6 +1507,13 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         )
     observed_delta_total = observed_distribution_delta(history)
     observed_delta_latest = observed_distribution_delta(history, latest_interval=True)
+    scorecard_available = bool(scorecard_data.get("available"))
+    scorecard_value = metric(scorecard_data.get("score")) if scorecard_available else "n/a"
+    scorecard_note = (
+        f"OpenSSF scan from {str(scorecard_data.get('date', 'n/a'))[:10]}"
+        if scorecard_available
+        else "No published OpenSSF result yet"
+    )
 
     cards = [
         ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Total container package downloads"),
@@ -1361,6 +1525,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ("Traffic 14d", compact(github_data.get("traffic", {}).get("views_14d")), "Repository page views"),
         ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
         ("Observed Clones", compact(observed_clone_events), f"Clone events since {clone_first_day or 'first stored day'}"),
+        ("OpenSSF Scorecard", scorecard_value, scorecard_note),
         ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
         ("Observed Δ", signed(observed_delta_total), "GHCR + payload releases + crates since first snapshot"),
@@ -1432,6 +1597,44 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         [item["login"], item["last_week"], item["total"]]
         for item in github_data.get("top_contributors_latest_week", [])
     ]
+    traffic = github_data.get("traffic", {})
+    referrer_rows = [
+        [item.get("referrer"), item.get("count"), item.get("uniques")]
+        for item in traffic.get("top_referrers", [])[:10]
+    ]
+    popular_path_rows = [
+        [item.get("path"), item.get("title"), item.get("count"), item.get("uniques")]
+        for item in traffic.get("popular_paths", [])[:10]
+    ]
+
+    scorecard_repo = scorecard_data.get("repo") if isinstance(scorecard_data.get("repo"), dict) else {}
+    scorecard_meta = scorecard_data.get("scorecard") if isinstance(scorecard_data.get("scorecard"), dict) else {}
+    scorecard_rows = [
+        ["Status", "Published" if scorecard_available else "Not published"],
+        ["Score", scorecard_data.get("score") if scorecard_available else None],
+        ["Date", scorecard_data.get("date")],
+        ["Commit", (scorecard_repo.get("commit") or "")[:12] if scorecard_repo else None],
+        ["Scorecard version", scorecard_meta.get("version")],
+    ]
+    if not scorecard_available:
+        scorecard_rows.append(["Next step", scorecard_data.get("publish_hint")])
+    scorecard_check_rows = [
+        [item.get("name"), item.get("score"), item.get("reason")]
+        for item in scorecard_data.get("lowest_checks", [])
+    ]
+    if not scorecard_check_rows:
+        scorecard_check_rows = [["n/a", None, "No published checks yet"]]
+    if scorecard_available:
+        scorecard_callout = (
+            f'Published result: <a href="{html.escape(scorecard_data.get("viewer_url") or SCORECARD_VIEWER_URL)}">'
+            "OpenSSF Scorecard viewer</a>."
+        )
+    else:
+        scorecard_callout = (
+            "To publish this signal, add <code>ossf/scorecard-action</code> to "
+            "<code>zeroclaw-labs/zeroclaw</code> with <code>publish_results: true</code> "
+            "and <code>id-token: write</code>. Until then the public Scorecard API returns 404 for this repo."
+        )
 
     docker_rows = [
         [item["repo_name"], item["pull_count"], item["star_count"], item.get("short_description") or ""]
@@ -1514,6 +1717,17 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         current, since_first, latest_delta = history_delta(history, key)
         rolling_metric_rows.append([label, current, signed(since_first), signed(latest_delta)])
 
+    methodology_rows = [
+        ["GitHub stars/forks", "CHAOSS-style project popularity", "Cumulative", "GitHub repository metadata counters."],
+        ["GitHub views/clones", "Attention and source-install proxy", "Rolling 14d", "GitHub Insights traffic API; no lifetime clone/view total is exposed."],
+        ["Observed clone history", "Source-install adoption proxy", "Observed cumulative", "Deduped daily clone rows stored from the rolling GitHub traffic API."],
+        ["Referrers and paths", "Discovery channels", "Rolling top 10", "GitHub Insights top referrers and popular content for the recent traffic window."],
+        ["GHCR downloads", "Container distribution", "Cumulative plus chart window", "Authenticated package UI counters; REST package objects omit pulls."],
+        ["Release payload assets", "Binary distribution", "Cumulative", "GitHub release asset counters, excluding install.sh bootstrap downloads."],
+        ["Homebrew installs", "Package-manager adoption", "Rolling 30d/90d/365d", "Homebrew anonymous install analytics, not lifetime downloads."],
+        ["OpenSSF Scorecard", "Security posture", "Latest published result", "OpenSSF Scorecard API; requires the main repo to publish scorecard-action results."],
+    ]
+
     status_rows = [
         ["GitHub repo + traffic", "ok" if github["ok"] else github.get("error")],
         ["GitHub releases", "ok" if releases["ok"] else releases.get("error")],
@@ -1523,6 +1737,14 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ["crates.io", "ok" if crates["ok"] else crates.get("error")],
         ["Scoop", "ok" if scoop["ok"] else scoop.get("error")],
         ["Docker Hub search", "ok" if docker_hub["ok"] else docker_hub.get("error")],
+        [
+            "OpenSSF Scorecard",
+            (
+                "ok" if scorecard_available else "not published"
+            )
+            if openssf_scorecard["ok"]
+            else openssf_scorecard.get("error"),
+        ],
     ]
 
     css = """
@@ -1775,11 +1997,11 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       <p class="callout"><code>install.sh</code> is a bootstrap path: default installs clone and build the repo, while <code>--prebuilt</code> downloads release payload assets. Treat repo clone traffic as the better proxy for source-build installs. First-21-day and latest-stable rates are computed only from stored snapshots.</p>
     </section>
 
-    <section>
-      <div class="section-head">
-        <h2>Repository Activity</h2>
-        <p class="muted">Pulse-like window since {html.escape(str(pulse.get("since", "n/a")))}</p>
-      </div>
+	    <section>
+	      <div class="section-head">
+	        <h2>Repository Activity</h2>
+	        <p class="muted">Pulse-like window since {html.escape(str(pulse.get("since", "n/a")))}</p>
+	      </div>
       <div class="split">
         <div>
           <h3>Views</h3>
@@ -1788,12 +2010,33 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
           {svg_bars(repo_clone_rows, date_key="timestamp", value_key="count")}
           <p class="note">Views: {metric(github_data.get("traffic", {}).get("views_14d"))} total, {metric(github_data.get("traffic", {}).get("views_uniques_14d"))} unique. Clones: {metric(github_data.get("traffic", {}).get("clones_14d"))} total, {metric(github_data.get("traffic", {}).get("clones_uniques_14d"))} unique.</p>
         </div>
-        <div>
-          {table(["Pulse metric", "Count"], pulse_rows)}
-          {table(["Contributor", "Latest week commits", "Total commits"], contributor_rows)}
-        </div>
-      </div>
-    </section>
+	        <div>
+	          {table(["Pulse metric", "Count"], pulse_rows)}
+	          {table(["Contributor", "Latest week commits", "Total commits"], contributor_rows)}
+	        </div>
+	      </div>
+	      <h3 style="margin-top:16px;">Top referrers</h3>
+	      {table(["Referrer", "Views", "Unique visitors"], referrer_rows)}
+	      <h3 style="margin-top:16px;">Popular content</h3>
+	      {table(["Path", "Title", "Views", "Unique visitors"], popular_path_rows)}
+	    </section>
+
+	    <section>
+	      <div class="section-head">
+	        <h2>OpenSSF Scorecard</h2>
+	        <p class="muted">Security-health signal from the OpenSSF Scorecard API</p>
+	      </div>
+	      <div class="split">
+	        <div>
+	          {table(["Field", "Value"], scorecard_rows)}
+	          <p class="callout">{scorecard_callout}</p>
+	        </div>
+	        <div>
+	          <h3>Lowest checks</h3>
+	          {table(["Check", "Score", "Reason"], scorecard_check_rows)}
+	        </div>
+	      </div>
+	    </section>
 
     <section>
       <div class="section-head">
@@ -1830,10 +2073,10 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       {table(["Repository", "Pulls", "Stars", "Description"], docker_rows)}
     </section>
 
-    <section>
-      <div class="section-head">
-        <h2>Recommended Permanent Home</h2>
-        <p class="muted">Keep snapshots separate from source code</p>
+	    <section>
+	      <div class="section-head">
+	        <h2>Recommended Permanent Home</h2>
+	        <p class="muted">Keep snapshots separate from source code</p>
       </div>
       <p>This repository is the durable home for ZeroClaw metrics. The collector runs from <code>scripts/build_dashboard.py</code>, writes immutable snapshots under <code>data/snapshots/</code>, refreshes <code>data/latest.json</code>, derives <code>data/daily.json</code> and <code>data/metrics.sqlite</code>, and publishes this static <code>index.html</code> through GitHub Pages. The main application repository should link here rather than storing metrics snapshots in product source.</p>
       <div>
@@ -1843,9 +2086,18 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         <span class="pill">Dashboard: GitHub Pages /metrics</span>
         <span class="pill">Docs link: maintainer docs</span>
       </div>
-    </section>
+	    </section>
 
-    <section>
+	    <section>
+	      <div class="section-head">
+	        <h2>Methodology</h2>
+	        <p class="muted">Investor-readable metric definitions and caveats</p>
+	      </div>
+	      {table(["Metric family", "Meaning", "Window", "Method"], methodology_rows)}
+	      <p class="callout">This dashboard follows a snapshot-first model aligned with CHAOSS-style project health reporting: raw platform responses are preserved under <code>data/snapshots/</code>, and aggregate JSON, SQLite, and HTML views are regenerated from those snapshots.</p>
+	    </section>
+
+	    <section>
       <div class="section-head">
         <h2>Source Status</h2>
         <p class="muted">Collector health for this snapshot</p>
@@ -1875,11 +2127,14 @@ def main() -> int:
         "crates_io": safe_collect("crates_io", collect_crates),
         "scoop": safe_collect("scoop", collect_scoop),
         "docker_hub": safe_collect("docker_hub", collect_docker_hub),
+        "openssf_scorecard": safe_collect("openssf_scorecard", collect_openssf_scorecard),
         "notes": [
             "GHCR download counts are scraped from authenticated GitHub package HTML because REST objects omit those fields.",
             "GitHub release downloads are cumulative per asset; downloads/week is an average since release publication.",
             "install.sh is a bootstrap asset; default source installs clone and build the repo, so clone traffic is the better proxy for that path.",
             "Traffic endpoints expose only the last 14 days; observed clone history is built from stored daily rows, not a GitHub lifetime total.",
+            "GitHub top referrers and popular paths are rolling-window Insights metrics and are snapshot daily.",
+            "OpenSSF Scorecard is shown when the main repository publishes scorecard-action results.",
             "Scoop installs ultimately hit GitHub release assets, so avoid double-counting with release downloads.",
             "npm packages named zeroclaw/zerocode are unrelated and intentionally excluded.",
         ],
