@@ -663,6 +663,7 @@ def close_by_utc_day(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def daily_metrics(history: list[dict[str, Any]]) -> dict[str, Any]:
     closes = close_by_utc_day(history)
+    clone_history = observed_clone_history()
     rows = []
     for index, point in enumerate(closes):
         previous = closes[index - 1] if index > 0 else {}
@@ -694,8 +695,10 @@ def daily_metrics(history: list[dict[str, Any]]) -> dict[str, Any]:
         "source": "data/snapshots",
         "day_boundary": "UTC",
         "method": "latest snapshot per UTC day, diffed against prior UTC day close",
+        "clone_history_method": "deduplicated GitHub traffic clone day rows from stored snapshots; cumulative values are observed clone events, not all-time GitHub totals",
         "cumulative_delta_keys": DAILY_CUMULATIVE_KEYS,
         "rolling_window_delta_keys": DAILY_ROLLING_KEYS,
+        "clone_history": clone_history,
         "rows": rows,
     }
 
@@ -718,6 +721,44 @@ def load_snapshot_documents() -> list[tuple[Path, dict[str, Any]]]:
         except json.JSONDecodeError:
             continue
     return documents
+
+
+def observed_clone_history() -> list[dict[str, Any]]:
+    by_day: dict[str, dict[str, Any]] = {}
+    for path, snapshot in load_snapshot_documents():
+        source_snapshot_at = snapshot.get("generated_at") or path.stem
+        traffic = data_for(snapshot, "github_repo").get("traffic", {})
+        for row in traffic.get("clones_daily", []):
+            timestamp = row.get("timestamp")
+            if not timestamp:
+                continue
+            day = str(timestamp)[:10]
+            existing = by_day.get(day)
+            if existing is not None and str(source_snapshot_at) < str(existing.get("source_snapshot_at") or ""):
+                continue
+            by_day[day] = {
+                "day": day,
+                "timestamp": timestamp,
+                "count": as_int(row.get("count")),
+                "uniques": as_int(row.get("uniques")),
+                "source_snapshot_at": source_snapshot_at,
+            }
+
+    cumulative_count = 0
+    cumulative_uniques_sum = 0
+    rows = []
+    for day in sorted(by_day):
+        row = by_day[day]
+        cumulative_count += as_int(row.get("count")) or 0
+        cumulative_uniques_sum += as_int(row.get("uniques")) or 0
+        rows.append(
+            {
+                **row,
+                "cumulative_count": cumulative_count,
+                "cumulative_uniques_sum": cumulative_uniques_sum,
+            }
+        )
+    return rows
 
 
 def build_sqlite_database(daily: dict[str, Any]) -> None:
@@ -768,6 +809,15 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
           metric TEXT NOT NULL,
           value INTEGER,
           PRIMARY KEY (day, metric)
+        );
+        CREATE TABLE observed_clone_history (
+          day TEXT PRIMARY KEY,
+          timestamp TEXT NOT NULL,
+          count INTEGER,
+          uniques INTEGER,
+          cumulative_count INTEGER,
+          cumulative_uniques_sum INTEGER,
+          source_snapshot_at TEXT NOT NULL
         );
         CREATE TABLE release_totals (
           snapshot_at TEXT NOT NULL,
@@ -1098,6 +1148,26 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
             (row["day"], "aggregate_distribution_delta", as_int(row.get("aggregate_distribution_delta"))),
         )
 
+    for row in daily.get("clone_history", []):
+        conn.execute(
+            """
+            INSERT OR REPLACE INTO observed_clone_history(
+              day, timestamp, count, uniques,
+              cumulative_count, cumulative_uniques_sum, source_snapshot_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                row["day"],
+                row["timestamp"],
+                as_int(row.get("count")),
+                as_int(row.get("uniques")),
+                as_int(row.get("cumulative_count")),
+                as_int(row.get("cumulative_uniques_sum")),
+                row.get("source_snapshot_at"),
+            ),
+        )
+
     conn.commit()
     conn.execute("VACUUM")
     conn.close()
@@ -1265,6 +1335,10 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 
     history = load_snapshot_history()
     daily = daily_metrics(history)
+    clone_history = daily.get("clone_history", [])
+    clone_first_day = clone_history[0]["day"] if clone_history else None
+    clone_latest_day = clone_history[-1]["day"] if clone_history else None
+    observed_clone_events = clone_history[-1]["cumulative_count"] if clone_history else None
     release_history = load_release_history()
     first_point = history[0] if history else {}
     latest_point = history[-1] if history else {}
@@ -1286,6 +1360,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ("Repo Stars", compact(github_data.get("stars")), "GitHub repository stars"),
         ("Traffic 14d", compact(github_data.get("traffic", {}).get("views_14d")), "Repository page views"),
         ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
+        ("Observed Clones", compact(observed_clone_events), f"Clone events since {clone_first_day or 'first stored day'}"),
         ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
         ("Observed Δ", signed(observed_delta_total), "GHCR + payload releases + crates since first snapshot"),
@@ -1417,6 +1492,15 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
             signed(row["deltas"].get("homebrew_installs_365d")),
         ]
         for row in daily["rows"][-14:]
+    ]
+    clone_history_rows = [
+        [
+            row["day"],
+            row.get("count"),
+            row.get("uniques"),
+            row.get("cumulative_count"),
+        ]
+        for row in clone_history[-14:]
     ]
 
     rolling_metric_rows = []
@@ -1654,6 +1738,9 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       <h3 style="margin-top:16px;">Rolling windows</h3>
       <p class="note">Homebrew and GitHub traffic/pulse APIs expose rolling windows, not lifetime totals. Their changes show movement in the reported window.</p>
       {table(["Metric", "Current window", "Change since first snapshot", "Latest interval"], rolling_metric_rows)}
+      <h3 style="margin-top:16px;">Observed clone history</h3>
+      <p class="note">GitHub does not expose lifetime clone totals. This table deduplicates the stored daily rows from the rolling 14-day traffic API, so the cumulative count starts at {html.escape(clone_first_day or "the first stored clone day")} and currently ends at {html.escape(clone_latest_day or "n/a")}. Daily uniques are not globally deduplicated.</p>
+      {table(["UTC day", "Clone events", "Daily unique cloners", "Observed cumulative"], clone_history_rows)}
       <h3 style="margin-top:16px;">Day-by-day diffs</h3>
       <p class="note">UTC day rows use the latest stored snapshot for each day, then diff cumulative counters against the prior day. Homebrew is included as a rolling-window change, not lifetime growth.</p>
       {table(["UTC day", "Distribution Δ", "GHCR Δ", "Payload Δ", "install.sh Δ", "crates.io Δ", "Stars Δ", "Forks Δ", "Homebrew 365d Δ"], daily_diff_rows)}
@@ -1695,8 +1782,10 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       </div>
       <div class="split">
         <div>
-          <h3>Traffic</h3>
+          <h3>Views</h3>
           {svg_bars(repo_view_rows, date_key="timestamp", value_key="count")}
+          <h3 style="margin-top:16px;">Clones</h3>
+          {svg_bars(repo_clone_rows, date_key="timestamp", value_key="count")}
           <p class="note">Views: {metric(github_data.get("traffic", {}).get("views_14d"))} total, {metric(github_data.get("traffic", {}).get("views_uniques_14d"))} unique. Clones: {metric(github_data.get("traffic", {}).get("clones_14d"))} total, {metric(github_data.get("traffic", {}).get("clones_uniques_14d"))} unique.</p>
         </div>
         <div>
@@ -1790,7 +1879,7 @@ def main() -> int:
             "GHCR download counts are scraped from authenticated GitHub package HTML because REST objects omit those fields.",
             "GitHub release downloads are cumulative per asset; downloads/week is an average since release publication.",
             "install.sh is a bootstrap asset; default source installs clone and build the repo, so clone traffic is the better proxy for that path.",
-            "Traffic endpoints expose only the last 14 days.",
+            "Traffic endpoints expose only the last 14 days; observed clone history is built from stored daily rows, not a GitHub lifetime total.",
             "Scoop installs ultimately hit GitHub release assets, so avoid double-counting with release downloads.",
             "npm packages named zeroclaw/zerocode are unrelated and intentionally excluded.",
         ],

@@ -29,7 +29,9 @@ stored history.
 `data/daily.json` and `data/metrics.sqlite` are derived views. Daily rows use
 the latest snapshot for each UTC day as that day's close, then compute deltas
 against the prior UTC day close. The SQLite database also includes raw snapshot
-JSON and normalized tables for common queries.
+JSON and normalized tables for common queries. Clone history appears in
+`data/daily.json` and the `observed_clone_history` SQLite table by deduplicating
+daily clone rows from the stored GitHub traffic snapshots.
 
 Example SQLite queries:
 
@@ -43,6 +45,10 @@ select snapshot_at, tag, downloads
 from release_totals
 where tag = 'v0.8.2'
 order by snapshot_at;
+
+select day, count, cumulative_count
+from observed_clone_history
+order by day;
 ```
 
 A remote ZeroClaw cron job can be used as an operational watchdog. It should
@@ -92,7 +98,10 @@ back to this repository, but it is not enough for all upstream ZeroClaw metrics.
 - Homebrew exposes anonymous install analytics over rolling 30d, 90d, and 365d
   windows. These are install event counts, not download counts or lifetime
   totals.
-- GitHub traffic endpoints expose only the last 14 days.
+- GitHub traffic endpoints expose only the last 14 days. GitHub does not expose
+  an all-time clone total. Observed clone history is a cumulative clone-event
+  count built from stored daily traffic rows; it cannot backfill traffic before
+  the first saved rows, and summed daily uniques are not globally unique users.
 - Do not add package-manager counts together as unique users. Homebrew, Scoop,
   installers, and release assets can overlap.
 - npm packages named `zeroclaw` or `zerocode` are unrelated and excluded.
