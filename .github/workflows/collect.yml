@@ -18,10 +18,14 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       GH_TOKEN: ${{ secrets.ZEROCLAW_METRICS_TOKEN || github.token }}
     steps:
       - uses: actions/checkout@v7
+
+      - name: Test collector
+        run: python3 -m unittest discover -s tests -v
 
       - name: Build dashboard
         run: python3 scripts/build_dashboard.py

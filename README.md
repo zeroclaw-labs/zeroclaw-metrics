@@ -14,6 +14,7 @@ timestamped, point-in-time snapshots so trends can be computed over time.
 - `data/metrics.sqlite` - generated SQLite database for ad hoc queries.
 - `data/snapshots/` - immutable historical snapshots.
 - `scripts/build_dashboard.py` - collector and dashboard renderer.
+- `tests/` - collector parsing and metric-definition regression tests.
 
 ## Update Model
 
@@ -27,9 +28,9 @@ time. There is no second aggregate database; the immutable snapshots are the
 stored history.
 
 `data/daily.json` and `data/metrics.sqlite` are derived views. Daily rows use
-the latest snapshot for each UTC day as that day's close, then compute deltas
-against the prior UTC day close. The SQLite database also includes raw snapshot
-JSON and normalized tables for common queries. Clone history appears in
+the most complete snapshot for each UTC day, preferring the latest on ties, then
+compute deltas against the prior UTC day close. The SQLite database also includes
+snapshot JSON and normalized tables for common queries. Clone history appears in
 `data/daily.json` and the `observed_clone_history` SQLite table by deduplicating
 daily clone rows from the stored GitHub traffic snapshots.
 
@@ -73,15 +74,18 @@ stale rather than maintaining a separate metrics store.
 
 ## Methodology
 
-This dashboard uses a snapshot-first model aligned with CHAOSS-style project
-health reporting. Raw platform responses are stored under `data/snapshots/`, and
-the dashboard, `data/daily.json`, and `data/metrics.sqlite` are regenerated from
+This dashboard uses a snapshot-first model aligned with CHAOSS project-health
+reporting. Versioned, normalized source records are stored under
+`data/snapshots/`; they are not byte-for-byte API response archives. The
+dashboard, `data/daily.json`, and `data/metrics.sqlite` are regenerated from
 those snapshots.
 
 Open standards and external frameworks used for vocabulary:
 
-- CHAOSS-style project health categories for popularity, activity, adoption, and
-  responsiveness.
+- The CHAOSS Starter Project Health model for time to first human response,
+  change-request closure throughput, contributor absence factor, and release
+  frequency.
+- CHAOSS Number of Downloads and Clones vocabulary for adoption and reach.
 - GitHub REST traffic windows for repository views, clones, referrers, and
   popular content.
 
@@ -123,6 +127,19 @@ back to this repository, but it is not enough for all upstream ZeroClaw metrics.
   the first saved rows, and summed daily uniques are not globally unique users.
 - GitHub referrers and popular paths are top-10 rolling-window Insights metrics,
   not complete attribution logs.
+- Seven-day GitHub activity windows use exact UTC timestamps, while CHAOSS
+  starter-health metrics use an exact rolling 28-day window.
+- First-response metrics exclude bots and the issue or pull-request author. The
+  first 20 comments and reviews are inspected for each item; this policy is
+  recorded in every snapshot. Unanswered items less than 48 hours old remain
+  pending and are excluded from the 48-hour service-level denominator.
+- Change-request closure throughput is pull requests closed during the window
+  divided by pull requests opened during the window. It can exceed 100% when a
+  project reduces an older backlog.
+- Contributor absence factor is based on non-bot default-branch commit authors,
+  not every form of community contribution.
+- Core GitHub, release, and GHCR fields are validated before publication. A core
+  failure stops the workflow rather than replacing the latest good dashboard.
 - Do not add package-manager counts together as unique users. Homebrew, Scoop,
   installers, and release assets can overlap.
 - npm packages named `zeroclaw` or `zerocode` are unrelated and excluded.

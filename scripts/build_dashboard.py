@@ -8,11 +8,14 @@ snapshot plus a self-contained HTML dashboard into this repository.
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 import html
 import json
+import os
 import re
 import sqlite3
 import subprocess
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -33,6 +36,10 @@ OWNER = "zeroclaw-labs"
 REPO = "zeroclaw"
 FULL_REPO = f"{OWNER}/{REPO}"
 USER_AGENT = "zeroclaw-metrics-dashboard (https://github.com/zeroclaw-labs/zeroclaw)"
+SNAPSHOT_SCHEMA_VERSION = 2
+GITHUB_API_VERSION = "2022-11-28"
+ACTIVITY_WINDOW_DAYS = 28
+CORE_SOURCES = ("github_repo", "releases", "ghcr")
 
 
 def run(args: list[str], *, input_text: str | None = None) -> str:
@@ -40,14 +47,34 @@ def run(args: list[str], *, input_text: str | None = None) -> str:
 
 
 def gh_api(path: str, jq: str | None = None) -> Any:
-    args = ["gh", "api", path]
+    args = ["gh", "api", "-H", f"X-GitHub-Api-Version: {GITHUB_API_VERSION}", path]
     if jq:
         args += ["--jq", jq]
     return json.loads(run(args))
 
 
+def gh_graphql(query: str, **variables: str) -> Any:
+    args = ["gh", "api", "graphql", "-f", f"query={query}"]
+    for key, value in variables.items():
+        if value:
+            args.extend(["-F", f"{key}={value}"])
+    return json.loads(run(args))
+
+
+def gh_stats(path: str, *, attempts: int = 4) -> list[Any]:
+    for attempt in range(attempts):
+        value = gh_api(path)
+        if isinstance(value, list) and value:
+            return value
+        if attempt < attempts - 1:
+            time.sleep(2**attempt)
+    raise RuntimeError(f"GitHub statistics endpoint returned no data after {attempts} attempts: {path}")
+
+
 def gh_api_paginated(path: str) -> list[Any]:
-    raw = run(["gh", "api", path, "--paginate"])
+    raw = run(
+        ["gh", "api", "-H", f"X-GitHub-Api-Version: {GITHUB_API_VERSION}", path, "--paginate"]
+    )
     decoder = json.JSONDecoder()
     idx = 0
     out: list[Any] = []
@@ -115,7 +142,11 @@ def is_payload_asset(name: str) -> bool:
 
 
 def collect_releases() -> dict[str, Any]:
-    releases = gh_api_paginated(f"repos/{FULL_REPO}/releases")
+    releases = [
+        release
+        for release in gh_api_paginated(f"repos/{FULL_REPO}/releases?per_page=100")
+        if not release.get("draft") and release.get("published_at")
+    ]
     rows: list[dict[str, Any]] = []
     asset_totals: defaultdict[str, int] = defaultdict(int)
 
@@ -160,6 +191,14 @@ def collect_releases() -> dict[str, Any]:
 
     return {
         "release_count": len(releases),
+        "published_releases": [
+            {
+                "tag": release["tag_name"],
+                "published_at": release["published_at"],
+                "prerelease": bool(release["prerelease"]),
+            }
+            for release in releases
+        ],
         "with_installable_downloads": len(rows),
         "installable_downloads_total": sum(row["downloads"] for row in rows),
         "payload_downloads_total": sum(row["payload_downloads"] for row in rows),
@@ -173,15 +212,13 @@ def collect_releases() -> dict[str, Any]:
     }
 
 
-def collect_ghcr() -> dict[str, Any]:
-    token = run(["gh", "auth", "token"]).strip()
-    package = gh_api(f"orgs/{OWNER}/packages/container/{REPO}")
-    versions = gh_api_paginated(f"orgs/{OWNER}/packages/container/{REPO}/versions?per_page=100")
-    auth_headers = {"Authorization": f"Bearer {token}"}
-    package_html = get_text(f"https://github.com/orgs/{OWNER}/packages/container/package/{REPO}", auth_headers)
-
+def parse_ghcr_html(package_html: str) -> dict[str, Any]:
     total_match = re.search(r"Total downloads</span>\s*<h3 title=\"([0-9]+)\">([^<]+)</h3>", package_html)
+    if not total_match:
+        raise ValueError("GitHub Packages HTML did not contain the total download counter")
     daily_rows = re.findall(r'data-merge-count="([0-9]+)"\s*data-date="([0-9-]+)"', package_html)
+    if not daily_rows:
+        raise ValueError("GitHub Packages HTML did not contain the daily download chart")
     daily = sorted({date: int(count) for count, date in daily_rows}.items())
 
     visible_versions: list[dict[str, Any]] = []
@@ -200,6 +237,24 @@ def collect_ghcr() -> dict[str, Any]:
                 }
             )
 
+    return {
+        "total_downloads": int(total_match.group(1)),
+        "total_downloads_display": total_match.group(2),
+        "last_30_daily": [{"date": date, "downloads": count} for date, count in daily],
+        "last_30_downloads": sum(count for _, count in daily),
+        "last_7_downloads": sum(count for _, count in daily[-7:]),
+        "visible_versions": visible_versions[:12],
+    }
+
+
+def collect_ghcr() -> dict[str, Any]:
+    token = run(["gh", "auth", "token"]).strip()
+    package = gh_api(f"orgs/{OWNER}/packages/container/{REPO}")
+    versions = gh_api_paginated(f"orgs/{OWNER}/packages/container/{REPO}/versions?per_page=100")
+    auth_headers = {"Authorization": f"Bearer {token}"}
+    package_html = get_text(f"https://github.com/orgs/{OWNER}/packages/container/package/{REPO}", auth_headers)
+    parsed_html = parse_ghcr_html(package_html)
+
     tagged_versions = [
         version
         for version in versions
@@ -216,12 +271,7 @@ def collect_ghcr() -> dict[str, Any]:
             "version_count": package.get("version_count"),
             "html_url": package["html_url"],
         },
-        "total_downloads": int(total_match.group(1)) if total_match else None,
-        "total_downloads_display": total_match.group(2) if total_match else None,
-        "last_30_daily": [{"date": date, "downloads": count} for date, count in daily],
-        "last_30_downloads": sum(count for _, count in daily),
-        "last_7_downloads": sum(count for _, count in daily[-7:]),
-        "visible_versions": visible_versions[:12],
+        **parsed_html,
         "tag_count": len(tags),
         "release_tags_present": [tag for tag in ["latest", "v0.8.2", "debian", "v0.8.2-debian"] if tag in tags],
     }
@@ -238,10 +288,16 @@ def collect_github_repo() -> dict[str, Any]:
     traffic_clones = gh_api(f"repos/{FULL_REPO}/traffic/clones?per=day")
     traffic_referrers = gh_api(f"repos/{FULL_REPO}/traffic/popular/referrers")
     traffic_paths = gh_api(f"repos/{FULL_REPO}/traffic/popular/paths")
-    since = (NOW - dt.timedelta(days=7)).date().isoformat()
-    commits = gh_api_paginated(f"repos/{FULL_REPO}/commits?sha=master&since={since}T00:00:00Z")
-    contributor_stats = gh_api(f"repos/{FULL_REPO}/stats/contributors")
-    commit_activity = gh_api(f"repos/{FULL_REPO}/stats/commit_activity")
+    since_at = (NOW - dt.timedelta(days=7)).replace(microsecond=0)
+    since = since_at.isoformat().replace("+00:00", "Z")
+    default_branch = repo["default_branch"]
+    commits = gh_api_paginated(
+        f"repos/{FULL_REPO}/commits?sha={urllib.parse.quote(default_branch)}&since={urllib.parse.quote(since)}&per_page=100"
+    )
+    try:
+        contributor_stats = gh_stats(f"repos/{FULL_REPO}/stats/contributors")
+    except RuntimeError:
+        contributor_stats = []
 
     top_contributors = sorted(
         [
@@ -260,7 +316,9 @@ def collect_github_repo() -> dict[str, Any]:
         "stars": repo["stargazers_count"],
         "forks": repo["forks_count"],
         "watchers": repo["subscribers_count"],
-        "open_issues": repo["open_issues_count"],
+        "open_issues": search_count(f"repo:{FULL_REPO} is:issue is:open"),
+        "open_pull_requests": search_count(f"repo:{FULL_REPO} is:pr is:open"),
+        "default_branch": default_branch,
         "pushed_at": repo["pushed_at"],
         "updated_at": repo["updated_at"],
         "traffic": {
@@ -281,8 +339,197 @@ def collect_github_repo() -> dict[str, Any]:
             "issues_closed": search_count(f"repo:{FULL_REPO} is:issue closed:>={since}"),
             "default_branch_commits": len(commits),
         },
-        "commit_activity_latest_week": commit_activity[-1] if commit_activity else None,
         "top_contributors_latest_week": top_contributors,
+    }
+
+
+def collect_activity_items(kind: str, since: dt.datetime) -> list[dict[str, Any]]:
+    if kind not in {"issues", "pullRequests"}:
+        raise ValueError(f"Unsupported activity kind: {kind}")
+    review_fields = """
+          reviews(first: 20) {
+            nodes { submittedAt author { login __typename } }
+          }
+    """ if kind == "pullRequests" else ""
+    query = f"""
+      query($owner: String!, $repo: String!, $cursor: String) {{
+        repository(owner: $owner, name: $repo) {{
+          {kind}(first: 100, after: $cursor, orderBy: {{field: CREATED_AT, direction: DESC}}) {{
+            pageInfo {{ hasNextPage endCursor }}
+            nodes {{
+              number createdAt closedAt
+              author {{ login __typename }}
+              comments(first: 20) {{
+                nodes {{ createdAt author {{ login __typename }} }}
+              }}
+              {review_fields}
+            }}
+          }}
+        }}
+      }}
+    """
+    cursor = ""
+    rows: list[dict[str, Any]] = []
+    for _ in range(100):
+        response = gh_graphql(query, owner=OWNER, repo=REPO, cursor=cursor)
+        connection = response["data"]["repository"][kind]
+        nodes = connection.get("nodes") or []
+        if not nodes:
+            break
+        for node in nodes:
+            if parse_iso(node["createdAt"]) >= since:
+                rows.append(node)
+        if parse_iso(nodes[-1]["createdAt"]) < since or not connection["pageInfo"]["hasNextPage"]:
+            break
+        cursor = connection["pageInfo"]["endCursor"]
+    else:
+        raise RuntimeError(f"Exceeded GraphQL pagination guard while collecting {kind}")
+    return rows
+
+
+def actor_login(actor: dict[str, Any] | None) -> str | None:
+    if not actor:
+        return None
+    login = actor.get("login")
+    if not login or actor.get("__typename") == "Bot" or login.lower().endswith("[bot]"):
+        return None
+    return str(login)
+
+
+def first_human_response_at(item: dict[str, Any]) -> dt.datetime | None:
+    author = actor_login(item.get("author"))
+    candidates: list[dt.datetime] = []
+    for row in (item.get("comments") or {}).get("nodes") or []:
+        responder = actor_login(row.get("author"))
+        if responder and responder != author and row.get("createdAt"):
+            candidates.append(parse_iso(row["createdAt"]))
+    for row in (item.get("reviews") or {}).get("nodes") or []:
+        responder = actor_login(row.get("author"))
+        if responder and responder != author and row.get("submittedAt"):
+            candidates.append(parse_iso(row["submittedAt"]))
+    return min(candidates) if candidates else None
+
+
+def percentile(values: list[float], fraction: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    position = (len(ordered) - 1) * fraction
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    weight = position - lower
+    return ordered[lower] * (1 - weight) + ordered[upper] * weight
+
+
+def summarize_responsiveness(items: list[dict[str, Any]]) -> dict[str, Any]:
+    response_hours: list[float] = []
+    close_hours: list[float] = []
+    within_48h = 0
+    response_sla_eligible = 0
+    pending_within_48h = 0
+    for item in items:
+        created = parse_iso(item["createdAt"])
+        response = first_human_response_at(item)
+        if response:
+            hours = max((response - created).total_seconds() / 3600, 0.0)
+            response_hours.append(hours)
+            response_sla_eligible += 1
+            within_48h += hours <= 48
+        elif (NOW - created).total_seconds() >= 48 * 3600:
+            response_sla_eligible += 1
+        else:
+            pending_within_48h += 1
+        if item.get("closedAt"):
+            close_hours.append(max((parse_iso(item["closedAt"]) - created).total_seconds() / 3600, 0.0))
+    return {
+        "opened": len(items),
+        "responded": len(response_hours),
+        "unanswered": len(items) - len(response_hours),
+        "pending_within_48h": pending_within_48h,
+        "response_sla_eligible": response_sla_eligible,
+        "responded_within_48h_pct": round(within_48h / response_sla_eligible * 100, 1)
+        if response_sla_eligible else None,
+        "median_first_response_hours": round(percentile(response_hours, 0.5), 1) if response_hours else None,
+        "p90_first_response_hours": round(percentile(response_hours, 0.9), 1) if response_hours else None,
+        "closed_from_window": len(close_hours),
+        "median_time_to_close_hours": round(percentile(close_hours, 0.5), 1) if close_hours else None,
+        "p90_time_to_close_hours": round(percentile(close_hours, 0.9), 1) if close_hours else None,
+    }
+
+
+def contributor_absence_factor(contributions: dict[str, int]) -> int | None:
+    counts = sorted((count for count in contributions.values() if count > 0), reverse=True)
+    if not counts:
+        return None
+    threshold = sum(counts) * 0.5
+    running = 0
+    for index, count in enumerate(counts, start=1):
+        running += count
+        if running >= threshold:
+            return index
+    return len(counts)
+
+
+def stable_release_cadence(releases: dict[str, Any], since: dt.datetime) -> dict[str, Any]:
+    stable = sorted(
+        (
+            parse_iso(row["published_at"])
+            for row in releases.get("published_releases", [])
+            if not row.get("prerelease") and row.get("published_at")
+        ),
+        reverse=True,
+    )
+    recent = [published for published in stable if published >= since]
+    intervals = [
+        (newer - older).total_seconds() / 86400
+        for newer, older in zip(stable, stable[1:])
+        if newer > older
+    ][:20]
+    return {
+        "stable_releases": len(recent),
+        "latest_stable_at": stable[0].isoformat() if stable else None,
+        "days_since_latest_stable": round((NOW - stable[0]).total_seconds() / 86400, 1) if stable else None,
+        "median_days_between_stable_releases": round(percentile(intervals, 0.5), 1) if intervals else None,
+    }
+
+
+def collect_chaoss_health(releases: dict[str, Any]) -> dict[str, Any]:
+    since_at = (NOW - dt.timedelta(days=ACTIVITY_WINDOW_DAYS)).replace(microsecond=0)
+    since = since_at.isoformat().replace("+00:00", "Z")
+    issues = collect_activity_items("issues", since_at)
+    pull_requests = collect_activity_items("pullRequests", since_at)
+    repo = gh_api(f"repos/{FULL_REPO}")
+    commits = gh_api_paginated(
+        f"repos/{FULL_REPO}/commits?sha={urllib.parse.quote(repo['default_branch'])}&since={urllib.parse.quote(since)}&per_page=100"
+    )
+    commit_counts: defaultdict[str, int] = defaultdict(int)
+    for commit in commits:
+        login = actor_login(commit.get("author"))
+        if login:
+            commit_counts[login] += 1
+
+    pr_summary = summarize_responsiveness(pull_requests)
+    closed_prs = search_count(f"repo:{FULL_REPO} is:pr closed:>={since}")
+    pr_summary["closed_during_window"] = closed_prs
+    pr_summary["closure_throughput_ratio"] = round(closed_prs / len(pull_requests), 3) if pull_requests else None
+
+    return {
+        "window_days": ACTIVITY_WINDOW_DAYS,
+        "since": since,
+        "response_policy": "first comment or review from a non-bot account other than the author; first 20 comments and reviews inspected",
+        "issues": summarize_responsiveness(issues),
+        "pull_requests": pr_summary,
+        "contributors": {
+            "active_commit_contributors": len(commit_counts),
+            "default_branch_commits": len(commits),
+            "attributed_default_branch_commits": sum(commit_counts.values()),
+            "contributor_absence_factor_50pct": contributor_absence_factor(commit_counts),
+            "top_commit_contributors": [
+                {"login": login, "commits": count}
+                for login, count in sorted(commit_counts.items(), key=lambda item: item[1], reverse=True)[:10]
+            ],
+        },
+        "releases": stable_release_cadence(releases, since_at),
     }
 
 
@@ -408,11 +655,45 @@ def collect_docker_hub() -> dict[str, Any]:
     }
 
 
+REQUIRED_SOURCE_FIELDS = {
+    "github_repo": ("stars", "open_issues", "open_pull_requests", "traffic.views_14d", "traffic.clones_14d"),
+    "releases": ("release_count", "payload_downloads_total", "published_releases"),
+    "ghcr": ("total_downloads", "last_30_daily"),
+}
+
+
+def nested_value(data: dict[str, Any], path: str) -> Any:
+    value: Any = data
+    for part in path.split("."):
+        if not isinstance(value, dict) or part not in value:
+            return None
+        value = value[part]
+    return value
+
+
+def validate_source_data(name: str, data: dict[str, Any]) -> None:
+    missing = [path for path in REQUIRED_SOURCE_FIELDS.get(name, ()) if nested_value(data, path) is None]
+    if missing:
+        raise ValueError(f"{name} missing required fields: {', '.join(missing)}")
+
+
 def safe_collect(name: str, fn) -> dict[str, Any]:
+    collected_at = dt.datetime.now(dt.timezone.utc).isoformat()
     try:
-        return {"ok": True, "data": fn()}
+        data = fn()
+        validate_source_data(name, data)
+        return {"ok": True, "collected_at": collected_at, "data": data}
     except Exception as exc:  # Keep dashboard useful if one source flakes.
-        return {"ok": False, "error": f"{type(exc).__name__}: {exc}"}
+        return {"ok": False, "collected_at": collected_at, "error": f"{type(exc).__name__}: {exc}"}
+
+
+def require_core_sources(snapshot: dict[str, Any]) -> None:
+    failed = [source for source in CORE_SOURCES if not snapshot.get(source, {}).get("ok")]
+    if failed:
+        details = "; ".join(
+            f"{source}: {snapshot[source].get('error', 'unknown failure')}" for source in failed
+        )
+        raise RuntimeError(f"Refusing to publish an incomplete core snapshot ({details})")
 
 
 def metric(value: Any) -> str:
@@ -527,6 +808,7 @@ def release_bootstrap_total(releases: dict[str, Any]) -> int | None:
 
 def snapshot_point(snapshot: dict[str, Any]) -> dict[str, Any]:
     github = data_for(snapshot, "github_repo")
+    chaoss = data_for(snapshot, "chaoss_health")
     ghcr = data_for(snapshot, "ghcr")
     releases = data_for(snapshot, "releases")
     homebrew = data_for(snapshot, "homebrew")
@@ -552,6 +834,7 @@ def snapshot_point(snapshot: dict[str, Any]) -> dict[str, Any]:
         "forks": as_int(github.get("forks")),
         "watchers": as_int(github.get("watchers")),
         "open_issues": as_int(github.get("open_issues")),
+        "open_pull_requests": as_int(github.get("open_pull_requests")),
         "repo_views_14d": as_int(github.get("traffic", {}).get("views_14d")),
         "repo_clones_14d": as_int(github.get("traffic", {}).get("clones_14d")),
         "prs_merged_7d": as_int(github.get("pulse_7d", {}).get("prs_merged")),
@@ -565,6 +848,14 @@ def snapshot_point(snapshot: dict[str, Any]) -> dict[str, Any]:
         "crates_downloads": crates_total if crates.get("crates") else None,
         "zeroclaw_crate_downloads": first_crate_downloads(crates, "zeroclaw"),
         "aardvark_sys_crate_downloads": first_crate_downloads(crates, "aardvark-sys"),
+        "active_commit_contributors_28d": as_int(chaoss.get("contributors", {}).get("active_commit_contributors")),
+        "contributor_absence_factor_28d": as_int(chaoss.get("contributors", {}).get("contributor_absence_factor_50pct")),
+        "pr_median_first_response_hours_28d": round(chaoss["pull_requests"]["median_first_response_hours"])
+        if isinstance(chaoss.get("pull_requests", {}).get("median_first_response_hours"), int | float)
+        else None,
+        "pr_closure_throughput_pct_28d": round(chaoss["pull_requests"]["closure_throughput_ratio"] * 100)
+        if isinstance(chaoss.get("pull_requests", {}).get("closure_throughput_ratio"), int | float)
+        else None,
     }
 
 
@@ -645,6 +936,7 @@ DAILY_CUMULATIVE_KEYS = [
     "forks",
     "watchers",
     "open_issues",
+    "open_pull_requests",
 ]
 
 DAILY_ROLLING_KEYS = [
@@ -653,15 +945,29 @@ DAILY_ROLLING_KEYS = [
     "repo_clones_14d",
     "prs_merged_7d",
     "issues_opened_7d",
+    "active_commit_contributors_28d",
+    "contributor_absence_factor_28d",
+    "pr_median_first_response_hours_28d",
+    "pr_closure_throughput_pct_28d",
 ]
 
 
 def close_by_utc_day(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    closes: dict[str, dict[str, Any]] = {}
+    candidates: defaultdict[str, list[dict[str, Any]]] = defaultdict(list)
     for point in history:
         day = point.get("day")
         if day:
-            closes[day] = point
+            candidates[day].append(point)
+    closes = {
+        day: max(
+            points,
+            key=lambda point: (
+                sum(value is not None for key, value in point.items() if key not in {"day", "generated_at"}),
+                point.get("generated_at", ""),
+            ),
+        )
+        for day, points in candidates.items()
+    }
     return [closes[day] for day in sorted(closes)]
 
 
@@ -698,7 +1004,7 @@ def daily_metrics(history: list[dict[str, Any]]) -> dict[str, Any]:
         "generated_at": NOW.isoformat(),
         "source": "data/snapshots",
         "day_boundary": "UTC",
-        "method": "latest snapshot per UTC day, diffed against prior UTC day close",
+        "method": "most complete snapshot per UTC day (latest on ties), diffed against prior UTC day close",
         "clone_history_method": "deduplicated GitHub traffic clone day rows from stored snapshots; cumulative values are observed clone events, not all-time GitHub totals",
         "cumulative_delta_keys": DAILY_CUMULATIVE_KEYS,
         "rolling_window_delta_keys": DAILY_ROLLING_KEYS,
@@ -937,6 +1243,7 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
         [
             ("generated_at", NOW.isoformat()),
             ("repo", FULL_REPO),
+            ("snapshot_schema_version", str(SNAPSHOT_SCHEMA_VERSION)),
             ("source", "data/snapshots"),
             ("method", "derived from immutable JSON snapshots"),
         ],
@@ -944,6 +1251,7 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
 
     source_names = [
         "github_repo",
+        "chaoss_health",
         "releases",
         "ghcr",
         "homebrew",
@@ -963,6 +1271,8 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
         )
 
         for source in source_names:
+            if source not in snapshot:
+                continue
             wrapped = snapshot.get(source, {})
             if isinstance(wrapped, dict):
                 conn.execute(
@@ -1309,8 +1619,9 @@ def table(headers: list[str], rows: list[list[Any]]) -> str:
     body = "\n".join(
         "<tr>" + "".join(f"<td>{metric(cell)}</td>" for cell in row) + "</tr>" for row in rows
     )
-    head = "".join(f"<th>{html.escape(header)}</th>" for header in headers)
-    return f"<div class=\"table-wrap\"><table><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>"
+    head = "".join(f'<th scope="col">{html.escape(header)}</th>' for header in headers)
+    caption = html.escape("; ".join(headers))
+    return f'<div class="table-wrap"><table><caption class="sr-only">{caption}</caption><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 
 
 def svg_bars(rows: list[dict[str, Any]], *, date_key: str, value_key: str, height: int = 92) -> str:
@@ -1375,6 +1686,7 @@ def svg_line(rows: list[dict[str, Any]], *, date_key: str, value_key: str, heigh
 
 def render_dashboard(snapshot: dict[str, Any]) -> str:
     github = snapshot["github_repo"]
+    chaoss = snapshot.get("chaoss_health", {"ok": False, "error": "not collected"})
     releases = snapshot["releases"]
     ghcr = snapshot["ghcr"]
     homebrew = snapshot["homebrew"]
@@ -1386,6 +1698,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     release_data = releases["data"] if releases["ok"] else {}
     ghcr_data = ghcr["data"] if ghcr["ok"] else {}
     github_data = github["data"] if github["ok"] else {}
+    chaoss_data = chaoss["data"] if chaoss.get("ok") else {}
     homebrew_data = homebrew["data"] if homebrew["ok"] else {}
     aur_data = aur["data"] if aur["ok"] else {}
     crates_data = crates["data"] if crates["ok"] else {}
@@ -1481,6 +1794,22 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ["Default-branch commits", pulse.get("default_branch_commits")],
     ]
 
+    chaoss_prs = chaoss_data.get("pull_requests", {})
+    chaoss_issues = chaoss_data.get("issues", {})
+    chaoss_contributors = chaoss_data.get("contributors", {})
+    chaoss_releases = chaoss_data.get("releases", {})
+    chaoss_rows = [
+        ["Issue first response", chaoss_issues.get("median_first_response_hours"), "Median hours", "First non-author, non-bot comment"],
+        ["Issues answered within 48h", f"{chaoss_issues['responded_within_48h_pct']:.1f}%" if chaoss_issues.get("responded_within_48h_pct") is not None else None, "Eligible issues", "Unanswered items younger than 48 hours are pending, not late"],
+        ["PR first response", chaoss_prs.get("median_first_response_hours"), "Median hours", "First non-author, non-bot comment or review"],
+        ["PRs answered within 48h", f"{chaoss_prs['responded_within_48h_pct']:.1f}%" if chaoss_prs.get("responded_within_48h_pct") is not None else None, "Eligible PRs", "Unanswered items younger than 48 hours are pending, not late"],
+        ["PR closure throughput", f"{chaoss_prs['closure_throughput_ratio'] * 100:.1f}%" if chaoss_prs.get("closure_throughput_ratio") is not None else None, "Closed / opened", "Closures during window divided by PRs opened during window"],
+        ["Active commit contributors", chaoss_contributors.get("active_commit_contributors"), "People", "Non-bot default-branch commit authors"],
+        ["Contributor absence factor", chaoss_contributors.get("contributor_absence_factor_50pct"), "People for 50%", "Smallest commit-author set responsible for half of commits"],
+        ["Stable releases", chaoss_releases.get("stable_releases"), "Count", "Published non-prerelease releases"],
+        ["Stable release interval", chaoss_releases.get("median_days_between_stable_releases"), "Median days", "Most recent 20 stable-release intervals"],
+    ]
+
     contributor_rows = [
         [item["login"], item["last_week"], item["total"]]
         for item in github_data.get("top_contributors_latest_week", [])
@@ -1542,10 +1871,12 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ["GHCR downloads", "Container distribution", "Cumulative plus chart window", "Authenticated package UI counters; REST package objects omit pulls."],
         ["Release payload assets", "Binary distribution", "Cumulative", "GitHub release asset counters, excluding install.sh bootstrap downloads."],
         ["Homebrew installs", "Package-manager adoption", "Rolling 30d/90d/365d", "Homebrew anonymous install analytics, not lifetime downloads."],
+        ["CHAOSS starter health", "Responsiveness, sustainability, release cadence", f"Rolling {ACTIVITY_WINDOW_DAYS}d", "Human responses exclude authors and bot accounts; definitions are recorded in each snapshot."],
     ]
 
     status_rows = [
         ["GitHub repo + traffic", "ok" if github["ok"] else github.get("error")],
+        ["CHAOSS health", "ok" if chaoss.get("ok") else chaoss.get("error")],
         ["GitHub releases", "ok" if releases["ok"] else releases.get("error")],
         ["GHCR package UI", "ok" if ghcr["ok"] else ghcr.get("error")],
         ["Homebrew", "ok" if homebrew["ok"] else homebrew.get("error")],
@@ -1571,6 +1902,19 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       --shadow: 0 1px 2px rgb(16 24 40 / 7%);
     }
     * { box-sizing: border-box; }
+    a { color: var(--blue); }
+    header a { color: #bfdbfe; }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
     body {
       margin: 0;
       font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -1745,7 +2089,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 <body>
   <header>
     <h1>ZeroClaw Metrics Dashboard</h1>
-    <p>Distribution, release, repository, and package-manager metrics snapshot for {html.escape(FULL_REPO)}. Generated {html.escape(snapshot["generated_at"])}.</p>
+    <p>Distribution, release, repository, and project-health metrics for <a href="https://github.com/{html.escape(FULL_REPO)}">{html.escape(FULL_REPO)}</a>. Generated {html.escape(snapshot["generated_at"])}.</p>
   </header>
   <main>
 {error_banner}    <div class="grid">{cards_html}</div>
@@ -1771,7 +2115,16 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 	      <h3 style="margin-top:16px;">Observed clone history</h3>
 	      <p class="note">GitHub does not expose lifetime clone totals. This table deduplicates the stored daily rows from the rolling 14-day traffic API, so the cumulative count starts at {html.escape(clone_first_day or "the first stored clone day")} and currently ends at {html.escape(clone_latest_day or "n/a")}. Daily uniques are not globally deduplicated.</p>
 	      {table(["UTC day", "Clone events", "Daily unique cloners", "Observed cumulative"], clone_history_rows)}
-	    </section>
+		    </section>
+
+    <section>
+      <div class="section-head">
+        <h2>CHAOSS Starter Health</h2>
+        <p class="muted">Rolling {metric(chaoss_data.get("window_days"))}-day window since {html.escape(str(chaoss_data.get("since", "n/a")))}</p>
+      </div>
+      {table(["Metric", "Value", "Unit", "Definition"], chaoss_rows)}
+      <p class="callout">These signals follow the <a href="https://www.chaoss.community/kb/metrics-model-starter-project-health/">CHAOSS Starter Project Health model</a>. They are trends for this project, not a score or cross-project ranking. {html.escape(str(chaoss_data.get("response_policy", "Response policy unavailable.")))}</p>
+    </section>
 
     <section>
       <div class="section-head">
@@ -1881,7 +2234,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 	        <p class="muted">Investor-readable metric definitions and caveats</p>
 	      </div>
 	      {table(["Metric family", "Meaning", "Window", "Method"], methodology_rows)}
-	      <p class="callout">This dashboard follows a snapshot-first model aligned with CHAOSS-style project health reporting: raw platform responses are preserved under <code>data/snapshots/</code>, and aggregate JSON, SQLite, and HTML views are regenerated from those snapshots.</p>
+	      <p class="callout">This dashboard follows a snapshot-first model aligned with CHAOSS project-health reporting. Versioned normalized source records are preserved under <code>data/snapshots/</code>, and aggregate JSON, SQLite, and HTML views are regenerated from those records.</p>
 	    </section>
 
 	    <section>
@@ -1893,7 +2246,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     </section>
   </main>
   <footer>
-    Source snapshot: <code>data/latest.json</code>. Daily diffs: <code>data/daily.json</code>. Query database: <code>data/metrics.sqlite</code>. The live platforms remain canonical; this dashboard is a point-in-time operational view.
+    <a href="data/latest.json">Source snapshot</a>. <a href="data/daily.json">Daily diffs</a>. <a href="data/metrics.sqlite">Query database</a>. The live platforms remain canonical; this dashboard is a point-in-time operational view.
   </footer>
 </body>
 </html>
@@ -1904,8 +2257,15 @@ def main() -> int:
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     SNAPSHOT_DIR.mkdir(parents=True, exist_ok=True)
     snapshot = {
+        "schema_version": SNAPSHOT_SCHEMA_VERSION,
         "generated_at": NOW.isoformat(),
         "repo": FULL_REPO,
+        "collector": {
+            "name": "scripts/build_dashboard.py",
+            "github_api_version": GITHUB_API_VERSION,
+            "commit": os.environ.get("GITHUB_SHA"),
+            "script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        },
         "github_repo": safe_collect("github_repo", collect_github_repo),
         "releases": safe_collect("releases", collect_releases),
         "ghcr": safe_collect("ghcr", collect_ghcr),
@@ -1924,6 +2284,11 @@ def main() -> int:
             "npm packages named zeroclaw/zerocode are unrelated and intentionally excluded.",
         ],
     }
+    require_core_sources(snapshot)
+    release_data = data_for(snapshot, "releases")
+    snapshot["chaoss_health"] = safe_collect(
+        "chaoss_health", lambda: collect_chaoss_health(release_data)
+    )
     snapshot_text = json.dumps(snapshot, indent=2, sort_keys=True) + "\n"
     snapshot_name = NOW.isoformat(timespec="seconds").replace(":", "-").replace("+", "-") + ".json"
     (SNAPSHOT_DIR / snapshot_name).write_text(snapshot_text)
