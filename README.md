@@ -34,6 +34,14 @@ snapshot JSON and normalized tables for common queries. Clone history appears in
 `data/daily.json` and the `observed_clone_history` SQLite table by deduplicating
 daily clone rows from the stored GitHub traffic snapshots.
 
+Public inference history uses the same snapshot-first approach. Each provider
+adapter emits a source-neutral contract with an entity, published usage window,
+daily model/token observations, price coverage, and explicit spend assumptions.
+Overlapping provider windows backfill recent UTC days; the latest stored
+observation wins for each source/entity/day. OpenRouter is the first adapter,
+and additional public sources such as ZeroRouter can be registered without
+changing the derived history schema.
+
 Example SQLite queries:
 
 ```sql
@@ -54,6 +62,16 @@ order by day;
 select snapshot_at, referrer, count, uniques
 from github_traffic_referrers
 order by snapshot_at desc, rank;
+
+select source, entity, day, total_tokens, estimated_spend_usd,
+       pricing_coverage_pct, is_partial
+from observed_public_usage_history
+order by source, entity, day;
+
+select snapshot_at, source, entity, model_name, tokens,
+       input_usd_per_million, output_usd_per_million
+from public_usage_model_totals
+order by snapshot_at desc, source, rank;
 ```
 
 A remote ZeroClaw cron job can be used as an operational watchdog. It should
@@ -71,6 +89,7 @@ stale rather than maintaining a separate metrics store.
 - crates.io crate download endpoints.
 - Scoop bucket repository traffic.
 - Docker Hub search, used only to confirm no official Docker Hub image exists.
+- OpenRouter's public ZeroClaw app analytics page and public model-price catalog.
 
 ## Methodology
 
@@ -88,6 +107,12 @@ Open standards and external frameworks used for vocabulary:
 - CHAOSS Number of Downloads and Clones vocabulary for adoption and reach.
 - GitHub REST traffic windows for repository views, clones, referrers, and
   popular content.
+
+Public inference spend is modeled, not reported billing. The central scenario
+assumes 90% input and 10% output tokens, with a displayed sensitivity range of
+95/5 through 80/20. Known model traffic is priced using the provider catalog at
+collection time. Traffic without a catalog match is scaled at the blended rate
+of the priced traffic, and each snapshot records both coverage and assumptions.
 
 ## Token Setup
 
@@ -143,3 +168,9 @@ back to this repository, but it is not enough for all upstream ZeroClaw metrics.
 - Do not add package-manager counts together as unique users. Homebrew, Scoop,
   installers, and release assets can overlap.
 - npm packages named `zeroclaw` or `zerocode` are unrelated and excluded.
+- Public inference counts are usage a provider attributes to the ZeroClaw app;
+  they are ecosystem activity, not necessarily usage purchased by ZeroClaw
+  Labs. Spend estimates exclude cache, reasoning, routing, long-context,
+  per-request, tool, and credit-purchase effects. Provider prices and historical
+  rolling-window values can be revised, so every estimate retains its source
+  snapshot and observed model rates.

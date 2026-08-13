@@ -1,7 +1,10 @@
 import datetime as dt
 import importlib.util
+import sqlite3
+import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 
 SCRIPT_PATH = Path(__file__).resolve().parents[1] / "scripts" / "build_dashboard.py"
@@ -31,6 +34,227 @@ class GhcrParserTests(unittest.TestCase):
     def test_rejects_markup_without_required_counter(self):
         with self.assertRaisesRegex(ValueError, "total download counter"):
             dashboard.parse_ghcr_html('<div data-merge-count="1" data-date="2026-07-11"></div>')
+
+
+class PublicInferenceUsageTests(unittest.TestCase):
+    PAGE = r'''\"totalTokens\":300,\"rank\":null,\"modelsUsed\":2
+    \"data\":[{\"x\":\"2026-08-12 00:00:00\",\"ys\":{\"vendor/model-a-20260801\":200,\"Others\":100}}],\"appName\":\"ZeroClaw\",\"forecast\":\"forecast-1d\"
+    \"appModelAnalytics\":[{\"date\":\"2026-08-12\",\"model_permaslug\":\"vendor/model-a-20260801\",\"total_tokens\":200}],\"appName\":\"ZeroClaw\"'''
+
+    CATALOG = {
+        "data": [
+            {
+                "id": "vendor/model-a",
+                "name": "Vendor: Model A",
+                "canonical_slug": "vendor/model-a-20260801",
+                "pricing": {"prompt": "0.000001", "completion": "0.000003"},
+            },
+            {
+                "id": "vendor/model-a:free",
+                "name": "Vendor: Model A (free)",
+                "canonical_slug": "vendor/model-a-20260801",
+                "pricing": {"prompt": "0", "completion": "0"},
+            },
+        ]
+    }
+
+    def test_compact_formats_billion_scale_usage(self):
+        self.assertEqual("14.8B", dashboard.compact(14_847_281_097))
+
+    def test_parses_embedded_openrouter_usage(self):
+        parsed = dashboard.parse_openrouter_app_page(self.PAGE)
+        self.assertEqual(300, parsed["reported_total_tokens"])
+        self.assertEqual(2, parsed["models_used"])
+        self.assertEqual(200, parsed["daily"][0]["ys"]["vendor/model-a-20260801"])
+        self.assertEqual("vendor/model-a-20260801", parsed["model_totals"][0]["model_permaslug"])
+
+    def test_estimate_records_coverage_and_output_share_range(self):
+        catalog = dashboard.openrouter_price_catalog(self.CATALOG)
+        estimate = dashboard.estimate_public_usage(
+            {"vendor/model-a-20260801": 200_000_000},
+            catalog,
+            total_tokens=300_000_000,
+        )
+        self.assertEqual(200_000_000, estimate["priced_tokens"])
+        self.assertAlmostEqual(66.6667, estimate["pricing_coverage_pct"], places=4)
+        self.assertAlmostEqual(360.0, estimate["estimated_spend_usd"])
+        self.assertLess(estimate["estimated_spend_low_usd"], estimate["estimated_spend_usd"])
+        self.assertGreater(estimate["estimated_spend_high_usd"], estimate["estimated_spend_usd"])
+
+    def test_collector_emits_normalized_provider_contract(self):
+        with (
+            mock.patch.object(dashboard, "get_text", return_value=self.PAGE),
+            mock.patch.object(dashboard, "get_json", return_value=self.CATALOG),
+        ):
+            source = dashboard.collect_openrouter_public_usage()
+        self.assertEqual("openrouter", source["source"])
+        self.assertEqual("zeroclaw", source["entity"])
+        self.assertEqual(300, source["reported_total_tokens"])
+        self.assertEqual(1, source["window_days"])
+        self.assertIn("input_output_split", source["estimation_method"])
+        self.assertAlmostEqual(0.00036, source["daily"][0]["estimated_spend_usd"])
+
+    def test_provider_failure_does_not_suppress_healthy_sources(self):
+        def failed_source():
+            raise RuntimeError("provider unavailable")
+
+        healthy = {
+            "source": "provider-a",
+            "entity": "zeroclaw",
+            "daily": [],
+            "top_models": [],
+            "estimate": {},
+        }
+        with mock.patch.object(
+            dashboard,
+            "PUBLIC_USAGE_SOURCE_COLLECTORS",
+            (("provider-a", lambda: healthy), ("provider-b", failed_source)),
+        ):
+            result = dashboard.collect_public_inference_usage()
+
+        self.assertEqual([healthy], result["sources"])
+        self.assertTrue(result["source_status"][0]["ok"])
+        self.assertFalse(result["source_status"][1]["ok"])
+        self.assertIn("provider unavailable", result["source_status"][1]["error"])
+
+    def test_observed_history_uses_latest_overlapping_observation(self):
+        def snapshot(generated_at, tokens, partial):
+            return {
+                "generated_at": generated_at,
+                "public_inference_usage": {
+                    "ok": True,
+                    "data": {
+                        "sources": [
+                            {
+                                "source": "provider-a",
+                                "entity": "zeroclaw",
+                                "daily": [
+                                    {
+                                        "day": "2026-08-12",
+                                        "total_tokens": tokens,
+                                        "priced_tokens": tokens,
+                                        "pricing_coverage_pct": 100.0,
+                                        "estimated_spend_usd": tokens / 100,
+                                        "estimated_spend_low_usd": tokens / 200,
+                                        "estimated_spend_high_usd": tokens / 50,
+                                        "is_partial": partial,
+                                    }
+                                ],
+                            }
+                        ]
+                    },
+                },
+            }
+
+        documents = [
+            (Path("early.json"), snapshot("2026-08-12T08:00:00Z", 100, True)),
+            (Path("late.json"), snapshot("2026-08-13T08:00:00Z", 150, False)),
+        ]
+        with mock.patch.object(dashboard, "load_snapshot_documents", return_value=documents):
+            rows = dashboard.observed_public_usage_history()
+        self.assertEqual(1, len(rows))
+        self.assertEqual(150, rows[0]["total_tokens"])
+        self.assertFalse(rows[0]["is_partial"])
+        self.assertEqual("2026-08-13T08:00:00Z", rows[0]["source_snapshot_at"])
+
+    def test_sqlite_exposes_normalized_public_usage_tables(self):
+        source = {
+            "source": "provider-a",
+            "entity": "zeroclaw",
+            "source_url": "https://example.test/usage",
+            "window_start": "2026-08-12",
+            "window_end": "2026-08-12",
+            "window_days": 1,
+            "reported_total_tokens": 100,
+            "models_used": 1,
+            "estimate": {
+                "priced_tokens": 100,
+                "pricing_coverage_pct": 100.0,
+                "estimated_spend_usd": 1.0,
+                "estimated_spend_low_usd": 0.8,
+                "estimated_spend_high_usd": 1.2,
+            },
+            "estimation_method": {"currency": "USD"},
+            "top_models": [
+                {
+                    "model_key": "vendor/model",
+                    "model_id": "vendor/model",
+                    "model_name": "Model",
+                    "tokens": 100,
+                    "input_usd_per_million": 1.0,
+                    "output_usd_per_million": 3.0,
+                    "estimated_spend_usd": 0.00012,
+                }
+            ],
+            "daily": [
+                {
+                    "day": "2026-08-12",
+                    "total_tokens": 100,
+                    "priced_tokens": 100,
+                    "pricing_coverage_pct": 100.0,
+                    "estimated_spend_usd": 1.0,
+                    "estimated_spend_low_usd": 0.8,
+                    "estimated_spend_high_usd": 1.2,
+                    "is_partial": False,
+                    "models": [],
+                }
+            ],
+        }
+        snapshot = {
+            "generated_at": "2026-08-13T08:00:00Z",
+            "repo": dashboard.FULL_REPO,
+            "public_inference_usage": {
+                "ok": True,
+                "collected_at": "2026-08-13T08:00:00Z",
+                "data": {"sources": [source]},
+            },
+        }
+        history = [
+            {
+                "source": "provider-a",
+                "entity": "zeroclaw",
+                "day": "2026-08-12",
+                "total_tokens": 100,
+                "priced_tokens": 100,
+                "pricing_coverage_pct": 100.0,
+                "estimated_spend_usd": 1.0,
+                "estimated_spend_low_usd": 0.8,
+                "estimated_spend_high_usd": 1.2,
+                "is_partial": False,
+                "observed_cumulative_tokens": 100,
+                "observed_cumulative_estimated_spend_usd": 1.0,
+                "source_snapshot_at": "2026-08-13T08:00:00Z",
+            }
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            database = Path(tmp) / "metrics.sqlite"
+            with (
+                mock.patch.object(dashboard, "DATABASE_PATH", database),
+                mock.patch.object(
+                    dashboard,
+                    "load_snapshot_documents",
+                    return_value=[(Path(dashboard.ROOT) / "snapshot.json", snapshot)],
+                ),
+            ):
+                dashboard.build_sqlite_database(
+                    {"rows": [], "clone_history": [], "public_usage_history": history}
+                )
+            connection = sqlite3.connect(database)
+            try:
+                self.assertEqual(
+                    ("provider-a", 100, 1.0),
+                    connection.execute(
+                        "select source, total_tokens, estimated_spend_usd from public_usage_windows"
+                    ).fetchone(),
+                )
+                self.assertEqual(
+                    ("2026-08-12", 100, 1.0),
+                    connection.execute(
+                        "select day, total_tokens, estimated_spend_usd from observed_public_usage_history"
+                    ).fetchone(),
+                )
+            finally:
+                connection.close()
 
 
 class ChaossMetricTests(unittest.TestCase):

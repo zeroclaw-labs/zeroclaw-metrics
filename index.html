@@ -174,48 +174,50 @@
 <body>
   <header>
     <h1>ZeroClaw Metrics Dashboard</h1>
-    <p>Distribution, release, repository, and project-health metrics for <a href="https://github.com/zeroclaw-labs/zeroclaw">zeroclaw-labs/zeroclaw</a>. Generated 2026-08-13T07:50:56.132086+00:00.</p>
+    <p>Distribution, release, repository, and project-health metrics for <a href="https://github.com/zeroclaw-labs/zeroclaw">zeroclaw-labs/zeroclaw</a>. Generated 2026-08-13T23:17:45.139983+00:00.</p>
   </header>
   <main>
-    <div class="grid"><article class="card"><span class="label">GHCR Downloads</span><span class="value">417.0K</span><p class="note">Total container package downloads</p></article>
-<article class="card"><span class="label">GHCR 30d</span><span class="value">43.1K</span><p class="note">Scraped from authenticated package chart</p></article>
-<article class="card"><span class="label">Prebuilt Payloads</span><span class="value">157.6K</span><p class="note">Release assets excluding install.sh bootstrap</p></article>
+    <div class="grid"><article class="card"><span class="label">GHCR Downloads</span><span class="value">417.9K</span><p class="note">Total container package downloads</p></article>
+<article class="card"><span class="label">GHCR 30d</span><span class="value">44.0K</span><p class="note">Scraped from authenticated package chart</p></article>
+<article class="card"><span class="label">Prebuilt Payloads</span><span class="value">157.9K</span><p class="note">Release assets excluding install.sh bootstrap</p></article>
 <article class="card"><span class="label">Bootstrap Script</span><span class="value">7.6K</span><p class="note">install.sh release asset downloads</p></article>
-<article class="card"><span class="label">Homebrew 30d</span><span class="value">356</span><p class="note">Homebrew Core installs</p></article>
+<article class="card"><span class="label">Homebrew 30d</span><span class="value">357</span><p class="note">Homebrew Core installs</p></article>
 <article class="card"><span class="label">Repo Stars</span><span class="value">32.6K</span><p class="note">GitHub repository stars</p></article>
 <article class="card"><span class="label">Traffic 14d</span><span class="value">31.0K</span><p class="note">Repository page views</p></article>
 <article class="card"><span class="label">Clones 14d</span><span class="value">86.1K</span><p class="note">Repository clones</p></article>
 <article class="card"><span class="label">Observed Clones</span><span class="value">313.5K</span><p class="note">Clone events since 2026-06-18</p></article>
-<article class="card"><span class="label">PRs Merged 7d</span><span class="value">85</span><p class="note">Pulse-like activity</p></article>
-<article class="card"><span class="label">Snapshots</span><span class="value">55</span><p class="note">Tracking window 41.4 days</p></article></div>
+<article class="card"><span class="label">PRs Merged 7d</span><span class="value">101</span><p class="note">Pulse-like activity</p></article>
+<article class="card"><span class="label">Public AI Tokens</span><span class="value">14.8B</span><p class="note">openrouter attributed usage window</p></article>
+<article class="card"><span class="label">Est. AI Spend</span><span class="value">$9,985.04</span><p class="note">Modeled provider inference, not a ZeroClaw Labs bill</p></article>
+<article class="card"><span class="label">Snapshots</span><span class="value">56</span><p class="note">Tracking window 42.1 days</p></article></div>
 
 	    <section>
 	      <div class="section-head">
 	        <h2>Current Scale</h2>
-	        <p class="muted">Latest snapshot values from 55 immutable snapshots in <code>data/snapshots/</code></p>
+	        <p class="muted">Latest snapshot values from 56 immutable snapshots in <code>data/snapshots/</code></p>
 	      </div>
 	      <div class="split">
 	        <div>
-	          <div class="table-wrap"><table><caption class="sr-only">Metric; Current; Meaning</caption><thead><tr><th scope="col">Metric</th><th scope="col">Current</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td>GHCR downloads</td><td>416,968</td><td>Cumulative GitHub Container Registry package counter</td></tr>
-<tr><td>Prebuilt release payload downloads</td><td>157,602</td><td>Cumulative GitHub release payload asset counter</td></tr>
-<tr><td>Bootstrap install.sh downloads</td><td>7,617</td><td>Cumulative bootstrap script release asset counter</td></tr>
-<tr><td>crates.io downloads</td><td>6,793</td><td>Cumulative crate download counters</td></tr>
-<tr><td>Repo stars</td><td>32,565</td><td>Current GitHub repository stars</td></tr>
-<tr><td>Repo forks</td><td>4,891</td><td>Current GitHub repository forks</td></tr></tbody></table></div>
+	          <div class="table-wrap"><table><caption class="sr-only">Metric; Current; Meaning</caption><thead><tr><th scope="col">Metric</th><th scope="col">Current</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td>GHCR downloads</td><td>417,857</td><td>Cumulative GitHub Container Registry package counter</td></tr>
+<tr><td>Prebuilt release payload downloads</td><td>157,941</td><td>Cumulative GitHub release payload asset counter</td></tr>
+<tr><td>Bootstrap install.sh downloads</td><td>7,623</td><td>Cumulative bootstrap script release asset counter</td></tr>
+<tr><td>crates.io downloads</td><td>6,798</td><td>Cumulative crate download counters</td></tr>
+<tr><td>Repo stars</td><td>32,570</td><td>Current GitHub repository stars</td></tr>
+<tr><td>Repo forks</td><td>4,892</td><td>Current GitHub repository forks</td></tr></tbody></table></div>
 	          <p class="callout">Snapshot-to-snapshot change columns are intentionally excluded from the main dashboard because this tracking repository started recently and short-interval movement understates project scale. Raw day-by-day change rows remain available in <code>data/daily.json</code> and <code>data/metrics.sqlite</code>.</p>
 	        </div>
 	        <div>
 	          <h3>GHCR cumulative downloads</h3>
-	          <svg class="line-chart" viewBox="0 0 2592 118" role="img" aria-label="ghcr_downloads over time"><polyline points="10.0,96.0 57.6,95.9 105.3,95.2 152.9,93.7 200.5,93.2 248.1,92.0 295.8,90.2 343.4,88.6 391.0,87.3 438.7,86.8 486.3,86.8 533.9,86.8 581.6,86.8 629.2,86.3 676.8,86.0 724.4,85.6 772.1,85.1 819.7,85.1 867.3,84.0 915.0,82.5 962.6,82.4 1010.2,81.8 1057.9,81.1 1105.5,79.2 1153.1,77.4 1200.7,75.4 1248.4,73.1 1296.0,69.9 1343.6,67.9 1391.3,65.9 1438.9,63.6 1486.5,61.3 1534.1,59.1 1581.8,57.0 1629.4,54.7 1677.0,52.3 1724.7,49.9 1772.3,47.4 1819.9,45.2 1867.6,42.8 1915.2,40.5 1962.8,38.1 2010.4,36.2 2058.1,34.1 2105.7,31.7 2153.3,27.9 2201.0,25.6 2248.6,23.3 2296.2,21.5 2343.9,19.7 2391.5,17.6 2439.1,15.7 2486.7,13.8 2534.4,11.9 2582.0,10.0"></polyline><circle cx="10.0" cy="96.0" r="3"><title>2026-07-02: 360,969</title></circle><circle cx="57.6" cy="95.9" r="3"><title>2026-07-02: 361,022</title></circle><circle cx="105.3" cy="95.2" r="3"><title>2026-07-03: 361,518</title></circle><circle cx="152.9" cy="93.7" r="3"><title>2026-07-04: 362,490</title></circle><circle cx="200.5" cy="93.2" r="3"><title>2026-07-04: 362,818</title></circle><circle cx="248.1" cy="92.0" r="3"><title>2026-07-05: 363,572</title></circle><circle cx="295.8" cy="90.2" r="3"><title>2026-07-06: 364,766</title></circle><circle cx="343.4" cy="88.6" r="3"><title>2026-07-07: 365,774</title></circle><circle cx="391.0" cy="87.3" r="3"><title>2026-07-08: 366,653</title></circle><circle cx="438.7" cy="86.8" r="3"><title>2026-07-08: 366,946</title></circle><circle cx="486.3" cy="86.8" r="3"><title>2026-07-08: 366,950</title></circle><circle cx="533.9" cy="86.8" r="3"><title>2026-07-08: 366,955</title></circle><circle cx="581.6" cy="86.8" r="3"><title>2026-07-08: 366,959</title></circle><circle cx="629.2" cy="86.3" r="3"><title>2026-07-09: 367,297</title></circle><circle cx="676.8" cy="86.0" r="3"><title>2026-07-09: 367,491</title></circle><circle cx="724.4" cy="85.6" r="3"><title>2026-07-09: 367,756</title></circle><circle cx="772.1" cy="85.1" r="3"><title>2026-07-09: 368,038</title></circle><circle cx="819.7" cy="85.1" r="3"><title>2026-07-09: 368,039</title></circle><circle cx="867.3" cy="84.0" r="3"><title>2026-07-10: 368,769</title></circle><circle cx="915.0" cy="82.5" r="3"><title>2026-07-11: 369,738</title></circle><circle cx="962.6" cy="82.4" r="3"><title>2026-07-11: 369,817</title></circle><circle cx="1010.2" cy="81.8" r="3"><title>2026-07-11: 370,199</title></circle><circle cx="1057.9" cy="81.1" r="3"><title>2026-07-12: 370,667</title></circle><circle cx="1105.5" cy="79.2" r="3"><title>2026-07-13: 371,896</title></circle><circle cx="1153.1" cy="77.4" r="3"><title>2026-07-14: 373,074</title></circle><circle cx="1200.7" cy="75.4" r="3"><title>2026-07-15: 374,368</title></circle><circle cx="1248.4" cy="73.1" r="3"><title>2026-07-16: 375,880</title></circle><circle cx="1296.0" cy="69.9" r="3"><title>2026-07-17: 377,983</title></circle><circle cx="1343.6" cy="67.9" r="3"><title>2026-07-18: 379,274</title></circle><circle cx="1391.3" cy="65.9" r="3"><title>2026-07-19: 380,542</title></circle><circle cx="1438.9" cy="63.6" r="3"><title>2026-07-20: 382,057</title></circle><circle cx="1486.5" cy="61.3" r="3"><title>2026-07-21: 383,555</title></circle><circle cx="1534.1" cy="59.1" r="3"><title>2026-07-22: 385,018</title></circle><circle cx="1581.8" cy="57.0" r="3"><title>2026-07-23: 386,360</title></circle><circle cx="1629.4" cy="54.7" r="3"><title>2026-07-24: 387,894</title></circle><circle cx="1677.0" cy="52.3" r="3"><title>2026-07-25: 389,406</title></circle><circle cx="1724.7" cy="49.9" r="3"><title>2026-07-26: 390,977</title></circle><circle cx="1772.3" cy="47.4" r="3"><title>2026-07-27: 392,635</title></circle><circle cx="1819.9" cy="45.2" r="3"><title>2026-07-28: 394,030</title></circle><circle cx="1867.6" cy="42.8" r="3"><title>2026-07-29: 395,579</title></circle><circle cx="1915.2" cy="40.5" r="3"><title>2026-07-30: 397,135</title></circle><circle cx="1962.8" cy="38.1" r="3"><title>2026-07-31: 398,641</title></circle><circle cx="2010.4" cy="36.2" r="3"><title>2026-08-01: 399,881</title></circle><circle cx="2058.1" cy="34.1" r="3"><title>2026-08-02: 401,294</title></circle><circle cx="2105.7" cy="31.7" r="3"><title>2026-08-03: 402,831</title></circle><circle cx="2153.3" cy="27.9" r="3"><title>2026-08-04: 405,344</title></circle><circle cx="2201.0" cy="25.6" r="3"><title>2026-08-05: 406,802</title></circle><circle cx="2248.6" cy="23.3" r="3"><title>2026-08-06: 408,278</title></circle><circle cx="2296.2" cy="21.5" r="3"><title>2026-08-07: 409,509</title></circle><circle cx="2343.9" cy="19.7" r="3"><title>2026-08-08: 410,678</title></circle><circle cx="2391.5" cy="17.6" r="3"><title>2026-08-09: 412,033</title></circle><circle cx="2439.1" cy="15.7" r="3"><title>2026-08-10: 413,244</title></circle><circle cx="2486.7" cy="13.8" r="3"><title>2026-08-11: 414,465</title></circle><circle cx="2534.4" cy="11.9" r="3"><title>2026-08-12: 415,762</title></circle><circle cx="2582.0" cy="10.0" r="3"><title>2026-08-13: 416,968</title></circle><text x="10" y="114">2026-07-02</text><text x="2582" y="114" text-anchor="end">2026-08-13</text></svg>
+	          <svg class="line-chart" viewBox="0 0 2640 118" role="img" aria-label="ghcr_downloads over time"><polyline points="10.0,96.0 57.6,95.9 105.3,95.2 152.9,93.7 200.5,93.2 248.2,92.1 295.8,90.3 343.5,88.7 391.1,87.4 438.7,87.0 486.4,87.0 534.0,87.0 581.6,86.9 629.3,86.4 676.9,86.1 724.5,85.7 772.2,85.3 819.8,85.3 867.5,84.2 915.1,82.7 962.7,82.6 1010.4,82.0 1058.0,81.3 1105.6,79.5 1153.3,77.7 1200.9,75.7 1248.5,73.5 1296.2,70.3 1343.8,68.3 1391.5,66.4 1439.1,64.1 1486.7,61.9 1534.4,59.6 1582.0,57.6 1629.6,55.3 1677.3,53.0 1724.9,50.6 1772.5,48.1 1820.2,46.0 1867.8,43.7 1915.5,41.3 1963.1,39.0 2010.7,37.2 2058.4,35.0 2106.0,32.7 2153.6,28.9 2201.3,26.7 2248.9,24.5 2296.5,22.6 2344.2,20.9 2391.8,18.8 2439.5,17.0 2487.1,15.1 2534.7,13.2 2582.4,11.3 2630.0,10.0"></polyline><circle cx="10.0" cy="96.0" r="3"><title>2026-07-02: 360,969</title></circle><circle cx="57.6" cy="95.9" r="3"><title>2026-07-02: 361,022</title></circle><circle cx="105.3" cy="95.2" r="3"><title>2026-07-03: 361,518</title></circle><circle cx="152.9" cy="93.7" r="3"><title>2026-07-04: 362,490</title></circle><circle cx="200.5" cy="93.2" r="3"><title>2026-07-04: 362,818</title></circle><circle cx="248.2" cy="92.1" r="3"><title>2026-07-05: 363,572</title></circle><circle cx="295.8" cy="90.3" r="3"><title>2026-07-06: 364,766</title></circle><circle cx="343.5" cy="88.7" r="3"><title>2026-07-07: 365,774</title></circle><circle cx="391.1" cy="87.4" r="3"><title>2026-07-08: 366,653</title></circle><circle cx="438.7" cy="87.0" r="3"><title>2026-07-08: 366,946</title></circle><circle cx="486.4" cy="87.0" r="3"><title>2026-07-08: 366,950</title></circle><circle cx="534.0" cy="87.0" r="3"><title>2026-07-08: 366,955</title></circle><circle cx="581.6" cy="86.9" r="3"><title>2026-07-08: 366,959</title></circle><circle cx="629.3" cy="86.4" r="3"><title>2026-07-09: 367,297</title></circle><circle cx="676.9" cy="86.1" r="3"><title>2026-07-09: 367,491</title></circle><circle cx="724.5" cy="85.7" r="3"><title>2026-07-09: 367,756</title></circle><circle cx="772.2" cy="85.3" r="3"><title>2026-07-09: 368,038</title></circle><circle cx="819.8" cy="85.3" r="3"><title>2026-07-09: 368,039</title></circle><circle cx="867.5" cy="84.2" r="3"><title>2026-07-10: 368,769</title></circle><circle cx="915.1" cy="82.7" r="3"><title>2026-07-11: 369,738</title></circle><circle cx="962.7" cy="82.6" r="3"><title>2026-07-11: 369,817</title></circle><circle cx="1010.4" cy="82.0" r="3"><title>2026-07-11: 370,199</title></circle><circle cx="1058.0" cy="81.3" r="3"><title>2026-07-12: 370,667</title></circle><circle cx="1105.6" cy="79.5" r="3"><title>2026-07-13: 371,896</title></circle><circle cx="1153.3" cy="77.7" r="3"><title>2026-07-14: 373,074</title></circle><circle cx="1200.9" cy="75.7" r="3"><title>2026-07-15: 374,368</title></circle><circle cx="1248.5" cy="73.5" r="3"><title>2026-07-16: 375,880</title></circle><circle cx="1296.2" cy="70.3" r="3"><title>2026-07-17: 377,983</title></circle><circle cx="1343.8" cy="68.3" r="3"><title>2026-07-18: 379,274</title></circle><circle cx="1391.5" cy="66.4" r="3"><title>2026-07-19: 380,542</title></circle><circle cx="1439.1" cy="64.1" r="3"><title>2026-07-20: 382,057</title></circle><circle cx="1486.7" cy="61.9" r="3"><title>2026-07-21: 383,555</title></circle><circle cx="1534.4" cy="59.6" r="3"><title>2026-07-22: 385,018</title></circle><circle cx="1582.0" cy="57.6" r="3"><title>2026-07-23: 386,360</title></circle><circle cx="1629.6" cy="55.3" r="3"><title>2026-07-24: 387,894</title></circle><circle cx="1677.3" cy="53.0" r="3"><title>2026-07-25: 389,406</title></circle><circle cx="1724.9" cy="50.6" r="3"><title>2026-07-26: 390,977</title></circle><circle cx="1772.5" cy="48.1" r="3"><title>2026-07-27: 392,635</title></circle><circle cx="1820.2" cy="46.0" r="3"><title>2026-07-28: 394,030</title></circle><circle cx="1867.8" cy="43.7" r="3"><title>2026-07-29: 395,579</title></circle><circle cx="1915.5" cy="41.3" r="3"><title>2026-07-30: 397,135</title></circle><circle cx="1963.1" cy="39.0" r="3"><title>2026-07-31: 398,641</title></circle><circle cx="2010.7" cy="37.2" r="3"><title>2026-08-01: 399,881</title></circle><circle cx="2058.4" cy="35.0" r="3"><title>2026-08-02: 401,294</title></circle><circle cx="2106.0" cy="32.7" r="3"><title>2026-08-03: 402,831</title></circle><circle cx="2153.6" cy="28.9" r="3"><title>2026-08-04: 405,344</title></circle><circle cx="2201.3" cy="26.7" r="3"><title>2026-08-05: 406,802</title></circle><circle cx="2248.9" cy="24.5" r="3"><title>2026-08-06: 408,278</title></circle><circle cx="2296.5" cy="22.6" r="3"><title>2026-08-07: 409,509</title></circle><circle cx="2344.2" cy="20.9" r="3"><title>2026-08-08: 410,678</title></circle><circle cx="2391.8" cy="18.8" r="3"><title>2026-08-09: 412,033</title></circle><circle cx="2439.5" cy="17.0" r="3"><title>2026-08-10: 413,244</title></circle><circle cx="2487.1" cy="15.1" r="3"><title>2026-08-11: 414,465</title></circle><circle cx="2534.7" cy="13.2" r="3"><title>2026-08-12: 415,762</title></circle><circle cx="2582.4" cy="11.3" r="3"><title>2026-08-13: 416,968</title></circle><circle cx="2630.0" cy="10.0" r="3"><title>2026-08-13: 417,857</title></circle><text x="10" y="114">2026-07-02</text><text x="2630" y="114" text-anchor="end">2026-08-13</text></svg>
 	        </div>
 	      </div>
 	      <h3 style="margin-top:16px;">Rolling windows</h3>
 	      <p class="note">Homebrew and GitHub traffic/pulse APIs expose rolling windows, not lifetime totals. These rows show the latest reported window value only.</p>
-	      <div class="table-wrap"><table><caption class="sr-only">Metric; Current window; Window</caption><thead><tr><th scope="col">Metric</th><th scope="col">Current window</th><th scope="col">Window</th></tr></thead><tbody><tr><td>Homebrew installs 365d</td><td>7,926</td><td>Rolling 365-day Homebrew install events</td></tr>
+	      <div class="table-wrap"><table><caption class="sr-only">Metric; Current window; Window</caption><thead><tr><th scope="col">Metric</th><th scope="col">Current window</th><th scope="col">Window</th></tr></thead><tbody><tr><td>Homebrew installs 365d</td><td>7,927</td><td>Rolling 365-day Homebrew install events</td></tr>
 <tr><td>Repo views 14d</td><td>31,041</td><td>Rolling 14-day GitHub repository views</td></tr>
 <tr><td>Repo clones 14d</td><td>86,071</td><td>Rolling 14-day GitHub repository clone events</td></tr>
-<tr><td>PRs merged 7d</td><td>85</td><td>Rolling 7-day merged pull requests</td></tr>
-<tr><td>Issues opened 7d</td><td>72</td><td>Rolling 7-day opened issues</td></tr></tbody></table></div>
+<tr><td>PRs merged 7d</td><td>101</td><td>Rolling 7-day merged pull requests</td></tr>
+<tr><td>Issues opened 7d</td><td>79</td><td>Rolling 7-day opened issues</td></tr></tbody></table></div>
 	      <h3 style="margin-top:16px;">Observed clone history</h3>
 	      <p class="note">GitHub does not expose lifetime clone totals. This table deduplicates the stored daily rows from the rolling 14-day traffic API, so the cumulative count starts at 2026-06-18 and currently ends at 2026-08-12. Daily uniques are not globally deduplicated.</p>
 	      <div class="table-wrap"><table><caption class="sr-only">UTC day; Clone events; Daily unique cloners; Observed cumulative</caption><thead><tr><th scope="col">UTC day</th><th scope="col">Clone events</th><th scope="col">Daily unique cloners</th><th scope="col">Observed cumulative</th></tr></thead><tbody><tr><td>2026-07-30</td><td>4,737</td><td>268</td><td>232,147</td></tr>
@@ -236,15 +238,61 @@
 
     <section>
       <div class="section-head">
+        <h2>Public Inference Usage</h2>
+        <p class="muted">openrouter · 2026-07-14 to 2026-08-13</p>
+      </div>
+      <div class="split">
+        <div>
+          <h3>Attributed tokens by UTC day</h3>
+          <svg class="bars" viewBox="0 0 372 92" role="img" aria-label="Public provider-attributed tokens by UTC day"><rect x="0" y="64" width="9" height="14" rx="2"><title>2026-07-14: 261,924,423</title></rect><rect x="12" y="55" width="9" height="23" rx="2"><title>2026-07-15: 441,016,825</title></rect><rect x="24" y="60" width="9" height="18" rx="2"><title>2026-07-16: 342,209,958</title></rect><rect x="36" y="59" width="9" height="19" rx="2"><title>2026-07-17: 363,867,041</title></rect><rect x="48" y="52" width="9" height="26" rx="2"><title>2026-07-18: 486,547,790</title></rect><rect x="60" y="63" width="9" height="15" rx="2"><title>2026-07-19: 275,511,248</title></rect><rect x="72" y="63" width="9" height="15" rx="2"><title>2026-07-20: 292,224,641</title></rect><rect x="84" y="65" width="9" height="13" rx="2"><title>2026-07-21: 237,285,894</title></rect><rect x="96" y="66" width="9" height="12" rx="2"><title>2026-07-22: 223,487,021</title></rect><rect x="108" y="47" width="9" height="31" rx="2"><title>2026-07-23: 587,719,200</title></rect><rect x="120" y="58" width="9" height="20" rx="2"><title>2026-07-24: 385,698,895</title></rect><rect x="132" y="68" width="9" height="10" rx="2"><title>2026-07-25: 194,041,895</title></rect><rect x="144" y="65" width="9" height="13" rx="2"><title>2026-07-26: 242,822,251</title></rect><rect x="156" y="58" width="9" height="20" rx="2"><title>2026-07-27: 385,490,348</title></rect><rect x="168" y="52" width="9" height="26" rx="2"><title>2026-07-28: 485,059,465</title></rect><rect x="180" y="63" width="9" height="15" rx="2"><title>2026-07-29: 291,928,886</title></rect><rect x="192" y="61" width="9" height="17" rx="2"><title>2026-07-30: 330,869,868</title></rect><rect x="204" y="50" width="9" height="28" rx="2"><title>2026-07-31: 522,203,216</title></rect><rect x="216" y="55" width="9" height="23" rx="2"><title>2026-08-01: 430,424,995</title></rect><rect x="228" y="52" width="9" height="26" rx="2"><title>2026-08-02: 494,558,627</title></rect><rect x="240" y="42" width="9" height="36" rx="2"><title>2026-08-03: 683,848,201</title></rect><rect x="252" y="54" width="9" height="24" rx="2"><title>2026-08-04: 461,442,996</title></rect><rect x="264" y="40" width="9" height="38" rx="2"><title>2026-08-05: 725,656,309</title></rect><rect x="276" y="34" width="9" height="44" rx="2"><title>2026-08-06: 836,855,775</title></rect><rect x="288" y="46" width="9" height="32" rx="2"><title>2026-08-07: 607,136,470</title></rect><rect x="300" y="6" width="9" height="72" rx="2"><title>2026-08-08: 1,364,181,102</title></rect><rect x="312" y="42" width="9" height="36" rx="2"><title>2026-08-09: 689,040,357</title></rect><rect x="324" y="50" width="9" height="28" rx="2"><title>2026-08-10: 523,475,148</title></rect><rect x="336" y="49" width="9" height="29" rx="2"><title>2026-08-11: 558,485,663</title></rect><rect x="348" y="49" width="9" height="29" rx="2"><title>2026-08-12: 546,908,996</title></rect><rect x="360" y="48" width="9" height="30" rx="2"><title>2026-08-13: 575,357,593</title></rect></svg>
+        </div>
+        <div>
+          <h3>Estimated inference spend by UTC day</h3>
+          <svg class="line-chart" viewBox="0 0 1440 118" role="img" aria-label="estimated_spend_usd over time"><polyline points="10.0,82.4 57.3,48.7 104.7,87.3 152.0,73.9 199.3,69.0 246.7,95.7 294.0,90.5 341.3,83.3 388.7,88.5 436.0,61.3 483.3,78.8 530.7,86.6 578.0,92.8 625.3,81.9 672.7,10.0 720.0,60.2 767.3,82.2 814.7,46.6 862.0,72.6 909.3,87.8 956.7,74.0 1004.0,73.1 1051.3,63.7 1098.7,86.6 1146.0,89.8 1193.3,84.2 1240.7,92.5 1288.0,96.0 1335.3,76.5 1382.7,83.9 1430.0,75.2"></polyline><circle cx="10.0" cy="82.4" r="3"><title>2026-07-14: $268.24</title></circle><circle cx="57.3" cy="48.7" r="3"><title>2026-07-15: $592.68</title></circle><circle cx="104.7" cy="87.3" r="3"><title>2026-07-16: $220.45</title></circle><circle cx="152.0" cy="73.9" r="3"><title>2026-07-17: $349.96</title></circle><circle cx="199.3" cy="69.0" r="3"><title>2026-07-18: $396.73</title></circle><circle cx="246.7" cy="95.7" r="3"><title>2026-07-19: $140.29</title></circle><circle cx="294.0" cy="90.5" r="3"><title>2026-07-20: $190.38</title></circle><circle cx="341.3" cy="83.3" r="3"><title>2026-07-21: $259.53</title></circle><circle cx="388.7" cy="88.5" r="3"><title>2026-07-22: $209.09</title></circle><circle cx="436.0" cy="61.3" r="3"><title>2026-07-23: $471.23</title></circle><circle cx="483.3" cy="78.8" r="3"><title>2026-07-24: $302.53</title></circle><circle cx="530.7" cy="86.6" r="3"><title>2026-07-25: $227.35</title></circle><circle cx="578.0" cy="92.8" r="3"><title>2026-07-26: $167.71</title></circle><circle cx="625.3" cy="81.9" r="3"><title>2026-07-27: $273.32</title></circle><circle cx="672.7" cy="10.0" r="3"><title>2026-07-28: $964.72</title></circle><circle cx="720.0" cy="60.2" r="3"><title>2026-07-29: $481.32</title></circle><circle cx="767.3" cy="82.2" r="3"><title>2026-07-30: $269.78</title></circle><circle cx="814.7" cy="46.6" r="3"><title>2026-07-31: $613.02</title></circle><circle cx="862.0" cy="72.6" r="3"><title>2026-08-01: $362.11</title></circle><circle cx="909.3" cy="87.8" r="3"><title>2026-08-02: $215.78</title></circle><circle cx="956.7" cy="74.0" r="3"><title>2026-08-03: $348.44</title></circle><circle cx="1004.0" cy="73.1" r="3"><title>2026-08-04: $357.73</title></circle><circle cx="1051.3" cy="63.7" r="3"><title>2026-08-05: $447.90</title></circle><circle cx="1098.7" cy="86.6" r="3"><title>2026-08-06: $227.91</title></circle><circle cx="1146.0" cy="89.8" r="3"><title>2026-08-07: $196.78</title></circle><circle cx="1193.3" cy="84.2" r="3"><title>2026-08-08: $250.88</title></circle><circle cx="1240.7" cy="92.5" r="3"><title>2026-08-09: $171.13</title></circle><circle cx="1288.0" cy="96.0" r="3"><title>2026-08-10: $137.21</title></circle><circle cx="1335.3" cy="76.5" r="3"><title>2026-08-11: $324.60</title></circle><circle cx="1382.7" cy="83.9" r="3"><title>2026-08-12: $253.98</title></circle><circle cx="1430.0" cy="75.2" r="3"><title>2026-08-13: $337.77</title></circle><text x="10" y="114">2026-07-14</text><text x="1430" y="114" text-anchor="end">2026-08-13</text></svg>
+        </div>
+      </div>
+      <h3 style="margin-top:16px;">Recent observations</h3>
+      <div class="table-wrap"><table><caption class="sr-only">UTC day; Tokens; Central estimate; 5–20% output range; Pricing coverage; State</caption><thead><tr><th scope="col">UTC day</th><th scope="col">Tokens</th><th scope="col">Central estimate</th><th scope="col">5–20% output range</th><th scope="col">Pricing coverage</th><th scope="col">State</th></tr></thead><tbody><tr><td>2026-07-31</td><td>522,203,216</td><td>$613.02</td><td>$557.16–$724.73</td><td>91.2%</td><td>closed</td></tr>
+<tr><td>2026-08-01</td><td>430,424,995</td><td>$362.11</td><td>$321.86–$442.59</td><td>91.4%</td><td>closed</td></tr>
+<tr><td>2026-08-02</td><td>494,558,627</td><td>$215.78</td><td>$195.20–$256.92</td><td>91.0%</td><td>closed</td></tr>
+<tr><td>2026-08-03</td><td>683,848,201</td><td>$348.44</td><td>$312.84–$419.64</td><td>93.9%</td><td>closed</td></tr>
+<tr><td>2026-08-04</td><td>461,442,996</td><td>$357.73</td><td>$324.74–$423.71</td><td>93.6%</td><td>closed</td></tr>
+<tr><td>2026-08-05</td><td>725,656,309</td><td>$447.90</td><td>$407.80–$528.12</td><td>93.3%</td><td>closed</td></tr>
+<tr><td>2026-08-06</td><td>836,855,775</td><td>$227.91</td><td>$200.54–$282.65</td><td>94.7%</td><td>closed</td></tr>
+<tr><td>2026-08-07</td><td>607,136,470</td><td>$196.78</td><td>$174.25–$241.82</td><td>94.4%</td><td>closed</td></tr>
+<tr><td>2026-08-08</td><td>1,364,181,102</td><td>$250.88</td><td>$228.78–$295.08</td><td>97.0%</td><td>closed</td></tr>
+<tr><td>2026-08-09</td><td>689,040,357</td><td>$171.13</td><td>$150.91–$211.57</td><td>93.1%</td><td>closed</td></tr>
+<tr><td>2026-08-10</td><td>523,475,148</td><td>$137.21</td><td>$119.14–$173.34</td><td>90.6%</td><td>closed</td></tr>
+<tr><td>2026-08-11</td><td>558,485,663</td><td>$324.60</td><td>$284.01–$405.78</td><td>88.7%</td><td>closed</td></tr>
+<tr><td>2026-08-12</td><td>546,908,996</td><td>$253.98</td><td>$221.23–$319.46</td><td>86.4%</td><td>closed</td></tr>
+<tr><td>2026-08-13</td><td>575,357,593</td><td>$337.77</td><td>$303.15–$407.01</td><td>85.4%</td><td>partial</td></tr></tbody></table></div>
+      <h3 style="margin-top:16px;">Top models in the current provider window</h3>
+      <div class="table-wrap"><table><caption class="sr-only">Model; Tokens; Input / output per 1M; Known-token estimate</caption><thead><tr><th scope="col">Model</th><th scope="col">Tokens</th><th scope="col">Input / output per 1M</th><th scope="col">Known-token estimate</th></tr></thead><tbody><tr><td>DeepSeek: DeepSeek V4 Flash 0731</td><td>3,329,472,079</td><td>$0.08 / $0.18</td><td>$299.65</td></tr>
+<tr><td>DeepSeek: DeepSeek V4 Flash 0423</td><td>2,293,579,968</td><td>$0.14 / $0.28</td><td>$353.21</td></tr>
+<tr><td>NVIDIA: Nemotron 3 Ultra</td><td>1,059,505,619</td><td>$0.6 / $3.6</td><td>$953.56</td></tr>
+<tr><td>OpenAI: GPT-5.6 Luna</td><td>918,593,610</td><td>$0.1 / $0.6</td><td>$137.79</td></tr>
+<tr><td>SpaceXAI: Grok 4.5</td><td>861,766,133</td><td>$2 / $6</td><td>$2,068.24</td></tr>
+<tr><td>DeepSeek: DeepSeek V4 Pro</td><td>807,745,624</td><td>$1.168 / $2.336</td><td>$1,037.79</td></tr>
+<tr><td>Tencent: Hy3</td><td>676,571,315</td><td>$0.132 / $0.528</td><td>$116.10</td></tr>
+<tr><td>NVIDIA: Nemotron 3 Super</td><td>624,979,774</td><td>$0.085 / $0.4</td><td>$72.81</td></tr>
+<tr><td>Google: Gemini 3 Flash Preview</td><td>588,786,109</td><td>$0.5 / $3</td><td>$441.59</td></tr>
+<tr><td>Anthropic: Claude Sonnet 4.6</td><td>385,609,520</td><td>$3 / $15</td><td>$1,619.56</td></tr>
+<tr><td>Z.ai: GLM 5.2</td><td>383,359,112</td><td>$0.392 / $1.232</td><td>$182.48</td></tr>
+<tr><td>Qwen: Qwen3.7 Plus</td><td>341,879,990</td><td>$0.32 / $1.28</td><td>$142.22</td></tr></tbody></table></div>
+      <p class="callout">This is ecosystem usage attributed by the public provider to ZeroClaw, not necessarily traffic paid by ZeroClaw Labs. The central estimate assumes 90% input and 10% output tokens; the displayed range uses 5–20% output. Unpriced model traffic is scaled at the priced-token blended rate. Current pricing coverage is 89.5%. Cache, reasoning, routing, long-context, request, tool, and credit-purchase effects are excluded. Every observation retains its source, model rates, assumptions, and collection timestamp for future providers such as ZeroRouter.</p>
+    </section>
+
+    <section>
+      <div class="section-head">
         <h2>CHAOSS Starter Health</h2>
-        <p class="muted">Rolling 28-day window since 2026-07-16T07:50:56Z</p>
+        <p class="muted">Rolling 28-day window since 2026-07-16T23:17:45Z</p>
       </div>
       <div class="table-wrap"><table><caption class="sr-only">Metric; Value; Unit; Definition</caption><thead><tr><th scope="col">Metric</th><th scope="col">Value</th><th scope="col">Unit</th><th scope="col">Definition</th></tr></thead><tbody><tr><td>Issue first response</td><td>13.1</td><td>Median hours</td><td>First non-author, non-bot comment</td></tr>
-<tr><td>Issues answered within 48h</td><td>57.5%</td><td>Eligible issues</td><td>Unanswered items younger than 48 hours are pending, not late</td></tr>
-<tr><td>PR first response</td><td>17.2</td><td>Median hours</td><td>First non-author, non-bot comment or review</td></tr>
-<tr><td>PRs answered within 48h</td><td>75.2%</td><td>Eligible PRs</td><td>Unanswered items younger than 48 hours are pending, not late</td></tr>
-<tr><td>PR closure throughput</td><td>83.8%</td><td>Closed / opened</td><td>Closures during window divided by PRs opened during window</td></tr>
-<tr><td>Active commit contributors</td><td>66</td><td>People</td><td>Non-bot default-branch commit authors</td></tr>
+<tr><td>Issues answered within 48h</td><td>57.3%</td><td>Eligible issues</td><td>Unanswered items younger than 48 hours are pending, not late</td></tr>
+<tr><td>PR first response</td><td>17.3</td><td>Median hours</td><td>First non-author, non-bot comment or review</td></tr>
+<tr><td>PRs answered within 48h</td><td>75.8%</td><td>Eligible PRs</td><td>Unanswered items younger than 48 hours are pending, not late</td></tr>
+<tr><td>PR closure throughput</td><td>84.9%</td><td>Closed / opened</td><td>Closures during window divided by PRs opened during window</td></tr>
+<tr><td>Active commit contributors</td><td>68</td><td>People</td><td>Non-bot default-branch commit authors</td></tr>
 <tr><td>Contributor absence factor</td><td>3</td><td>People for 50%</td><td>Smallest commit-author set responsible for half of commits</td></tr>
 <tr><td>Stable releases</td><td>1</td><td>Count</td><td>Published non-prerelease releases</td></tr>
 <tr><td>Stable release interval</td><td>2.9</td><td>Median days</td><td>Most recent 20 stable-release intervals</td></tr></tbody></table></div>
@@ -254,11 +302,11 @@
     <section>
       <div class="section-head">
         <h2>GHCR Container Downloads</h2>
-        <p class="muted">Total 416,968; last 7 days 7,920</p>
+        <p class="muted">Total 417,857; last 7 days 8,809</p>
       </div>
       <div class="split">
         <div>
-          <svg class="bars" viewBox="0 0 360 92" role="img" aria-label="Daily downloads"><rect x="0" y="36" width="9" height="42" rx="2"><title>2026-07-15: 1,398</title></rect><rect x="12" y="28" width="9" height="50" rx="2"><title>2026-07-16: 1,679</title></rect><rect x="24" y="22" width="9" height="56" rx="2"><title>2026-07-17: 1,870</title></rect><rect x="36" y="42" width="9" height="36" rx="2"><title>2026-07-18: 1,192</title></rect><rect x="48" y="36" width="9" height="42" rx="2"><title>2026-07-19: 1,407</title></rect><rect x="60" y="32" width="9" height="46" rx="2"><title>2026-07-20: 1,544</title></rect><rect x="72" y="32" width="9" height="46" rx="2"><title>2026-07-21: 1,528</title></rect><rect x="84" y="37" width="9" height="41" rx="2"><title>2026-07-22: 1,361</title></rect><rect x="96" y="34" width="9" height="44" rx="2"><title>2026-07-23: 1,482</title></rect><rect x="108" y="33" width="9" height="45" rx="2"><title>2026-07-24: 1,508</title></rect><rect x="120" y="31" width="9" height="47" rx="2"><title>2026-07-25: 1,568</title></rect><rect x="132" y="31" width="9" height="47" rx="2"><title>2026-07-26: 1,570</title></rect><rect x="144" y="34" width="9" height="44" rx="2"><title>2026-07-27: 1,451</title></rect><rect x="156" y="32" width="9" height="46" rx="2"><title>2026-07-28: 1,539</title></rect><rect x="168" y="30" width="9" height="48" rx="2"><title>2026-07-29: 1,612</title></rect><rect x="180" y="33" width="9" height="45" rx="2"><title>2026-07-30: 1,502</title></rect><rect x="192" y="37" width="9" height="41" rx="2"><title>2026-07-31: 1,380</title></rect><rect x="204" y="38" width="9" height="40" rx="2"><title>2026-08-01: 1,342</title></rect><rect x="216" y="36" width="9" height="42" rx="2"><title>2026-08-02: 1,394</title></rect><rect x="228" y="6" width="9" height="72" rx="2"><title>2026-08-03: 2,399</title></rect><rect x="240" y="31" width="9" height="47" rx="2"><title>2026-08-04: 1,551</title></rect><rect x="252" y="31" width="9" height="47" rx="2"><title>2026-08-05: 1,573</title></rect><rect x="264" y="39" width="9" height="39" rx="2"><title>2026-08-06: 1,313</title></rect><rect x="276" y="41" width="9" height="37" rx="2"><title>2026-08-07: 1,246</title></rect><rect x="288" y="38" width="9" height="40" rx="2"><title>2026-08-08: 1,337</title></rect><rect x="300" y="42" width="9" height="36" rx="2"><title>2026-08-09: 1,206</title></rect><rect x="312" y="41" width="9" height="37" rx="2"><title>2026-08-10: 1,248</title></rect><rect x="324" y="39" width="9" height="39" rx="2"><title>2026-08-11: 1,287</title></rect><rect x="336" y="41" width="9" height="37" rx="2"><title>2026-08-12: 1,221</title></rect><rect x="348" y="67" width="9" height="11" rx="2"><title>2026-08-13: 375</title></rect></svg>
+          <svg class="bars" viewBox="0 0 360 92" role="img" aria-label="Daily values"><rect x="0" y="36" width="9" height="42" rx="2"><title>2026-07-15: 1,398</title></rect><rect x="12" y="28" width="9" height="50" rx="2"><title>2026-07-16: 1,679</title></rect><rect x="24" y="22" width="9" height="56" rx="2"><title>2026-07-17: 1,870</title></rect><rect x="36" y="42" width="9" height="36" rx="2"><title>2026-07-18: 1,192</title></rect><rect x="48" y="36" width="9" height="42" rx="2"><title>2026-07-19: 1,407</title></rect><rect x="60" y="32" width="9" height="46" rx="2"><title>2026-07-20: 1,544</title></rect><rect x="72" y="32" width="9" height="46" rx="2"><title>2026-07-21: 1,528</title></rect><rect x="84" y="37" width="9" height="41" rx="2"><title>2026-07-22: 1,361</title></rect><rect x="96" y="34" width="9" height="44" rx="2"><title>2026-07-23: 1,482</title></rect><rect x="108" y="33" width="9" height="45" rx="2"><title>2026-07-24: 1,508</title></rect><rect x="120" y="31" width="9" height="47" rx="2"><title>2026-07-25: 1,568</title></rect><rect x="132" y="31" width="9" height="47" rx="2"><title>2026-07-26: 1,570</title></rect><rect x="144" y="34" width="9" height="44" rx="2"><title>2026-07-27: 1,451</title></rect><rect x="156" y="32" width="9" height="46" rx="2"><title>2026-07-28: 1,539</title></rect><rect x="168" y="30" width="9" height="48" rx="2"><title>2026-07-29: 1,612</title></rect><rect x="180" y="33" width="9" height="45" rx="2"><title>2026-07-30: 1,502</title></rect><rect x="192" y="37" width="9" height="41" rx="2"><title>2026-07-31: 1,380</title></rect><rect x="204" y="38" width="9" height="40" rx="2"><title>2026-08-01: 1,342</title></rect><rect x="216" y="36" width="9" height="42" rx="2"><title>2026-08-02: 1,394</title></rect><rect x="228" y="6" width="9" height="72" rx="2"><title>2026-08-03: 2,399</title></rect><rect x="240" y="31" width="9" height="47" rx="2"><title>2026-08-04: 1,551</title></rect><rect x="252" y="31" width="9" height="47" rx="2"><title>2026-08-05: 1,573</title></rect><rect x="264" y="39" width="9" height="39" rx="2"><title>2026-08-06: 1,313</title></rect><rect x="276" y="41" width="9" height="37" rx="2"><title>2026-08-07: 1,246</title></rect><rect x="288" y="38" width="9" height="40" rx="2"><title>2026-08-08: 1,337</title></rect><rect x="300" y="42" width="9" height="36" rx="2"><title>2026-08-09: 1,206</title></rect><rect x="312" y="41" width="9" height="37" rx="2"><title>2026-08-10: 1,248</title></rect><rect x="324" y="39" width="9" height="39" rx="2"><title>2026-08-11: 1,287</title></rect><rect x="336" y="41" width="9" height="37" rx="2"><title>2026-08-12: 1,221</title></rect><rect x="348" y="40" width="9" height="38" rx="2"><title>2026-08-13: 1,264</title></rect></svg>
           <p class="note">Daily values are scraped from the authenticated GitHub Packages chart because REST package objects omit pull/download counts.</p>
         </div>
         <div>
@@ -277,26 +325,26 @@
         <p class="muted">Prebuilt payloads are separated from install.sh bootstrap downloads</p>
       </div>
       <div class="split">
-	        <div><div class="table-wrap"><table><caption class="sr-only">Release; Published; Age; Payload downloads; install.sh; Payload avg/wk; Observed first 21d/wk; Observed latest-stable/wk; Observed latest-stable window</caption><thead><tr><th scope="col">Release</th><th scope="col">Published</th><th scope="col">Age</th><th scope="col">Payload downloads</th><th scope="col">install.sh</th><th scope="col">Payload avg/wk</th><th scope="col">Observed first 21d/wk</th><th scope="col">Observed latest-stable/wk</th><th scope="col">Observed latest-stable window</th></tr></thead><tbody><tr><td>v0.8.4</td><td>2026-08-02</td><td>10.5d</td><td>7,343</td><td>359</td><td>4918</td><td>4889</td><td>4889</td><td>+6,920 over 9.9d</td></tr>
-<tr><td>v0.8.3</td><td>2026-07-16</td><td>28.3d</td><td>11,200</td><td>434</td><td>2775</td><td>3271</td><td>3265</td><td>+7,931 over 17.0d</td></tr>
-<tr><td>v0.8.2</td><td>2026-06-26</td><td>48.1d</td><td>11,897</td><td>460</td><td>1730</td><td>3036</td><td>3105</td><td>+5,526 over 12.5d</td></tr>
-<tr><td>v0.8.1</td><td>2026-06-19</td><td>55.2d</td><td>6,170</td><td>406</td><td>782</td><td>36</td><td>n/a</td><td>n/a</td></tr>
-<tr><td>v0.8.0</td><td>2026-06-12</td><td>62.3d</td><td>6,875</td><td>408</td><td>772</td><td>0</td><td>n/a</td><td>n/a</td></tr>
-<tr><td>v0.7.5</td><td>2026-05-08</td><td>97.1d</td><td>24,335</td><td>649</td><td>1754</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
-<tr><td>v0.7.4</td><td>2026-05-01</td><td>104.2d</td><td>8,757</td><td>475</td><td>588</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
-<tr><td>v0.7.3</td><td>2026-04-19</td><td>116.2d</td><td>12,417</td><td>587</td><td>748</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
-<tr><td>v0.6.9</td><td>2026-04-08</td><td>127.1d</td><td>9,047</td><td>434</td><td>498</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
-<tr><td>v0.6.8</td><td>2026-04-02</td><td>133.3d</td><td>7,041</td><td>334</td><td>370</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
-<tr><td>v0.6.7</td><td>2026-03-29</td><td>136.4d</td><td>1,075</td><td>133</td><td>55</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
-<tr><td>v0.6.5</td><td>2026-03-27</td><td>139.2d</td><td>5,013</td><td>266</td><td>252</td><td>n/a</td><td>n/a</td><td>n/a</td></tr></tbody></table></div></div>
-        <div><div class="table-wrap"><table><caption class="sr-only">Asset category; Downloads; Share</caption><thead><tr><th scope="col">Asset category</th><th scope="col">Downloads</th><th scope="col">Share</th></tr></thead><tbody><tr><td>Linux GNU</td><td>108,748</td><td>65.8%</td></tr>
-<tr><td>Windows zip</td><td>25,517</td><td>15.4%</td></tr>
-<tr><td>Android</td><td>9,088</td><td>5.5%</td></tr>
-<tr><td>Install script</td><td>7,617</td><td>4.6%</td></tr>
-<tr><td>macOS tarball</td><td>6,294</td><td>3.8%</td></tr>
-<tr><td>Linux musl</td><td>5,484</td><td>3.3%</td></tr>
-<tr><td>DMG</td><td>1,797</td><td>1.1%</td></tr>
-<tr><td>Other installable</td><td>674</td><td>0.4%</td></tr></tbody></table></div></div>
+	        <div><div class="table-wrap"><table><caption class="sr-only">Release; Published; Age; Payload downloads; install.sh; Payload avg/wk; Observed first 21d/wk; Observed latest-stable/wk; Observed latest-stable window</caption><thead><tr><th scope="col">Release</th><th scope="col">Published</th><th scope="col">Age</th><th scope="col">Payload downloads</th><th scope="col">install.sh</th><th scope="col">Payload avg/wk</th><th scope="col">Observed first 21d/wk</th><th scope="col">Observed latest-stable/wk</th><th scope="col">Observed latest-stable window</th></tr></thead><tbody><tr><td>v0.8.4</td><td>2026-08-02</td><td>11.1d</td><td>7,619</td><td>364</td><td>4807</td><td>4774</td><td>4774</td><td>+7,196 over 10.6d</td></tr>
+<tr><td>v0.8.3</td><td>2026-07-16</td><td>28.9d</td><td>11,204</td><td>435</td><td>2714</td><td>3271</td><td>3265</td><td>+7,931 over 17.0d</td></tr>
+<tr><td>v0.8.2</td><td>2026-06-26</td><td>48.8d</td><td>11,901</td><td>460</td><td>1708</td><td>3036</td><td>3105</td><td>+5,526 over 12.5d</td></tr>
+<tr><td>v0.8.1</td><td>2026-06-19</td><td>55.9d</td><td>6,171</td><td>406</td><td>773</td><td>36</td><td>n/a</td><td>n/a</td></tr>
+<tr><td>v0.8.0</td><td>2026-06-12</td><td>63.0d</td><td>6,876</td><td>408</td><td>764</td><td>0</td><td>n/a</td><td>n/a</td></tr>
+<tr><td>v0.7.5</td><td>2026-05-08</td><td>97.8d</td><td>24,338</td><td>649</td><td>1743</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
+<tr><td>v0.7.4</td><td>2026-05-01</td><td>104.9d</td><td>8,759</td><td>475</td><td>585</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
+<tr><td>v0.7.3</td><td>2026-04-19</td><td>116.8d</td><td>12,419</td><td>587</td><td>744</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
+<tr><td>v0.6.9</td><td>2026-04-08</td><td>127.7d</td><td>9,049</td><td>434</td><td>496</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
+<tr><td>v0.6.8</td><td>2026-04-02</td><td>133.9d</td><td>7,043</td><td>334</td><td>368</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
+<tr><td>v0.6.7</td><td>2026-03-29</td><td>137.1d</td><td>1,077</td><td>133</td><td>55</td><td>n/a</td><td>n/a</td><td>n/a</td></tr>
+<tr><td>v0.6.5</td><td>2026-03-27</td><td>139.8d</td><td>5,015</td><td>266</td><td>251</td><td>n/a</td><td>n/a</td><td>n/a</td></tr></tbody></table></div></div>
+        <div><div class="table-wrap"><table><caption class="sr-only">Asset category; Downloads; Share</caption><thead><tr><th scope="col">Asset category</th><th scope="col">Downloads</th><th scope="col">Share</th></tr></thead><tbody><tr><td>Linux GNU</td><td>108,964</td><td>65.8%</td></tr>
+<tr><td>Windows zip</td><td>25,602</td><td>15.5%</td></tr>
+<tr><td>Android</td><td>9,096</td><td>5.5%</td></tr>
+<tr><td>Install script</td><td>7,623</td><td>4.6%</td></tr>
+<tr><td>macOS tarball</td><td>6,308</td><td>3.8%</td></tr>
+<tr><td>Linux musl</td><td>5,493</td><td>3.3%</td></tr>
+<tr><td>DMG</td><td>1,802</td><td>1.1%</td></tr>
+<tr><td>Other installable</td><td>676</td><td>0.4%</td></tr></tbody></table></div></div>
       </div>
       <p class="callout"><code>install.sh</code> is a bootstrap path: default installs clone and build the repo, while <code>--prebuilt</code> downloads release payload assets. Treat repo clone traffic as the better proxy for source-build installs. First-21-day and latest-stable rates are computed only from stored snapshots.</p>
     </section>
@@ -304,32 +352,32 @@
 	    <section>
 	      <div class="section-head">
 	        <h2>Repository Activity</h2>
-	        <p class="muted">Pulse-like window since 2026-08-06T07:50:56Z</p>
+	        <p class="muted">Pulse-like window since 2026-08-06T23:17:45Z</p>
 	      </div>
       <div class="split">
         <div>
           <h3>Views</h3>
-          <svg class="bars" viewBox="0 0 168 92" role="img" aria-label="Daily downloads"><rect x="0" y="22" width="9" height="56" rx="2"><title>2026-07-30T00:00:00Z: 2,173</title></rect><rect x="12" y="25" width="9" height="53" rx="2"><title>2026-07-31T00:00:00Z: 2,061</title></rect><rect x="24" y="16" width="9" height="62" rx="2"><title>2026-08-01T00:00:00Z: 2,421</title></rect><rect x="36" y="23" width="9" height="55" rx="2"><title>2026-08-02T00:00:00Z: 2,140</title></rect><rect x="48" y="7" width="9" height="71" rx="2"><title>2026-08-03T00:00:00Z: 2,767</title></rect><rect x="60" y="6" width="9" height="72" rx="2"><title>2026-08-04T00:00:00Z: 2,819</title></rect><rect x="72" y="15" width="9" height="63" rx="2"><title>2026-08-05T00:00:00Z: 2,461</title></rect><rect x="84" y="27" width="9" height="51" rx="2"><title>2026-08-06T00:00:00Z: 1,985</title></rect><rect x="96" y="23" width="9" height="55" rx="2"><title>2026-08-07T00:00:00Z: 2,165</title></rect><rect x="108" y="39" width="9" height="39" rx="2"><title>2026-08-08T00:00:00Z: 1,535</title></rect><rect x="120" y="30" width="9" height="48" rx="2"><title>2026-08-09T00:00:00Z: 1,895</title></rect><rect x="132" y="30" width="9" height="48" rx="2"><title>2026-08-10T00:00:00Z: 1,866</title></rect><rect x="144" y="7" width="9" height="71" rx="2"><title>2026-08-11T00:00:00Z: 2,780</title></rect><rect x="156" y="28" width="9" height="50" rx="2"><title>2026-08-12T00:00:00Z: 1,973</title></rect></svg>
+          <svg class="bars" viewBox="0 0 168 92" role="img" aria-label="Daily values"><rect x="0" y="22" width="9" height="56" rx="2"><title>2026-07-30T00:00:00Z: 2,173</title></rect><rect x="12" y="25" width="9" height="53" rx="2"><title>2026-07-31T00:00:00Z: 2,061</title></rect><rect x="24" y="16" width="9" height="62" rx="2"><title>2026-08-01T00:00:00Z: 2,421</title></rect><rect x="36" y="23" width="9" height="55" rx="2"><title>2026-08-02T00:00:00Z: 2,140</title></rect><rect x="48" y="7" width="9" height="71" rx="2"><title>2026-08-03T00:00:00Z: 2,767</title></rect><rect x="60" y="6" width="9" height="72" rx="2"><title>2026-08-04T00:00:00Z: 2,819</title></rect><rect x="72" y="15" width="9" height="63" rx="2"><title>2026-08-05T00:00:00Z: 2,461</title></rect><rect x="84" y="27" width="9" height="51" rx="2"><title>2026-08-06T00:00:00Z: 1,985</title></rect><rect x="96" y="23" width="9" height="55" rx="2"><title>2026-08-07T00:00:00Z: 2,165</title></rect><rect x="108" y="39" width="9" height="39" rx="2"><title>2026-08-08T00:00:00Z: 1,535</title></rect><rect x="120" y="30" width="9" height="48" rx="2"><title>2026-08-09T00:00:00Z: 1,895</title></rect><rect x="132" y="30" width="9" height="48" rx="2"><title>2026-08-10T00:00:00Z: 1,866</title></rect><rect x="144" y="7" width="9" height="71" rx="2"><title>2026-08-11T00:00:00Z: 2,780</title></rect><rect x="156" y="28" width="9" height="50" rx="2"><title>2026-08-12T00:00:00Z: 1,973</title></rect></svg>
           <h3 style="margin-top:16px;">Clones</h3>
-          <svg class="bars" viewBox="0 0 168 92" role="img" aria-label="Daily downloads"><rect x="0" y="43" width="9" height="35" rx="2"><title>2026-07-30T00:00:00Z: 4,737</title></rect><rect x="12" y="57" width="9" height="21" rx="2"><title>2026-07-31T00:00:00Z: 2,780</title></rect><rect x="24" y="26" width="9" height="52" rx="2"><title>2026-08-01T00:00:00Z: 6,915</title></rect><rect x="36" y="37" width="9" height="41" rx="2"><title>2026-08-02T00:00:00Z: 5,471</title></rect><rect x="48" y="27" width="9" height="51" rx="2"><title>2026-08-03T00:00:00Z: 6,868</title></rect><rect x="60" y="33" width="9" height="45" rx="2"><title>2026-08-04T00:00:00Z: 6,082</title></rect><rect x="72" y="11" width="9" height="67" rx="2"><title>2026-08-05T00:00:00Z: 8,948</title></rect><rect x="84" y="53" width="9" height="25" rx="2"><title>2026-08-06T00:00:00Z: 3,319</title></rect><rect x="96" y="30" width="9" height="48" rx="2"><title>2026-08-07T00:00:00Z: 6,473</title></rect><rect x="108" y="31" width="9" height="47" rx="2"><title>2026-08-08T00:00:00Z: 6,295</title></rect><rect x="120" y="21" width="9" height="57" rx="2"><title>2026-08-09T00:00:00Z: 7,584</title></rect><rect x="132" y="42" width="9" height="36" rx="2"><title>2026-08-10T00:00:00Z: 4,774</title></rect><rect x="144" y="6" width="9" height="72" rx="2"><title>2026-08-11T00:00:00Z: 9,654</title></rect><rect x="156" y="32" width="9" height="46" rx="2"><title>2026-08-12T00:00:00Z: 6,171</title></rect></svg>
+          <svg class="bars" viewBox="0 0 168 92" role="img" aria-label="Daily values"><rect x="0" y="43" width="9" height="35" rx="2"><title>2026-07-30T00:00:00Z: 4,737</title></rect><rect x="12" y="57" width="9" height="21" rx="2"><title>2026-07-31T00:00:00Z: 2,780</title></rect><rect x="24" y="26" width="9" height="52" rx="2"><title>2026-08-01T00:00:00Z: 6,915</title></rect><rect x="36" y="37" width="9" height="41" rx="2"><title>2026-08-02T00:00:00Z: 5,471</title></rect><rect x="48" y="27" width="9" height="51" rx="2"><title>2026-08-03T00:00:00Z: 6,868</title></rect><rect x="60" y="33" width="9" height="45" rx="2"><title>2026-08-04T00:00:00Z: 6,082</title></rect><rect x="72" y="11" width="9" height="67" rx="2"><title>2026-08-05T00:00:00Z: 8,948</title></rect><rect x="84" y="53" width="9" height="25" rx="2"><title>2026-08-06T00:00:00Z: 3,319</title></rect><rect x="96" y="30" width="9" height="48" rx="2"><title>2026-08-07T00:00:00Z: 6,473</title></rect><rect x="108" y="31" width="9" height="47" rx="2"><title>2026-08-08T00:00:00Z: 6,295</title></rect><rect x="120" y="21" width="9" height="57" rx="2"><title>2026-08-09T00:00:00Z: 7,584</title></rect><rect x="132" y="42" width="9" height="36" rx="2"><title>2026-08-10T00:00:00Z: 4,774</title></rect><rect x="144" y="6" width="9" height="72" rx="2"><title>2026-08-11T00:00:00Z: 9,654</title></rect><rect x="156" y="32" width="9" height="46" rx="2"><title>2026-08-12T00:00:00Z: 6,171</title></rect></svg>
           <p class="note">Views: 31,041 total, 7,089 unique. Clones: 86,071 total, 2,624 unique.</p>
         </div>
 	        <div>
-	          <div class="table-wrap"><table><caption class="sr-only">Pulse metric; Count</caption><thead><tr><th scope="col">Pulse metric</th><th scope="col">Count</th></tr></thead><tbody><tr><td>PRs opened</td><td>102</td></tr>
-<tr><td>PRs merged</td><td>85</td></tr>
-<tr><td>Issues opened</td><td>72</td></tr>
-<tr><td>Issues closed</td><td>57</td></tr>
-<tr><td>Default-branch commits</td><td>85</td></tr></tbody></table></div>
-	          <div class="table-wrap"><table><caption class="sr-only">Contributor; Latest week commits; Total commits</caption><thead><tr><th scope="col">Contributor</th><th scope="col">Latest week commits</th><th scope="col">Total commits</th></tr></thead><tbody><tr><td>Audacity88</td><td>24</td><td>446</td></tr>
+	          <div class="table-wrap"><table><caption class="sr-only">Pulse metric; Count</caption><thead><tr><th scope="col">Pulse metric</th><th scope="col">Count</th></tr></thead><tbody><tr><td>PRs opened</td><td>111</td></tr>
+<tr><td>PRs merged</td><td>101</td></tr>
+<tr><td>Issues opened</td><td>79</td></tr>
+<tr><td>Issues closed</td><td>70</td></tr>
+<tr><td>Default-branch commits</td><td>101</td></tr></tbody></table></div>
+	          <div class="table-wrap"><table><caption class="sr-only">Contributor; Latest week commits; Total commits</caption><thead><tr><th scope="col">Contributor</th><th scope="col">Latest week commits</th><th scope="col">Total commits</th></tr></thead><tbody><tr><td>Audacity88</td><td>28</td><td>450</td></tr>
 <tr><td>JordanTheJet</td><td>6</td><td>139</td></tr>
+<tr><td>zyw02</td><td>5</td><td>5</td></tr>
 <tr><td>wangmiao0668000666</td><td>4</td><td>53</td></tr>
+<tr><td>NiuBlibing</td><td>3</td><td>44</td></tr>
+<tr><td>tidux</td><td>3</td><td>51</td></tr>
 <tr><td>dependabot[bot]</td><td>3</td><td>55</td></tr>
 <tr><td>IftekharUddin</td><td>3</td><td>65</td></tr>
 <tr><td>AngryPacifist</td><td>2</td><td>5</td></tr>
-<tr><td>metalmon</td><td>2</td><td>12</td></tr>
-<tr><td>tidux</td><td>2</td><td>50</td></tr>
-<tr><td>ozpool</td><td>1</td><td>5</td></tr>
-<tr><td>abhinavmathur-atlan</td><td>1</td><td>7</td></tr></tbody></table></div>
+<tr><td>metalmon</td><td>2</td><td>12</td></tr></tbody></table></div>
 	        </div>
 	      </div>
 	      <h3 style="margin-top:16px;">Top referrers</h3>
@@ -364,12 +412,12 @@
       <div class="split">
         <div>
           <h3>Homebrew Core</h3>
-          <div class="table-wrap"><table><caption class="sr-only">Window; Installs; Install on request</caption><thead><tr><th scope="col">Window</th><th scope="col">Installs</th><th scope="col">Install on request</th></tr></thead><tbody><tr><td>30d</td><td>356</td><td>356</td></tr>
-<tr><td>90d</td><td>930</td><td>930</td></tr>
-<tr><td>365d</td><td>7,926</td><td>7,926</td></tr></tbody></table></div>
+          <div class="table-wrap"><table><caption class="sr-only">Window; Installs; Install on request</caption><thead><tr><th scope="col">Window</th><th scope="col">Installs</th><th scope="col">Install on request</th></tr></thead><tbody><tr><td>30d</td><td>357</td><td>357</td></tr>
+<tr><td>90d</td><td>922</td><td>922</td></tr>
+<tr><td>365d</td><td>7,927</td><td>7,927</td></tr></tbody></table></div>
           <h3 style="margin-top:16px;">crates.io</h3>
-          <div class="table-wrap"><table><caption class="sr-only">Crate; Version; Total; 7d; 30d; 90d</caption><thead><tr><th scope="col">Crate</th><th scope="col">Version</th><th scope="col">Total</th><th scope="col">7d</th><th scope="col">30d</th><th scope="col">90d</th></tr></thead><tbody><tr><td>zeroclaw</td><td>0.1.7</td><td>4,202</td><td>56</td><td>145</td><td>769</td></tr>
-<tr><td>aardvark-sys</td><td>0.1.0</td><td>2,591</td><td>47</td><td>165</td><td>723</td></tr></tbody></table></div>
+          <div class="table-wrap"><table><caption class="sr-only">Crate; Version; Total; 7d; 30d; 90d</caption><thead><tr><th scope="col">Crate</th><th scope="col">Version</th><th scope="col">Total</th><th scope="col">7d</th><th scope="col">30d</th><th scope="col">90d</th></tr></thead><tbody><tr><td>zeroclaw</td><td>0.1.7</td><td>4,204</td><td>60</td><td>149</td><td>773</td></tr>
+<tr><td>aardvark-sys</td><td>0.1.0</td><td>2,594</td><td>48</td><td>166</td><td>724</td></tr></tbody></table></div>
         </div>
         <div>
           <h3>AUR</h3>
@@ -395,9 +443,9 @@
 <tr><td>cardellier/zeroclaw</td><td>3,357</td><td>0</td><td></td></tr>
 <tr><td>ilteoood/zeroclaw</td><td>3,864</td><td>0</td><td></td></tr>
 <tr><td>cdfng/zeroclaw</td><td>1,789</td><td>0</td><td></td></tr>
-<tr><td>nphung/zeroclaw</td><td>2,272</td><td>0</td><td></td></tr>
 <tr><td>mkasajim/zeroclaw</td><td>1,573</td><td>0</td><td></td></tr>
-<tr><td>mos4/zeroclaw</td><td>1,325</td><td>0</td><td></td></tr></tbody></table></div>
+<tr><td>mos4/zeroclaw</td><td>1,325</td><td>0</td><td></td></tr>
+<tr><td>nphung/zeroclaw</td><td>2,272</td><td>0</td><td></td></tr></tbody></table></div>
     </section>
 
 	    <section>
@@ -427,7 +475,8 @@
 <tr><td>GHCR downloads</td><td>Container distribution</td><td>Cumulative plus chart window</td><td>Authenticated package UI counters; REST package objects omit pulls.</td></tr>
 <tr><td>Release payload assets</td><td>Binary distribution</td><td>Cumulative</td><td>GitHub release asset counters, excluding install.sh bootstrap downloads.</td></tr>
 <tr><td>Homebrew installs</td><td>Package-manager adoption</td><td>Rolling 30d/90d/365d</td><td>Homebrew anonymous install analytics, not lifetime downloads.</td></tr>
-<tr><td>CHAOSS starter health</td><td>Responsiveness, sustainability, release cadence</td><td>Rolling 28d</td><td>Human responses exclude authors and bot accounts; definitions are recorded in each snapshot.</td></tr></tbody></table></div>
+<tr><td>CHAOSS starter health</td><td>Responsiveness, sustainability, release cadence</td><td>Rolling 28d</td><td>Human responses exclude authors and bot accounts; definitions are recorded in each snapshot.</td></tr>
+<tr><td>Public inference usage</td><td>Provider-attributed ecosystem activity</td><td>Provider-published rolling window</td><td>Daily provider observations are deduplicated by source, entity, and UTC day; spend remains an estimate with stored assumptions and coverage.</td></tr></tbody></table></div>
 	      <p class="callout">This dashboard follows a snapshot-first model aligned with CHAOSS project-health reporting. Versioned normalized source records are preserved under <code>data/snapshots/</code>, and aggregate JSON, SQLite, and HTML views are regenerated from those records.</p>
 	    </section>
 
@@ -444,7 +493,9 @@
 <tr><td>AUR</td><td>ok</td></tr>
 <tr><td>crates.io</td><td>ok</td></tr>
 <tr><td>Scoop</td><td>ok</td></tr>
-<tr><td>Docker Hub search</td><td>ok</td></tr></tbody></table></div>
+<tr><td>Docker Hub search</td><td>ok</td></tr>
+<tr><td>Public inference usage</td><td>ok (1 source)</td></tr>
+<tr><td>Public inference: openrouter</td><td>ok</td></tr></tbody></table></div>
     </section>
   </main>
   <footer>
