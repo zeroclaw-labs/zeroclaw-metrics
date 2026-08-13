@@ -58,6 +58,9 @@ class PublicInferenceUsageTests(unittest.TestCase):
         ]
     }
 
+    def test_compact_formats_billion_scale_usage(self):
+        self.assertEqual("14.8B", dashboard.compact(14_847_281_097))
+
     def test_parses_embedded_openrouter_usage(self):
         parsed = dashboard.parse_openrouter_app_page(self.PAGE)
         self.assertEqual(300, parsed["reported_total_tokens"])
