@@ -44,6 +44,9 @@ PUBLIC_USAGE_SCHEMA_VERSION = 1
 OPENROUTER_APP_SLUG = "zeroclaw"
 OPENROUTER_APP_URL = f"https://openrouter.ai/apps/{OPENROUTER_APP_SLUG}"
 OPENROUTER_MODELS_URL = "https://openrouter.ai/api/v1/models?limit=1000"
+PUBLIC_USAGE_SOURCE_NAMES = {
+    "openrouter": "OpenRouter",
+}
 PUBLIC_USAGE_OUTPUT_SHARES = {
     "low": 0.05,
     "central": 0.10,
@@ -959,6 +962,11 @@ def usd(value: Any) -> str:
     if not isinstance(value, int | float):
         return "n/a"
     return f"${float(value):,.2f}"
+
+
+def public_usage_source_name(source: dict[str, Any]) -> str:
+    source_key = str(source.get("source") or "provider")
+    return PUBLIC_USAGE_SOURCE_NAMES.get(source_key, source_key)
 
 
 def as_int(value: Any) -> int | None:
@@ -2259,6 +2267,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     public_usage_data = public_usage["data"] if public_usage.get("ok") else {}
     public_sources = public_usage_data.get("sources", [])
     primary_public_source = public_sources[0] if public_sources else {}
+    primary_public_source_name = public_usage_source_name(primary_public_source)
     public_estimate = (
         primary_public_source.get("estimate")
         if isinstance(primary_public_source.get("estimate"), dict)
@@ -2298,14 +2307,14 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ("Observed Clones", compact(observed_clone_events), f"Clone events since {clone_first_day or 'first stored day'}"),
         ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
         (
-            "Public AI Tokens",
+            f"{primary_public_source_name} Tokens",
             compact(primary_public_source.get("reported_total_tokens")),
-            f"{primary_public_source.get('source', 'Provider')} attributed usage window",
+            f"{primary_public_source_name}-attributed usage window",
         ),
         (
-            "Est. AI Spend",
+            f"{primary_public_source_name} Spend",
             usd(public_estimate.get("estimated_spend_usd")),
-            "Modeled provider inference, not a ZeroClaw Labs bill",
+            "Estimated from model prices, not a ZeroClaw Labs bill",
         ),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
     ]
@@ -2474,7 +2483,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ["Release payload assets", "Binary distribution", "Cumulative", "GitHub release asset counters, excluding install.sh bootstrap downloads."],
         ["Homebrew installs", "Package-manager adoption", "Rolling 30d/90d/365d", "Homebrew anonymous install analytics, not lifetime downloads."],
         ["CHAOSS starter health", "Responsiveness, sustainability, release cadence", f"Rolling {ACTIVITY_WINDOW_DAYS}d", "Human responses exclude authors and bot accounts; definitions are recorded in each snapshot."],
-        ["Public inference usage", "Provider-attributed ecosystem activity", "Provider-published rolling window", "Daily provider observations are deduplicated by source, entity, and UTC day; spend remains an estimate with stored assumptions and coverage."],
+        [f"{primary_public_source_name} usage", "Provider-attributed ecosystem activity", "Provider-published rolling window", "Daily provider observations are deduplicated by source, entity, and UTC day; spend remains an estimate with stored assumptions and coverage."],
     ]
 
     status_rows = [
@@ -2488,7 +2497,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ["Scoop", "ok" if scoop["ok"] else scoop.get("error")],
         ["Docker Hub search", "ok" if docker_hub["ok"] else docker_hub.get("error")],
         [
-            "Public inference usage",
+            f"{primary_public_source_name} usage",
             (
                 f"ok ({len(public_sources)} source{'s' if len(public_sources) != 1 else ''})"
                 if public_usage.get("ok")
@@ -2498,7 +2507,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     ]
     status_rows.extend(
         [
-            f"Public inference: {row.get('source', 'unknown')}",
+            public_usage_source_name(row),
             "ok" if row.get("ok") else row.get("error", "collection failed"),
         ]
         for row in public_usage_data.get("source_status", [])
@@ -2737,8 +2746,8 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 
     <section>
       <div class="section-head">
-        <h2>Public Inference Usage</h2>
-        <p class="muted">{html.escape(str(primary_public_source.get("source", "No provider collected")))} · {html.escape(str(primary_public_source.get("window_start", "n/a")))} to {html.escape(str(primary_public_source.get("window_end", "n/a")))}</p>
+        <h2>{html.escape(primary_public_source_name)} Usage &amp; Spend</h2>
+        <p class="muted">{html.escape(str(primary_public_source.get("window_start", "n/a")))} to {html.escape(str(primary_public_source.get("window_end", "n/a")))}</p>
       </div>
       <div class="split">
         <div>
@@ -2754,7 +2763,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       {table(["UTC day", "Tokens", "Central estimate", "5–20% output range", "Pricing coverage", "State"], public_daily_rows)}
       <h3 style="margin-top:16px;">Top models in the current provider window</h3>
       {table(["Model", "Tokens", "Input / output per 1M", "Known-token estimate"], public_model_rows)}
-      <p class="callout">This is ecosystem usage attributed by the public provider to ZeroClaw, not necessarily traffic paid by ZeroClaw Labs. The central estimate assumes 90% input and 10% output tokens; the displayed range uses 5–20% output. Unpriced model traffic is scaled at the priced-token blended rate. Current pricing coverage is {metric(public_estimate.get("pricing_coverage_pct"))}%. Cache, reasoning, routing, long-context, request, tool, and credit-purchase effects are excluded. Every observation retains its source, model rates, assumptions, and collection timestamp for future providers such as ZeroRouter.</p>
+      <p class="callout">OpenRouter attributes this ecosystem usage to ZeroClaw; it is not necessarily traffic paid by ZeroClaw Labs. The central estimate assumes 90% input and 10% output tokens; the displayed range uses 5–20% output. Unpriced model traffic is scaled at the priced-token blended rate. Current pricing coverage is {metric(public_estimate.get("pricing_coverage_pct"))}%. Cache, reasoning, routing, long-context, request, tool, and credit-purchase effects are excluded. Every observation retains its source, model rates, assumptions, and collection timestamp.</p>
     </section>
 
     <section>
