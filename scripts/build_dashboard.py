@@ -36,10 +36,19 @@ OWNER = "zeroclaw-labs"
 REPO = "zeroclaw"
 FULL_REPO = f"{OWNER}/{REPO}"
 USER_AGENT = "zeroclaw-metrics-dashboard (https://github.com/zeroclaw-labs/zeroclaw)"
-SNAPSHOT_SCHEMA_VERSION = 2
+SNAPSHOT_SCHEMA_VERSION = 3
 GITHUB_API_VERSION = "2022-11-28"
 ACTIVITY_WINDOW_DAYS = 28
 CORE_SOURCES = ("github_repo", "releases", "ghcr")
+PUBLIC_USAGE_SCHEMA_VERSION = 1
+OPENROUTER_APP_SLUG = "zeroclaw"
+OPENROUTER_APP_URL = f"https://openrouter.ai/apps/{OPENROUTER_APP_SLUG}"
+OPENROUTER_MODELS_URL = "https://openrouter.ai/api/v1/models?limit=1000"
+PUBLIC_USAGE_OUTPUT_SHARES = {
+    "low": 0.05,
+    "central": 0.10,
+    "high": 0.20,
+}
 
 
 def run(args: list[str], *, input_text: str | None = None) -> str:
@@ -101,6 +110,233 @@ def get_text(url: str, headers: dict[str, str] | None = None) -> str:
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, **(headers or {})})
     with urllib.request.urlopen(req, timeout=30) as response:
         return response.read().decode("utf-8")
+
+
+def embedded_json(page: str, pattern: str, label: str) -> Any:
+    match = re.search(pattern, page, re.S)
+    if not match:
+        raise ValueError(f"OpenRouter app page did not contain {label}")
+    escaped = match.group(1)
+    try:
+        decoded = json.loads(f'"{escaped}"')
+        return json.loads(decoded)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"OpenRouter {label} was not valid embedded JSON") from exc
+
+
+def parse_openrouter_app_page(page: str) -> dict[str, Any]:
+    metadata = re.search(
+        r'\\"totalTokens\\":(\d+),\\"rank\\":.*?,\\"modelsUsed\\":(\d+)',
+        page,
+        re.S,
+    )
+    if not metadata:
+        raise ValueError("OpenRouter app page did not contain usage metadata")
+
+    daily = embedded_json(
+        page,
+        r'\\"data\\":(\[\{\\"x\\":.*?\}\]),\\"appName\\":\\"ZeroClaw\\",\\"forecast\\"',
+        "daily usage chart",
+    )
+    model_totals = embedded_json(
+        page,
+        r'\\"appModelAnalytics\\":(\[\{.*?\}\]),\\"appName\\":\\"ZeroClaw\\"',
+        "model usage rankings",
+    )
+    if not isinstance(daily, list) or not isinstance(model_totals, list):
+        raise ValueError("OpenRouter usage payload had an unexpected shape")
+
+    return {
+        "reported_total_tokens": int(metadata.group(1)),
+        "models_used": int(metadata.group(2)),
+        "daily": daily,
+        "model_totals": model_totals,
+    }
+
+
+def openrouter_price_catalog(payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    catalog: dict[str, dict[str, Any]] = {}
+    for model in payload.get("data", []):
+        model_id = str(model.get("id") or "")
+        canonical_slug = str(model.get("canonical_slug") or "")
+        pricing = model.get("pricing") if isinstance(model.get("pricing"), dict) else {}
+        if not model_id or ":" in model_id or not canonical_slug:
+            continue
+        try:
+            prompt = round(float(pricing["prompt"]) * 1_000_000, 9)
+            completion = round(float(pricing["completion"]) * 1_000_000, 9)
+        except (KeyError, TypeError, ValueError):
+            continue
+        if prompt < 0 or completion < 0:
+            continue
+        catalog[canonical_slug] = {
+            "model_id": model_id,
+            "model_name": model.get("name") or model_id,
+            "input_usd_per_million": prompt,
+            "output_usd_per_million": completion,
+        }
+    return catalog
+
+
+def estimate_public_usage(
+    model_tokens: dict[str, int],
+    catalog: dict[str, dict[str, Any]],
+    *,
+    total_tokens: int | None = None,
+) -> dict[str, Any]:
+    rows = []
+    priced_tokens = 0
+    scenario_costs = {name: 0.0 for name in PUBLIC_USAGE_OUTPUT_SHARES}
+    for model_key, raw_tokens in sorted(model_tokens.items(), key=lambda item: item[1], reverse=True):
+        tokens = int(raw_tokens)
+        price = catalog.get(model_key)
+        row: dict[str, Any] = {"model_key": model_key, "tokens": tokens}
+        if price is not None:
+            priced_tokens += tokens
+            row.update(price)
+            row["estimated_spend_usd"] = round(
+                tokens
+                / 1_000_000
+                * (
+                    (1 - PUBLIC_USAGE_OUTPUT_SHARES["central"])
+                    * price["input_usd_per_million"]
+                    + PUBLIC_USAGE_OUTPUT_SHARES["central"]
+                    * price["output_usd_per_million"]
+                ),
+                6,
+            )
+            for name, output_share in PUBLIC_USAGE_OUTPUT_SHARES.items():
+                scenario_costs[name] += (
+                    tokens
+                    / 1_000_000
+                    * (
+                        (1 - output_share) * price["input_usd_per_million"]
+                        + output_share * price["output_usd_per_million"]
+                    )
+                )
+        rows.append(row)
+
+    observed_tokens = int(total_tokens if total_tokens is not None else sum(model_tokens.values()))
+    coverage = priced_tokens / observed_tokens if observed_tokens else 0.0
+    scale = observed_tokens / priced_tokens if priced_tokens else None
+
+    def scaled(name: str) -> float | None:
+        if scale is None:
+            return None
+        return round(scenario_costs[name] * scale, 6)
+
+    return {
+        "total_tokens": observed_tokens,
+        "priced_tokens": priced_tokens,
+        "unpriced_tokens": max(observed_tokens - priced_tokens, 0),
+        "pricing_coverage_pct": round(coverage * 100, 4),
+        "estimated_spend_usd": scaled("central"),
+        "estimated_spend_low_usd": scaled("low"),
+        "estimated_spend_high_usd": scaled("high"),
+        "models": rows,
+    }
+
+
+def collect_openrouter_public_usage() -> dict[str, Any]:
+    parsed = parse_openrouter_app_page(get_text(OPENROUTER_APP_URL))
+    catalog = openrouter_price_catalog(get_json(OPENROUTER_MODELS_URL))
+
+    daily = []
+    for raw in parsed["daily"]:
+        day = str(raw.get("x") or "")[:10]
+        breakdown = raw.get("ys") if isinstance(raw.get("ys"), dict) else {}
+        model_tokens = {
+            str(model): int(tokens)
+            for model, tokens in breakdown.items()
+            if model != "Others" and isinstance(tokens, int | float)
+        }
+        total_tokens = sum(int(tokens) for tokens in breakdown.values())
+        estimated = estimate_public_usage(model_tokens, catalog, total_tokens=total_tokens)
+        daily.append(
+            {
+                "day": day,
+                "is_partial": day == NOW.date().isoformat(),
+                **estimated,
+            }
+        )
+
+    top_model_tokens = {
+        str(row["model_permaslug"]): int(row["total_tokens"])
+        for row in parsed["model_totals"]
+        if row.get("model_permaslug") and isinstance(row.get("total_tokens"), int | float)
+    }
+    estimate = estimate_public_usage(
+        top_model_tokens,
+        catalog,
+        total_tokens=parsed["reported_total_tokens"],
+    )
+    window_total = sum(int(row["total_tokens"]) for row in daily)
+    if window_total != parsed["reported_total_tokens"]:
+        raise ValueError(
+            "OpenRouter total token counter did not match the sum of the daily usage chart "
+            f"({parsed['reported_total_tokens']} != {window_total})"
+        )
+
+    return {
+        "source": "openrouter",
+        "source_kind": "public_app_analytics",
+        "entity": OPENROUTER_APP_SLUG,
+        "source_url": OPENROUTER_APP_URL,
+        "window_start": daily[0]["day"] if daily else None,
+        "window_end": daily[-1]["day"] if daily else None,
+        "window_days": len(daily),
+        "reported_total_tokens": parsed["reported_total_tokens"],
+        "models_used": parsed["models_used"],
+        "daily": daily,
+        "top_models": estimate.pop("models"),
+        "estimate": estimate,
+        "estimation_method": {
+            "currency": "USD",
+            "price_basis": "OpenRouter model catalog prices observed during collection",
+            "unpriced_tokens": "scaled at the priced-token blended rate",
+            "input_output_split": {
+                name: {"input": 1 - share, "output": share}
+                for name, share in PUBLIC_USAGE_OUTPUT_SHARES.items()
+            },
+            "excludes": [
+                "cache read/write pricing",
+                "reasoning-token pricing not represented in total tokens",
+                "provider routing differences",
+                "long-context price overrides",
+                "per-request and tool fees",
+                "credit-purchase or platform fees",
+            ],
+        },
+    }
+
+
+PUBLIC_USAGE_SOURCE_COLLECTORS = (
+    ("openrouter", collect_openrouter_public_usage),
+)
+
+
+def collect_public_inference_usage() -> dict[str, Any]:
+    sources = []
+    statuses = []
+    for source_name, collector in PUBLIC_USAGE_SOURCE_COLLECTORS:
+        collected_at = dt.datetime.now(dt.timezone.utc).isoformat()
+        try:
+            sources.append(collector())
+            statuses.append({"source": source_name, "ok": True, "collected_at": collected_at})
+        except Exception as exc:
+            statuses.append(
+                {
+                    "source": source_name,
+                    "ok": False,
+                    "collected_at": collected_at,
+                    "error": f"{type(exc).__name__}: {exc}",
+                }
+            )
+    return {
+        "schema_version": PUBLIC_USAGE_SCHEMA_VERSION,
+        "sources": sources,
+        "source_status": statuses,
+    }
 
 
 def parse_iso(value: str) -> dt.datetime:
@@ -717,6 +953,12 @@ def compact(value: int | None) -> str:
     return str(value)
 
 
+def usd(value: Any) -> str:
+    if not isinstance(value, int | float):
+        return "n/a"
+    return f"${float(value):,.2f}"
+
+
 def as_int(value: Any) -> int | None:
     if value is None:
         return None
@@ -728,6 +970,14 @@ def as_int(value: Any) -> int | None:
         cleaned = value.replace(",", "").strip()
         if cleaned and re.fullmatch(r"-?\d+", cleaned):
             return int(cleaned)
+    return None
+
+
+def as_number(value: Any) -> int | float | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int | float):
+        return value
     return None
 
 
@@ -974,6 +1224,7 @@ def close_by_utc_day(history: list[dict[str, Any]]) -> list[dict[str, Any]]:
 def daily_metrics(history: list[dict[str, Any]]) -> dict[str, Any]:
     closes = close_by_utc_day(history)
     clone_history = observed_clone_history()
+    public_usage_history = observed_public_usage_history()
     rows = []
     for index, point in enumerate(closes):
         previous = closes[index - 1] if index > 0 else {}
@@ -1006,9 +1257,11 @@ def daily_metrics(history: list[dict[str, Any]]) -> dict[str, Any]:
         "day_boundary": "UTC",
         "method": "most complete snapshot per UTC day (latest on ties), diffed against prior UTC day close",
         "clone_history_method": "deduplicated GitHub traffic clone day rows from stored snapshots; cumulative values are observed clone events, not all-time GitHub totals",
+        "public_usage_history_method": "latest stored observation for each public source/entity/UTC day; overlapping provider windows backfill history and replace partial days",
         "cumulative_delta_keys": DAILY_CUMULATIVE_KEYS,
         "rolling_window_delta_keys": DAILY_ROLLING_KEYS,
         "clone_history": clone_history,
+        "public_usage_history": public_usage_history,
         "rows": rows,
     }
 
@@ -1071,6 +1324,63 @@ def observed_clone_history() -> list[dict[str, Any]]:
     return rows
 
 
+def observed_public_usage_history() -> list[dict[str, Any]]:
+    by_key: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for path, snapshot in load_snapshot_documents():
+        source_snapshot_at = snapshot.get("generated_at") or path.stem
+        public_usage = data_for(snapshot, "public_inference_usage")
+        for source in public_usage.get("sources", []):
+            source_name = str(source.get("source") or "")
+            entity = str(source.get("entity") or "")
+            if not source_name or not entity:
+                continue
+            for row in source.get("daily", []):
+                day = str(row.get("day") or "")[:10]
+                if not day or as_int(row.get("total_tokens")) is None:
+                    continue
+                key = (source_name, entity, day)
+                existing = by_key.get(key)
+                if existing is not None and str(source_snapshot_at) < str(
+                    existing.get("source_snapshot_at") or ""
+                ):
+                    continue
+                by_key[key] = {
+                    "source": source_name,
+                    "entity": entity,
+                    "day": day,
+                    "total_tokens": as_int(row.get("total_tokens")),
+                    "priced_tokens": as_int(row.get("priced_tokens")),
+                    "pricing_coverage_pct": row.get("pricing_coverage_pct"),
+                    "estimated_spend_usd": row.get("estimated_spend_usd"),
+                    "estimated_spend_low_usd": row.get("estimated_spend_low_usd"),
+                    "estimated_spend_high_usd": row.get("estimated_spend_high_usd"),
+                    "is_partial": bool(row.get("is_partial")),
+                    "source_snapshot_at": source_snapshot_at,
+                }
+
+    cumulative: defaultdict[tuple[str, str], dict[str, float | int]] = defaultdict(
+        lambda: {"tokens": 0, "estimated_spend_usd": 0.0}
+    )
+    rows = []
+    for key in sorted(by_key, key=lambda item: (item[0], item[1], item[2])):
+        row = by_key[key]
+        group = (row["source"], row["entity"])
+        cumulative[group]["tokens"] += as_int(row.get("total_tokens")) or 0
+        spend = row.get("estimated_spend_usd")
+        if isinstance(spend, int | float):
+            cumulative[group]["estimated_spend_usd"] += float(spend)
+        rows.append(
+            {
+                **row,
+                "observed_cumulative_tokens": int(cumulative[group]["tokens"]),
+                "observed_cumulative_estimated_spend_usd": round(
+                    float(cumulative[group]["estimated_spend_usd"]), 6
+                ),
+            }
+        )
+    return rows
+
+
 def build_sqlite_database(daily: dict[str, Any]) -> None:
     tmp_path = DATABASE_PATH.with_suffix(".sqlite.tmp")
     if tmp_path.exists():
@@ -1128,6 +1438,84 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
           cumulative_count INTEGER,
           cumulative_uniques_sum INTEGER,
           source_snapshot_at TEXT NOT NULL
+        );
+        CREATE TABLE public_usage_windows (
+          snapshot_at TEXT NOT NULL,
+          source TEXT NOT NULL,
+          entity TEXT NOT NULL,
+          source_url TEXT,
+          window_start TEXT,
+          window_end TEXT,
+          window_days INTEGER,
+          total_tokens INTEGER,
+          models_used INTEGER,
+          priced_tokens INTEGER,
+          pricing_coverage_pct REAL,
+          estimated_spend_usd REAL,
+          estimated_spend_low_usd REAL,
+          estimated_spend_high_usd REAL,
+          estimation_method_json TEXT NOT NULL,
+          raw_json TEXT NOT NULL,
+          PRIMARY KEY (snapshot_at, source, entity)
+        );
+        CREATE TABLE public_usage_daily_observations (
+          snapshot_at TEXT NOT NULL,
+          source TEXT NOT NULL,
+          entity TEXT NOT NULL,
+          day TEXT NOT NULL,
+          total_tokens INTEGER,
+          priced_tokens INTEGER,
+          pricing_coverage_pct REAL,
+          estimated_spend_usd REAL,
+          estimated_spend_low_usd REAL,
+          estimated_spend_high_usd REAL,
+          is_partial INTEGER NOT NULL,
+          raw_json TEXT NOT NULL,
+          PRIMARY KEY (snapshot_at, source, entity, day)
+        );
+        CREATE TABLE public_usage_daily_models (
+          snapshot_at TEXT NOT NULL,
+          source TEXT NOT NULL,
+          entity TEXT NOT NULL,
+          day TEXT NOT NULL,
+          model_key TEXT NOT NULL,
+          model_id TEXT,
+          model_name TEXT,
+          tokens INTEGER,
+          input_usd_per_million REAL,
+          output_usd_per_million REAL,
+          estimated_spend_usd REAL,
+          PRIMARY KEY (snapshot_at, source, entity, day, model_key)
+        );
+        CREATE TABLE public_usage_model_totals (
+          snapshot_at TEXT NOT NULL,
+          source TEXT NOT NULL,
+          entity TEXT NOT NULL,
+          rank INTEGER NOT NULL,
+          model_key TEXT NOT NULL,
+          model_id TEXT,
+          model_name TEXT,
+          tokens INTEGER,
+          input_usd_per_million REAL,
+          output_usd_per_million REAL,
+          estimated_spend_usd REAL,
+          PRIMARY KEY (snapshot_at, source, entity, model_key)
+        );
+        CREATE TABLE observed_public_usage_history (
+          source TEXT NOT NULL,
+          entity TEXT NOT NULL,
+          day TEXT NOT NULL,
+          total_tokens INTEGER,
+          priced_tokens INTEGER,
+          pricing_coverage_pct REAL,
+          estimated_spend_usd REAL,
+          estimated_spend_low_usd REAL,
+          estimated_spend_high_usd REAL,
+          is_partial INTEGER NOT NULL,
+          observed_cumulative_tokens INTEGER,
+          observed_cumulative_estimated_spend_usd REAL,
+          source_snapshot_at TEXT NOT NULL,
+          PRIMARY KEY (source, entity, day)
         );
         CREATE TABLE release_totals (
           snapshot_at TEXT NOT NULL,
@@ -1235,6 +1623,10 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
         CREATE INDEX idx_metric_points_metric_day ON metric_points(metric, day);
         CREATE INDEX idx_daily_deltas_metric_day ON daily_deltas(metric, day);
         CREATE INDEX idx_release_totals_tag ON release_totals(tag, snapshot_at);
+        CREATE INDEX idx_public_usage_daily_source_day
+          ON public_usage_daily_observations(source, entity, day);
+        CREATE INDEX idx_public_usage_model_source
+          ON public_usage_model_totals(source, entity, model_key, snapshot_at);
         """
     )
 
@@ -1259,6 +1651,7 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
         "crates_io",
         "scoop",
         "docker_hub",
+        "public_inference_usage",
     ]
     for path, snapshot in load_snapshot_documents():
         generated_at = snapshot.get("generated_at")
@@ -1493,6 +1886,117 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
                 ),
             )
 
+        public_usage = data_for(snapshot, "public_inference_usage")
+        for source in public_usage.get("sources", []):
+            source_name = source.get("source")
+            entity = source.get("entity")
+            if not source_name or not entity:
+                continue
+            estimate = source.get("estimate") if isinstance(source.get("estimate"), dict) else {}
+            conn.execute(
+                """
+                INSERT OR REPLACE INTO public_usage_windows(
+                  snapshot_at, source, entity, source_url,
+                  window_start, window_end, window_days,
+                  total_tokens, models_used, priced_tokens, pricing_coverage_pct,
+                  estimated_spend_usd, estimated_spend_low_usd, estimated_spend_high_usd,
+                  estimation_method_json, raw_json
+                )
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    generated_at,
+                    source_name,
+                    entity,
+                    source.get("source_url"),
+                    source.get("window_start"),
+                    source.get("window_end"),
+                    as_int(source.get("window_days")),
+                    as_int(source.get("reported_total_tokens")),
+                    as_int(source.get("models_used")),
+                    as_int(estimate.get("priced_tokens")),
+                    estimate.get("pricing_coverage_pct"),
+                    estimate.get("estimated_spend_usd"),
+                    estimate.get("estimated_spend_low_usd"),
+                    estimate.get("estimated_spend_high_usd"),
+                    json_blob(source.get("estimation_method", {})),
+                    json_blob(source),
+                ),
+            )
+            for rank, row in enumerate(source.get("top_models", []), start=1):
+                conn.execute(
+                    """
+                    INSERT OR REPLACE INTO public_usage_model_totals(
+                      snapshot_at, source, entity, rank, model_key, model_id, model_name,
+                      tokens, input_usd_per_million, output_usd_per_million, estimated_spend_usd
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        generated_at,
+                        source_name,
+                        entity,
+                        rank,
+                        row.get("model_key"),
+                        row.get("model_id"),
+                        row.get("model_name"),
+                        as_int(row.get("tokens")),
+                        row.get("input_usd_per_million"),
+                        row.get("output_usd_per_million"),
+                        row.get("estimated_spend_usd"),
+                    ),
+                )
+            for row in source.get("daily", []):
+                conn.execute(
+                    """
+                    INSERT OR REPLACE INTO public_usage_daily_observations(
+                      snapshot_at, source, entity, day, total_tokens, priced_tokens,
+                      pricing_coverage_pct, estimated_spend_usd,
+                      estimated_spend_low_usd, estimated_spend_high_usd,
+                      is_partial, raw_json
+                    )
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        generated_at,
+                        source_name,
+                        entity,
+                        row.get("day"),
+                        as_int(row.get("total_tokens")),
+                        as_int(row.get("priced_tokens")),
+                        row.get("pricing_coverage_pct"),
+                        row.get("estimated_spend_usd"),
+                        row.get("estimated_spend_low_usd"),
+                        row.get("estimated_spend_high_usd"),
+                        1 if row.get("is_partial") else 0,
+                        json_blob(row),
+                    ),
+                )
+                for model in row.get("models", []):
+                    conn.execute(
+                        """
+                        INSERT OR REPLACE INTO public_usage_daily_models(
+                          snapshot_at, source, entity, day, model_key, model_id, model_name,
+                          tokens, input_usd_per_million, output_usd_per_million,
+                          estimated_spend_usd
+                        )
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """,
+                        (
+                            generated_at,
+                            source_name,
+                            entity,
+                            row.get("day"),
+                            model.get("model_key"),
+                            model.get("model_id"),
+                            model.get("model_name"),
+                            as_int(model.get("tokens")),
+                            model.get("input_usd_per_million"),
+                            model.get("output_usd_per_million"),
+                            model.get("estimated_spend_usd"),
+                        ),
+                    )
+
     for row in daily.get("rows", []):
         conn.execute(
             """
@@ -1533,6 +2037,34 @@ def build_sqlite_database(daily: dict[str, Any]) -> None:
                 as_int(row.get("uniques")),
                 as_int(row.get("cumulative_count")),
                 as_int(row.get("cumulative_uniques_sum")),
+                row.get("source_snapshot_at"),
+            ),
+        )
+
+    for row in daily.get("public_usage_history", []):
+        conn.execute(
+            """
+            INSERT OR REPLACE INTO observed_public_usage_history(
+              source, entity, day, total_tokens, priced_tokens, pricing_coverage_pct,
+              estimated_spend_usd, estimated_spend_low_usd, estimated_spend_high_usd,
+              is_partial, observed_cumulative_tokens,
+              observed_cumulative_estimated_spend_usd, source_snapshot_at
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                row.get("source"),
+                row.get("entity"),
+                row.get("day"),
+                as_int(row.get("total_tokens")),
+                as_int(row.get("priced_tokens")),
+                row.get("pricing_coverage_pct"),
+                row.get("estimated_spend_usd"),
+                row.get("estimated_spend_low_usd"),
+                row.get("estimated_spend_high_usd"),
+                1 if row.get("is_partial") else 0,
+                as_int(row.get("observed_cumulative_tokens")),
+                row.get("observed_cumulative_estimated_spend_usd"),
                 row.get("source_snapshot_at"),
             ),
         )
@@ -1624,7 +2156,14 @@ def table(headers: list[str], rows: list[list[Any]]) -> str:
     return f'<div class="table-wrap"><table><caption class="sr-only">{caption}</caption><thead><tr>{head}</tr></thead><tbody>{body}</tbody></table></div>'
 
 
-def svg_bars(rows: list[dict[str, Any]], *, date_key: str, value_key: str, height: int = 92) -> str:
+def svg_bars(
+    rows: list[dict[str, Any]],
+    *,
+    date_key: str,
+    value_key: str,
+    height: int = 92,
+    aria_label: str = "Daily values",
+) -> str:
     if not rows:
         return "<p class=\"muted\">No daily data available.</p>"
     max_value = max(max(int(row[value_key]) for row in rows), 1)
@@ -1642,14 +2181,21 @@ def svg_bars(rows: list[dict[str, Any]], *, date_key: str, value_key: str, heigh
             f'<rect x="{x}" y="{y}" width="{bar_width}" height="{bar_height}" rx="2">'
             f'<title>{date}: {value:,}</title></rect>'
         )
-    return f'<svg class="bars" viewBox="0 0 {width} {height}" role="img" aria-label="Daily downloads">{"" .join(bars)}</svg>'
+    return f'<svg class="bars" viewBox="0 0 {width} {height}" role="img" aria-label="{html.escape(aria_label)}">{"" .join(bars)}</svg>'
 
 
-def svg_line(rows: list[dict[str, Any]], *, date_key: str, value_key: str, height: int = 118) -> str:
+def svg_line(
+    rows: list[dict[str, Any]],
+    *,
+    date_key: str,
+    value_key: str,
+    height: int = 118,
+    value_prefix: str = "",
+) -> str:
     points = [
-        (str(row[date_key]), as_int(row.get(value_key)))
+        (str(row[date_key]), as_number(row.get(value_key)))
         for row in rows
-        if as_int(row.get(value_key)) is not None
+        if as_number(row.get(value_key)) is not None
     ]
     if len(points) < 2:
         return "<p class=\"muted\">Not enough historical snapshots yet.</p>"
@@ -1672,8 +2218,9 @@ def svg_line(rows: list[dict[str, Any]], *, date_key: str, value_key: str, heigh
         x = left + index * x_step
         y = bottom - ((value - min_value) / span) * (bottom - top)
         coords.append(f"{x:.1f},{y:.1f}")
+        value_text = f"{value:,}" if isinstance(value, int) else f"{value:,.2f}"
         dots.append(
-            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3"><title>{html.escape(date)}: {value:,}</title></circle>'
+            f'<circle cx="{x:.1f}" cy="{y:.1f}" r="3"><title>{html.escape(date)}: {html.escape(value_prefix)}{value_text}</title></circle>'
         )
     return (
         f'<svg class="line-chart" viewBox="0 0 {width} {height}" role="img" aria-label="{html.escape(value_key)} over time">'
@@ -1694,6 +2241,9 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     crates = snapshot["crates_io"]
     scoop = snapshot["scoop"]
     docker_hub = snapshot["docker_hub"]
+    public_usage = snapshot.get(
+        "public_inference_usage", {"ok": False, "error": "not collected"}
+    )
 
     release_data = releases["data"] if releases["ok"] else {}
     ghcr_data = ghcr["data"] if ghcr["ok"] else {}
@@ -1704,10 +2254,24 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     crates_data = crates["data"] if crates["ok"] else {}
     scoop_data = scoop["data"] if scoop["ok"] else {}
     docker_hub_data = docker_hub["data"] if docker_hub["ok"] else {}
+    public_usage_data = public_usage["data"] if public_usage.get("ok") else {}
+    public_sources = public_usage_data.get("sources", [])
+    primary_public_source = public_sources[0] if public_sources else {}
+    public_estimate = (
+        primary_public_source.get("estimate")
+        if isinstance(primary_public_source.get("estimate"), dict)
+        else {}
+    )
 
     history = load_snapshot_history()
     daily = daily_metrics(history)
     clone_history = daily.get("clone_history", [])
+    public_usage_history = [
+        row
+        for row in daily.get("public_usage_history", [])
+        if row.get("source") == primary_public_source.get("source")
+        and row.get("entity") == primary_public_source.get("entity")
+    ]
     clone_first_day = clone_history[0]["day"] if clone_history else None
     clone_latest_day = clone_history[-1]["day"] if clone_history else None
     observed_clone_events = clone_history[-1]["cumulative_count"] if clone_history else None
@@ -1731,6 +2295,16 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
         ("Observed Clones", compact(observed_clone_events), f"Clone events since {clone_first_day or 'first stored day'}"),
         ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
+        (
+            "Public AI Tokens",
+            compact(primary_public_source.get("reported_total_tokens")),
+            f"{primary_public_source.get('source', 'Provider')} attributed usage window",
+        ),
+        (
+            "Est. AI Spend",
+            usd(public_estimate.get("estimated_spend_usd")),
+            "Modeled provider inference, not a ZeroClaw Labs bill",
+        ),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
     ]
 
@@ -1829,6 +2403,32 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         for item in docker_hub_data.get("top_community_results", [])[:8]
     ]
 
+    public_daily_rows = [
+        [
+            row.get("day"),
+            row.get("total_tokens"),
+            usd(row.get("estimated_spend_usd")),
+            f"{usd(row.get('estimated_spend_low_usd'))}–{usd(row.get('estimated_spend_high_usd'))}",
+            f"{row.get('pricing_coverage_pct', 0):.1f}%",
+            "partial" if row.get("is_partial") else "closed",
+        ]
+        for row in public_usage_history[-14:]
+    ]
+    public_model_rows = [
+        [
+            row.get("model_name") or row.get("model_key"),
+            row.get("tokens"),
+            (
+                f"${row.get('input_usd_per_million', 0):g} / "
+                f"${row.get('output_usd_per_million', 0):g}"
+                if row.get("input_usd_per_million") is not None
+                else "unpriced"
+            ),
+            usd(row.get("estimated_spend_usd")),
+        ]
+        for row in primary_public_source.get("top_models", [])[:12]
+    ]
+
     cumulative_metrics = [
         ("GHCR downloads", "ghcr_downloads", "Cumulative GitHub Container Registry package counter"),
         ("Prebuilt release payload downloads", "release_payload_downloads", "Cumulative GitHub release payload asset counter"),
@@ -1872,6 +2472,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ["Release payload assets", "Binary distribution", "Cumulative", "GitHub release asset counters, excluding install.sh bootstrap downloads."],
         ["Homebrew installs", "Package-manager adoption", "Rolling 30d/90d/365d", "Homebrew anonymous install analytics, not lifetime downloads."],
         ["CHAOSS starter health", "Responsiveness, sustainability, release cadence", f"Rolling {ACTIVITY_WINDOW_DAYS}d", "Human responses exclude authors and bot accounts; definitions are recorded in each snapshot."],
+        ["Public inference usage", "Provider-attributed ecosystem activity", "Provider-published rolling window", "Daily provider observations are deduplicated by source, entity, and UTC day; spend remains an estimate with stored assumptions and coverage."],
     ]
 
     status_rows = [
@@ -1884,7 +2485,22 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ["crates.io", "ok" if crates["ok"] else crates.get("error")],
         ["Scoop", "ok" if scoop["ok"] else scoop.get("error")],
         ["Docker Hub search", "ok" if docker_hub["ok"] else docker_hub.get("error")],
+        [
+            "Public inference usage",
+            (
+                f"ok ({len(public_sources)} source{'s' if len(public_sources) != 1 else ''})"
+                if public_usage.get("ok")
+                else public_usage.get("error")
+            ),
+        ],
     ]
+    status_rows.extend(
+        [
+            f"Public inference: {row.get('source', 'unknown')}",
+            "ok" if row.get("ok") else row.get("error", "collection failed"),
+        ]
+        for row in public_usage_data.get("source_status", [])
+    )
 
     css = """
     :root {
@@ -2119,6 +2735,28 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 
     <section>
       <div class="section-head">
+        <h2>Public Inference Usage</h2>
+        <p class="muted">{html.escape(str(primary_public_source.get("source", "No provider collected")))} · {html.escape(str(primary_public_source.get("window_start", "n/a")))} to {html.escape(str(primary_public_source.get("window_end", "n/a")))}</p>
+      </div>
+      <div class="split">
+        <div>
+          <h3>Attributed tokens by UTC day</h3>
+          {svg_bars(public_usage_history, date_key="day", value_key="total_tokens", aria_label="Public provider-attributed tokens by UTC day")}
+        </div>
+        <div>
+          <h3>Estimated inference spend by UTC day</h3>
+          {svg_line(public_usage_history, date_key="day", value_key="estimated_spend_usd", value_prefix="$")}
+        </div>
+      </div>
+      <h3 style="margin-top:16px;">Recent observations</h3>
+      {table(["UTC day", "Tokens", "Central estimate", "5–20% output range", "Pricing coverage", "State"], public_daily_rows)}
+      <h3 style="margin-top:16px;">Top models in the current provider window</h3>
+      {table(["Model", "Tokens", "Input / output per 1M", "Known-token estimate"], public_model_rows)}
+      <p class="callout">This is ecosystem usage attributed by the public provider to ZeroClaw, not necessarily traffic paid by ZeroClaw Labs. The central estimate assumes 90% input and 10% output tokens; the displayed range uses 5–20% output. Unpriced model traffic is scaled at the priced-token blended rate. Current pricing coverage is {metric(public_estimate.get("pricing_coverage_pct"))}%. Cache, reasoning, routing, long-context, request, tool, and credit-purchase effects are excluded. Every observation retains its source, model rates, assumptions, and collection timestamp for future providers such as ZeroRouter.</p>
+    </section>
+
+    <section>
+      <div class="section-head">
         <h2>CHAOSS Starter Health</h2>
         <p class="muted">Rolling {metric(chaoss_data.get("window_days"))}-day window since {html.escape(str(chaoss_data.get("since", "n/a")))}</p>
       </div>
@@ -2274,6 +2912,9 @@ def main() -> int:
         "crates_io": safe_collect("crates_io", collect_crates),
         "scoop": safe_collect("scoop", collect_scoop),
         "docker_hub": safe_collect("docker_hub", collect_docker_hub),
+        "public_inference_usage": safe_collect(
+            "public_inference_usage", collect_public_inference_usage
+        ),
         "notes": [
             "GHCR download counts are scraped from authenticated GitHub package HTML because REST objects omit those fields.",
             "GitHub release downloads are cumulative per asset; downloads/week is an average since release publication.",
@@ -2282,6 +2923,7 @@ def main() -> int:
             "GitHub top referrers and popular paths are rolling-window Insights metrics and are snapshot daily.",
             "Scoop installs ultimately hit GitHub release assets, so avoid double-counting with release downloads.",
             "npm packages named zeroclaw/zerocode are unrelated and intentionally excluded.",
+            "Public provider token counts describe attributed ecosystem usage, not a ZeroClaw Labs bill; spend is explicitly estimated from stored pricing assumptions.",
         ],
     }
     require_core_sources(snapshot)
