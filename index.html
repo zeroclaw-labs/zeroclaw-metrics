@@ -209,31 +209,31 @@
   </header>
   <main>
     <div class="grid" aria-label="Key metrics"><article class="card card--feature"><span class="label">OpenRouter Tokens — Last 30 Days</span><span class="value">14.8B</span><p class="note">2026-07-15 to 2026-08-14</p></article>
-<article class="card"><span class="label">GHCR Downloads</span><span class="value">418.5K</span><p class="note">Total container package downloads</p></article>
+<article class="card"><span class="label">GHCR Downloads</span><span class="value">418.5K</span><p class="note">Cumulative · includes pre-tracking activity</p></article>
 <article class="card"><span class="label">Observed Clones</span><span class="value">321.3K</span><p class="note">Clone events since 2026-06-18</p></article>
-<article class="card"><span class="label">Repo Stars</span><span class="value">32.6K</span><p class="note">GitHub repository stars</p></article>
-<article class="card"><span class="label">Prebuilt Payloads</span><span class="value">158.2K</span><p class="note">Release assets excluding install.sh bootstrap</p></article>
+<article class="card"><span class="label">Repo Stars</span><span class="value">32.6K</span><p class="note">Current snapshot · history since 2026-07-02</p></article>
+<article class="card"><span class="label">Prebuilt Payloads</span><span class="value">158.2K</span><p class="note">Cumulative · includes pre-tracking activity</p></article>
 <article class="card"><span class="label">GHCR 30d</span><span class="value">43.2K</span><p class="note">Authenticated package chart</p></article>
 <article class="card"><span class="label">Clones 14d</span><span class="value">89.1K</span><p class="note">Repository clones</p></article>
 <article class="card"><span class="label">Traffic 14d</span><span class="value">31.1K</span><p class="note">Repository page views</p></article>
 <article class="card"><span class="label">Homebrew 30d</span><span class="value">355</span><p class="note">Homebrew Core installs</p></article>
 <article class="card"><span class="label">PRs Merged 7d</span><span class="value">81</span><p class="note">Pulse-like activity</p></article>
-<article class="card"><span class="label">Bootstrap Script</span><span class="value">7.6K</span><p class="note">install.sh release asset downloads</p></article>
+<article class="card"><span class="label">Bootstrap Script</span><span class="value">7.6K</span><p class="note">Cumulative · includes pre-tracking activity</p></article>
 <article class="card"><span class="label">Snapshots</span><span class="value">62</span><p class="note">Tracking window 42.6 days</p></article></div>
 
 	    <section id="overview">
 	      <div class="section-head">
 	        <h2>Current Scale</h2>
-	        <p class="muted">Latest snapshot values from 62 immutable snapshots in <code>data/snapshots/</code></p>
+	        <p class="muted">Latest values from 62 immutable snapshots. Coverage separates source-cumulative counters from current state and tracking-limited observations.</p>
 	      </div>
 	      <div class="split">
 	        <div>
-	          <div class="table-wrap"><table><caption class="sr-only">Metric; Current; Meaning</caption><thead><tr><th scope="col">Metric</th><th scope="col">Current</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td>GHCR downloads</td><td>418,528</td><td>Cumulative GitHub Container Registry package counter</td></tr>
-<tr><td>Prebuilt release payload downloads</td><td>158,201</td><td>Cumulative GitHub release payload asset counter</td></tr>
-<tr><td>Bootstrap install.sh downloads</td><td>7,632</td><td>Cumulative bootstrap script release asset counter</td></tr>
-<tr><td>crates.io downloads</td><td>6,806</td><td>Cumulative crate download counters</td></tr>
-<tr><td>Repo stars</td><td>32,576</td><td>Current GitHub repository stars</td></tr>
-<tr><td>Repo forks</td><td>4,892</td><td>Current GitHub repository forks</td></tr></tbody></table></div>
+	          <div class="table-wrap"><table><caption class="sr-only">Metric; Current; Coverage; Meaning</caption><thead><tr><th scope="col">Metric</th><th scope="col">Current</th><th scope="col">Coverage</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td>GHCR downloads</td><td>418,528</td><td>Cumulative · includes pre-tracking activity</td><td>GitHub Container Registry package counter</td></tr>
+<tr><td>Prebuilt release payload downloads</td><td>158,201</td><td>Cumulative · includes pre-tracking activity</td><td>Currently published GitHub release payload assets</td></tr>
+<tr><td>Bootstrap install.sh downloads</td><td>7,632</td><td>Cumulative · includes pre-tracking activity</td><td>Currently published install.sh release assets</td></tr>
+<tr><td>crates.io downloads</td><td>6,806</td><td>Cumulative · includes pre-tracking activity</td><td>crates.io publisher counters</td></tr>
+<tr><td>Repo stars</td><td>32,576</td><td>Current snapshot · history since 2026-07-02</td><td>Current GitHub repository star count</td></tr>
+<tr><td>Repo forks</td><td>4,892</td><td>Current snapshot · history since 2026-07-02</td><td>Current GitHub repository fork count</td></tr></tbody></table></div>
 	          <p class="callout">Snapshot-to-snapshot change columns are intentionally excluded from the main dashboard because this tracking repository started recently and short-interval movement understates project scale. Raw day-by-day change rows remain available in <code>data/daily.json</code> and <code>data/metrics.sqlite</code>.</p>
 	        </div>
 	        <div>
@@ -490,12 +490,13 @@
 	        <h2>Methodology</h2>
 	        <p class="muted">Investor-readable metric definitions and caveats</p>
 	      </div>
-	      <div class="table-wrap"><table><caption class="sr-only">Metric family; Meaning; Window; Method</caption><thead><tr><th scope="col">Metric family</th><th scope="col">Meaning</th><th scope="col">Window</th><th scope="col">Method</th></tr></thead><tbody><tr><td>GitHub stars/forks</td><td>CHAOSS-style project popularity</td><td>Cumulative</td><td>GitHub repository metadata counters.</td></tr>
+	      <div class="table-wrap"><table><caption class="sr-only">Metric family; Meaning; Window; Method</caption><thead><tr><th scope="col">Metric family</th><th scope="col">Meaning</th><th scope="col">Window</th><th scope="col">Method</th></tr></thead><tbody><tr><td>GitHub stars/forks</td><td>CHAOSS-style project popularity</td><td>Current snapshot · history since 2026-07-02</td><td>GitHub repository metadata counters.</td></tr>
 <tr><td>GitHub views/clones</td><td>Attention and source-install proxy</td><td>Rolling 14d</td><td>GitHub Insights traffic API; no lifetime clone/view total is exposed.</td></tr>
-<tr><td>Observed clone history</td><td>Source-install adoption proxy</td><td>Observed cumulative</td><td>Deduped daily clone rows stored from the rolling GitHub traffic API.</td></tr>
+<tr><td>Observed clone history</td><td>Source-install adoption proxy</td><td>Tracked since 2026-06-18</td><td>Deduped daily clone rows stored from the rolling GitHub traffic API.</td></tr>
 <tr><td>Referrers and paths</td><td>Discovery channels</td><td>Rolling top 10</td><td>GitHub Insights top referrers and popular content for the recent traffic window.</td></tr>
-<tr><td>GHCR downloads</td><td>Container distribution</td><td>Cumulative plus chart window</td><td>Authenticated package UI counters; REST package objects omit pulls.</td></tr>
-<tr><td>Release payload assets</td><td>Binary distribution</td><td>Cumulative</td><td>GitHub release asset counters, excluding install.sh bootstrap downloads.</td></tr>
+<tr><td>GHCR downloads</td><td>Container distribution</td><td>Cumulative · includes pre-tracking activity</td><td>Authenticated package UI counters; REST package objects omit pulls.</td></tr>
+<tr><td>Release payload assets</td><td>Binary distribution</td><td>Cumulative · includes pre-tracking activity</td><td>Currently published GitHub release asset counters, excluding install.sh bootstrap downloads.</td></tr>
+<tr><td>crates.io downloads</td><td>Rust package distribution</td><td>Cumulative · includes pre-tracking activity</td><td>crates.io publisher counters across tracked ZeroClaw crates.</td></tr>
 <tr><td>Homebrew installs</td><td>Package-manager adoption</td><td>Rolling 30d/90d/365d</td><td>Homebrew anonymous install analytics, not lifetime downloads.</td></tr>
 <tr><td>CHAOSS starter health</td><td>Responsiveness, sustainability, release cadence</td><td>Rolling 28d</td><td>Human responses exclude authors and bot accounts; definitions are recorded in each snapshot.</td></tr>
 <tr><td>OpenRouter usage</td><td>Provider-attributed ecosystem activity</td><td>Provider-published rolling window</td><td>Daily provider observations are deduplicated by source, entity, and UTC day.</td></tr></tbody></table></div>

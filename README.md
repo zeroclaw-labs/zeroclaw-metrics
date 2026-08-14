@@ -134,8 +134,13 @@ back to this repository, but it is not enough for all upstream ZeroClaw metrics.
 
 - GHCR download counts are scraped from authenticated GitHub package HTML
   because REST package objects omit those fields.
-- GitHub release downloads are cumulative per asset; downloads/week is an
-  average since release publication unless computed from stored snapshots.
+- GHCR, GitHub release asset, and crates.io counters are source-cumulative and
+  include activity from before this metrics repository started tracking them.
+- GitHub release downloads are cumulative per currently published asset;
+  downloads/week is an average since release publication unless computed from
+  stored snapshots.
+- Repository stars and forks are current-state counters. Their stored daily
+  history begins at the first metrics snapshot, not at repository creation.
 - `install.sh` is tracked as a bootstrap release asset, not a payload install.
   The default source-install path clones and builds the repository, so GitHub
   repo clone traffic is the better proxy for that path.
