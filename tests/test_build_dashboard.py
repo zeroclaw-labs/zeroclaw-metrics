@@ -82,9 +82,16 @@ class PublicInferenceUsageTests(unittest.TestCase):
         self.assertIn('class="hero"', renderer)
         self.assertIn('href="assets/style.css"', renderer)
         self.assertIn('src="assets/zeroclaw-labs-mark.png"', renderer)
+        self.assertIn('src="assets/zeroclaw-wordmark-transparent.png"', renderer)
+        self.assertNotIn("card--feature", renderer)
+        self.assertIn('"GHCR — 30 Days"', renderer)
+        self.assertNotIn('"Homebrew — 30 Days"', renderer)
         self.assertTrue((SCRIPT_PATH.parents[1] / "assets" / "style.css").is_file())
         self.assertTrue(
             (SCRIPT_PATH.parents[1] / "assets" / "zeroclaw-labs-mark.png").is_file()
+        )
+        self.assertTrue(
+            (SCRIPT_PATH.parents[1] / "assets" / "zeroclaw-wordmark-transparent.png").is_file()
         )
 
     def test_parses_embedded_openrouter_usage(self):

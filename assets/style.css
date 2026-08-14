@@ -201,9 +201,32 @@ code {
   background: rgb(56 189 248 / 9%);
 }
 
+.hero-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, .72fr);
+  align-items: center;
+  gap: clamp(24px, 5vw, 72px);
+}
+
 .hero-copy {
-  max-width: 850px;
+  min-width: 0;
   padding: 76px 0 92px;
+}
+
+.hero-art {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+  pointer-events: none;
+}
+
+.hero-art img {
+  display: block;
+  width: min(100%, 490px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 0 34px rgb(56 189 248 / 20%));
 }
 
 .eyebrow {
@@ -342,14 +365,6 @@ section {
   box-shadow: 0 24px 72px rgb(0 0 0 / 32%), 0 0 36px rgb(56 189 248 / 8%);
 }
 
-.card--feature {
-  background:
-    radial-gradient(circle at 100% 0%, rgb(34 211 238 / 17%), transparent 14rem),
-    linear-gradient(145deg, rgb(10 28 45 / 96%), rgb(8 13 23 / 94%));
-  border-color: rgb(56 189 248 / 34%);
-  box-shadow: var(--shadow), 0 0 60px rgb(56 189 248 / 8%);
-}
-
 .label {
   display: block;
   min-height: 30px;
@@ -373,7 +388,6 @@ section {
   font-variant-numeric: tabular-nums;
 }
 
-.card--feature .value { color: var(--frost); }
 .note, .muted { color: var(--mist); }
 .note { font-size: 12px; line-height: 1.5; }
 
@@ -666,6 +680,7 @@ footer {
 
 @media (max-width: 1020px) {
   .nav-links a:nth-child(-n + 2) { display: none; }
+  .hero-content { grid-template-columns: minmax(0, 1fr) minmax(280px, .62fr); gap: 18px; }
   .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .split { grid-template-columns: 1fr; }
   .section-head { align-items: flex-start; }
@@ -677,7 +692,10 @@ footer {
   .topbar { min-height: 72px; }
   .nav-links a { display: none; }
   .nav-links a:last-child { display: inline-flex; }
-  .hero-copy { padding: 58px 0 78px; }
+  .hero-content { display: block; }
+  .hero-copy { padding: 58px 0 22px; }
+  .hero-art { justify-content: center; padding-bottom: 72px; }
+  .hero-art img { width: min(82vw, 380px); }
   .hero-lede { font-size: 16px; }
   main { width: calc(100% - 24px); margin-top: -28px; }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
