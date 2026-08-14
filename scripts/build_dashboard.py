@@ -2166,6 +2166,16 @@ def metric_coverage(kind: str, tracking_start_day: str | None = None) -> str:
     raise ValueError(f"Unknown metric coverage kind: {kind}")
 
 
+def metric_list(rows: list[tuple[str, Any, str]]) -> str:
+    items = "\n".join(
+        '<li><span class="metric-list-label">'
+        f"<strong>{html.escape(label)}</strong><small>{html.escape(note)}</small>"
+        f'</span><span class="metric-list-value">{metric(value)}</span></li>'
+        for label, value, note in rows
+    )
+    return f'<ul class="metric-list">{items}</ul>'
+
+
 def table(headers: list[str], rows: list[list[Any]]) -> str:
     body = "\n".join(
         "<tr>" + "".join(f"<td>{metric(cell)}</td>" for cell in row) + "</tr>" for row in rows
@@ -2294,12 +2304,6 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     first_point = history[0] if history else {}
     latest_point = history[-1] if history else {}
     tracking_start_day = first_point.get("day")
-    tracking_days = 0.0
-    if first_point.get("generated_at") and latest_point.get("generated_at"):
-        tracking_days = max(
-            (parse_iso(latest_point["generated_at"]) - parse_iso(first_point["generated_at"])).total_seconds() / 86400,
-            0.0,
-        )
     cards = [
         (
             f"{primary_public_source_name} Tokens — Last 30 Days",
@@ -2309,17 +2313,13 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
                 f"{primary_public_source.get('window_end', 'n/a')}"
             ),
         ),
-        ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), metric_coverage("cumulative")),
-        ("Observed Clones", compact(observed_clone_events), f"Clone events since {clone_first_day or 'first stored day'}"),
-        ("Repo Stars", compact(github_data.get("stars")), metric_coverage("current", tracking_start_day)),
-        ("Prebuilt Payloads", compact(release_data.get("payload_downloads_total")), metric_coverage("cumulative")),
-        ("GHCR 30d", compact(ghcr_data.get("last_30_downloads")), "Authenticated package chart"),
-        ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
-        ("Traffic 14d", compact(github_data.get("traffic", {}).get("views_14d")), "Repository page views"),
-        ("Homebrew 30d", metric((homebrew_data.get("install", {}).get("30d") or {}).get("count")), "Homebrew Core installs"),
-        ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
-        ("Bootstrap Script", compact(release_data.get("bootstrap_downloads_total")), metric_coverage("cumulative")),
-        ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
+        ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Cumulative total"),
+        ("Observed Clones", compact(observed_clone_events), f"Tracked since {clone_first_day or 'first stored day'}"),
+        ("Repo Stars", compact(github_data.get("stars")), f"Current · history since {tracking_start_day or 'first snapshot'}"),
+        ("Prebuilt Payloads", compact(release_data.get("payload_downloads_total")), "Published assets · cumulative"),
+        ("Bootstrap Script", compact(release_data.get("bootstrap_downloads_total")), "Published asset · cumulative"),
+        ("Clones — 14 Days", compact(github_data.get("traffic", {}).get("clones_14d")), "Latest rolling window"),
+        ("Homebrew — 30 Days", metric((homebrew_data.get("install", {}).get("30d") or {}).get("count")), "Latest rolling window"),
     ]
 
     current_release_rows = release_rows_from_snapshot(snapshot)
@@ -2433,40 +2433,40 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         for row in primary_public_source.get("top_models", [])[:12]
     ]
 
-    current_scale_metrics = [
+    cumulative_scale_rows = [
         (
-            "GHCR downloads",
-            "ghcr_downloads",
-            "cumulative",
-            "GitHub Container Registry package counter",
+            "Container downloads",
+            latest_point.get("ghcr_downloads") if latest_point else None,
+            "GHCR package total",
         ),
         (
-            "Prebuilt release payload downloads",
-            "release_payload_downloads",
-            "cumulative",
-            "Currently published GitHub release payload assets",
+            "Prebuilt release payloads",
+            latest_point.get("release_payload_downloads") if latest_point else None,
+            "Currently published assets",
         ),
         (
-            "Bootstrap install.sh downloads",
-            "release_bootstrap_downloads",
-            "cumulative",
-            "Currently published install.sh release assets",
+            "Bootstrap install.sh",
+            latest_point.get("release_bootstrap_downloads") if latest_point else None,
+            "Currently published asset",
         ),
         (
             "crates.io downloads",
-            "crates_downloads",
-            "cumulative",
-            "crates.io publisher counters",
+            latest_point.get("crates_downloads") if latest_point else None,
+            "Publisher total",
         ),
-        ("Repo stars", "stars", "current", "Current GitHub repository star count"),
-        ("Repo forks", "forks", "current", "Current GitHub repository fork count"),
     ]
-    growth_rows = []
-    for label, key, coverage_kind, note in current_scale_metrics:
-        current = latest_point.get(key) if latest_point else None
-        growth_rows.append(
-            [label, current, metric_coverage(coverage_kind, tracking_start_day), note]
-        )
+    current_repo_rows = [
+        (
+            "Repository stars",
+            latest_point.get("stars") if latest_point else None,
+            "GitHub",
+        ),
+        (
+            "Repository forks",
+            latest_point.get("forks") if latest_point else None,
+            "GitHub",
+        ),
+    ]
 
     clone_history_rows = [
         [
@@ -2756,7 +2756,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       <div class="hero-copy">
         <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Daily project telemetry</p>
         <h1>ZeroClaw,<br><span>by the numbers.</span></h1>
-        <p class="hero-lede">A clear view of adoption, distribution, community health, and inference activity—collected daily and preserved over time.</p>
+        <p class="hero-lede">Daily signals for adoption, distribution, community health, and inference.</p>
         <div class="hero-meta" aria-label="Dataset summary">
           <span class="meta-chip">Updated {html.escape(snapshot["generated_at"][:10])}</span>
           <span class="meta-chip">{metric(len(history))} immutable snapshots</span>
@@ -2771,23 +2771,45 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 	    <section id="overview">
 	      <div class="section-head">
 	        <h2>Current Scale</h2>
-	        <p class="muted">Latest values from {metric(len(history))} immutable snapshots. Coverage separates source-cumulative counters from current state and tracking-limited observations.</p>
+	        <p class="muted">Source totals, current repository state, and the history behind them.</p>
 	      </div>
 	      <div class="split">
-	        <div>
-	          {table(["Metric", "Current", "Coverage", "Meaning"], growth_rows)}
-	          <p class="callout">Snapshot-to-snapshot change columns are intentionally excluded from the main dashboard because this tracking repository started recently and short-interval movement understates project scale. Raw day-by-day change rows remain available in <code>data/daily.json</code> and <code>data/metrics.sqlite</code>.</p>
+	        <div class="metric-groups">
+	          <article class="metric-group" aria-labelledby="cumulative-heading">
+	            <div class="metric-group-head">
+	              <div>
+	                <p class="metric-group-kicker">Provider totals</p>
+	                <h3 id="cumulative-heading">Cumulative distribution</h3>
+	              </div>
+	              <span class="coverage-badge">Cumulative</span>
+	            </div>
+	            <p class="metric-group-copy">Includes activity from before tracking began. Release counts cover assets currently published on GitHub.</p>
+	            {metric_list(cumulative_scale_rows)}
+	          </article>
+	          <article class="metric-group" aria-labelledby="repository-heading">
+	            <div class="metric-group-head">
+	              <div>
+	                <p class="metric-group-kicker">Point in time</p>
+	                <h3 id="repository-heading">Current repository</h3>
+	              </div>
+	              <span class="coverage-badge coverage-badge--current">Current</span>
+	            </div>
+	            <p class="metric-group-copy">Daily history is stored from {html.escape(tracking_start_day or "the first snapshot")} forward.</p>
+	            {metric_list(current_repo_rows)}
+	          </article>
 	        </div>
-	        <div>
-	          <h3>GHCR cumulative downloads</h3>
+	        <div class="scale-chart">
+	          <p class="metric-group-kicker">Trend</p>
+	          <h3>Container downloads</h3>
+	          <p class="metric-group-copy">Daily snapshots since {html.escape(tracking_start_day or "the first snapshot")}.</p>
 	          {svg_line(history, date_key="day", value_key="ghcr_downloads")}
 	        </div>
 	      </div>
 	      <h3 style="margin-top:16px;">Rolling windows</h3>
-	      <p class="note">Homebrew and GitHub traffic/pulse APIs expose rolling windows, not lifetime totals. These rows show the latest reported window value only.</p>
+	      <p class="note">Latest values only; these sources do not expose lifetime totals.</p>
 	      {table(["Metric", "Current window", "Window"], rolling_metric_rows)}
 	      <h3 style="margin-top:16px;">Observed clone history</h3>
-	      <p class="note">GitHub does not expose lifetime clone totals. This table deduplicates the stored daily rows from the rolling 14-day traffic API, so the cumulative count starts at {html.escape(clone_first_day or "the first stored clone day")} and currently ends at {html.escape(clone_latest_day or "n/a")}. Daily uniques are not globally deduplicated.</p>
+	      <p class="note">Observed total from {html.escape(clone_first_day or "the first stored clone day")} through {html.escape(clone_latest_day or "n/a")}. GitHub exposes only 14 days at a time; unique cloners may repeat across days.</p>
 	      {table(["UTC day", "Clone events", "Daily unique cloners", "Observed cumulative"], clone_history_rows)}
 		    </section>
 

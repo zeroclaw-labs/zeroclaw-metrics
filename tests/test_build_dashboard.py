@@ -339,6 +339,15 @@ class ChaossMetricTests(unittest.TestCase):
 
 
 class SnapshotTests(unittest.TestCase):
+    def test_metric_list_is_compact_and_escapes_copy(self):
+        rendered = dashboard.metric_list(
+            [("Prebuilt <payloads>", 158201, "Published & cumulative")]
+        )
+        self.assertIn('class="metric-list"', rendered)
+        self.assertIn("158,201", rendered)
+        self.assertIn("Prebuilt &lt;payloads&gt;", rendered)
+        self.assertIn("Published &amp; cumulative", rendered)
+
     def test_metric_coverage_distinguishes_source_and_tracker_windows(self):
         self.assertEqual(
             "Cumulative · includes pre-tracking activity",

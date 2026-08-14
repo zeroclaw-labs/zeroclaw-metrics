@@ -430,6 +430,116 @@ h3 {
   align-items: start;
 }
 
+.metric-groups {
+  display: grid;
+  gap: 12px;
+}
+
+.metric-group,
+.scale-chart {
+  padding: 20px;
+  background: rgb(5 8 16 / 46%);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.metric-group-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.metric-group h3,
+.scale-chart h3 {
+  margin: 2px 0 0;
+  color: var(--snow);
+  font-size: 16px;
+  letter-spacing: -.015em;
+  text-transform: none;
+}
+
+.metric-group-kicker {
+  color: var(--mist);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.metric-group-copy {
+  max-width: 58ch;
+  margin-top: 8px;
+  color: var(--mist);
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.coverage-badge {
+  flex: 0 0 auto;
+  padding: 5px 9px;
+  color: #bae6fd;
+  background: rgb(14 165 233 / 10%);
+  border: 1px solid rgb(56 189 248 / 20%);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+.coverage-badge--current {
+  color: #cffafe;
+  background: rgb(34 211 238 / 9%);
+  border-color: rgb(34 211 238 / 20%);
+}
+
+.metric-list {
+  padding: 0;
+  margin: 16px 0 0;
+  list-style: none;
+  border-top: 1px solid rgb(148 163 184 / 10%);
+}
+
+.metric-list li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 18px;
+  min-height: 58px;
+  border-bottom: 1px solid rgb(148 163 184 / 10%);
+}
+
+.metric-list li:last-child { border-bottom: 0; }
+
+.metric-list-label strong,
+.metric-list-label small {
+  display: block;
+}
+
+.metric-list-label strong {
+  color: #dbeafe;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.metric-list-label small {
+  margin-top: 2px;
+  color: var(--mist);
+  font-size: 11px;
+}
+
+.metric-list-value {
+  color: var(--frost);
+  font-size: 20px;
+  font-weight: 780;
+  letter-spacing: -.025em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.scale-chart { align-self: stretch; }
+
 .table-wrap {
   position: relative;
   overflow-x: auto;
@@ -575,6 +685,7 @@ footer {
   section { padding: 22px 16px; border-radius: 18px; }
   .section-head { display: block; }
   .section-head .muted { margin-top: 7px; text-align: left; }
+  .metric-group, .scale-chart { padding: 17px; }
   footer { display: block; width: calc(100% - 32px); }
   .footer-note { margin-top: 14px; text-align: left; }
 }
@@ -586,6 +697,8 @@ footer {
   .card { min-height: 126px; }
   .label { min-height: 0; }
   .value { font-size: 34px; }
+  .metric-group-head { gap: 10px; }
+  .coverage-badge { padding: 4px 7px; }
   th, td { padding: 11px 12px; }
 }
 
