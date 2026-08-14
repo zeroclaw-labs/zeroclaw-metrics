@@ -2151,6 +2151,21 @@ def coverage_cell(rate: dict[str, Any]) -> str:
     return f"{rate['downloads']:+,} over {rate['days']:.1f}d"
 
 
+def metric_coverage(kind: str, tracking_start_day: str | None = None) -> str:
+    if kind == "cumulative":
+        return "Cumulative · includes pre-tracking activity"
+    if kind == "current":
+        history = (
+            f"history since {tracking_start_day}"
+            if tracking_start_day
+            else "history starts at first snapshot"
+        )
+        return f"Current snapshot · {history}"
+    if kind == "observed":
+        return f"Tracked since {tracking_start_day or 'first stored day'}"
+    raise ValueError(f"Unknown metric coverage kind: {kind}")
+
+
 def table(headers: list[str], rows: list[list[Any]]) -> str:
     body = "\n".join(
         "<tr>" + "".join(f"<td>{metric(cell)}</td>" for cell in row) + "</tr>" for row in rows
@@ -2278,6 +2293,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     release_history = load_release_history()
     first_point = history[0] if history else {}
     latest_point = history[-1] if history else {}
+    tracking_start_day = first_point.get("day")
     tracking_days = 0.0
     if first_point.get("generated_at") and latest_point.get("generated_at"):
         tracking_days = max(
@@ -2293,16 +2309,16 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
                 f"{primary_public_source.get('window_end', 'n/a')}"
             ),
         ),
-        ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Total container package downloads"),
+        ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), metric_coverage("cumulative")),
         ("Observed Clones", compact(observed_clone_events), f"Clone events since {clone_first_day or 'first stored day'}"),
-        ("Repo Stars", compact(github_data.get("stars")), "GitHub repository stars"),
-        ("Prebuilt Payloads", compact(release_data.get("payload_downloads_total")), "Release assets excluding install.sh bootstrap"),
+        ("Repo Stars", compact(github_data.get("stars")), metric_coverage("current", tracking_start_day)),
+        ("Prebuilt Payloads", compact(release_data.get("payload_downloads_total")), metric_coverage("cumulative")),
         ("GHCR 30d", compact(ghcr_data.get("last_30_downloads")), "Authenticated package chart"),
         ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
         ("Traffic 14d", compact(github_data.get("traffic", {}).get("views_14d")), "Repository page views"),
         ("Homebrew 30d", metric((homebrew_data.get("install", {}).get("30d") or {}).get("count")), "Homebrew Core installs"),
         ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
-        ("Bootstrap Script", compact(release_data.get("bootstrap_downloads_total")), "install.sh release asset downloads"),
+        ("Bootstrap Script", compact(release_data.get("bootstrap_downloads_total")), metric_coverage("cumulative")),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
     ]
 
@@ -2417,18 +2433,40 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         for row in primary_public_source.get("top_models", [])[:12]
     ]
 
-    cumulative_metrics = [
-        ("GHCR downloads", "ghcr_downloads", "Cumulative GitHub Container Registry package counter"),
-        ("Prebuilt release payload downloads", "release_payload_downloads", "Cumulative GitHub release payload asset counter"),
-        ("Bootstrap install.sh downloads", "release_bootstrap_downloads", "Cumulative bootstrap script release asset counter"),
-        ("crates.io downloads", "crates_downloads", "Cumulative crate download counters"),
-        ("Repo stars", "stars", "Current GitHub repository stars"),
-        ("Repo forks", "forks", "Current GitHub repository forks"),
+    current_scale_metrics = [
+        (
+            "GHCR downloads",
+            "ghcr_downloads",
+            "cumulative",
+            "GitHub Container Registry package counter",
+        ),
+        (
+            "Prebuilt release payload downloads",
+            "release_payload_downloads",
+            "cumulative",
+            "Currently published GitHub release payload assets",
+        ),
+        (
+            "Bootstrap install.sh downloads",
+            "release_bootstrap_downloads",
+            "cumulative",
+            "Currently published install.sh release assets",
+        ),
+        (
+            "crates.io downloads",
+            "crates_downloads",
+            "cumulative",
+            "crates.io publisher counters",
+        ),
+        ("Repo stars", "stars", "current", "Current GitHub repository star count"),
+        ("Repo forks", "forks", "current", "Current GitHub repository fork count"),
     ]
     growth_rows = []
-    for label, key, note in cumulative_metrics:
+    for label, key, coverage_kind, note in current_scale_metrics:
         current = latest_point.get(key) if latest_point else None
-        growth_rows.append([label, current, note])
+        growth_rows.append(
+            [label, current, metric_coverage(coverage_kind, tracking_start_day), note]
+        )
 
     clone_history_rows = [
         [
@@ -2452,12 +2490,13 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         rolling_metric_rows.append([label, current, note])
 
     methodology_rows = [
-        ["GitHub stars/forks", "CHAOSS-style project popularity", "Cumulative", "GitHub repository metadata counters."],
+        ["GitHub stars/forks", "CHAOSS-style project popularity", metric_coverage("current", tracking_start_day), "GitHub repository metadata counters."],
         ["GitHub views/clones", "Attention and source-install proxy", "Rolling 14d", "GitHub Insights traffic API; no lifetime clone/view total is exposed."],
-        ["Observed clone history", "Source-install adoption proxy", "Observed cumulative", "Deduped daily clone rows stored from the rolling GitHub traffic API."],
+        ["Observed clone history", "Source-install adoption proxy", metric_coverage("observed", clone_first_day), "Deduped daily clone rows stored from the rolling GitHub traffic API."],
         ["Referrers and paths", "Discovery channels", "Rolling top 10", "GitHub Insights top referrers and popular content for the recent traffic window."],
-        ["GHCR downloads", "Container distribution", "Cumulative plus chart window", "Authenticated package UI counters; REST package objects omit pulls."],
-        ["Release payload assets", "Binary distribution", "Cumulative", "GitHub release asset counters, excluding install.sh bootstrap downloads."],
+        ["GHCR downloads", "Container distribution", metric_coverage("cumulative"), "Authenticated package UI counters; REST package objects omit pulls."],
+        ["Release payload assets", "Binary distribution", metric_coverage("cumulative"), "Currently published GitHub release asset counters, excluding install.sh bootstrap downloads."],
+        ["crates.io downloads", "Rust package distribution", metric_coverage("cumulative"), "crates.io publisher counters across tracked ZeroClaw crates."],
         ["Homebrew installs", "Package-manager adoption", "Rolling 30d/90d/365d", "Homebrew anonymous install analytics, not lifetime downloads."],
         ["CHAOSS starter health", "Responsiveness, sustainability, release cadence", f"Rolling {ACTIVITY_WINDOW_DAYS}d", "Human responses exclude authors and bot accounts; definitions are recorded in each snapshot."],
         [f"{primary_public_source_name} usage", "Provider-attributed ecosystem activity", "Provider-published rolling window", "Daily provider observations are deduplicated by source, entity, and UTC day."],
@@ -2732,11 +2771,11 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 	    <section id="overview">
 	      <div class="section-head">
 	        <h2>Current Scale</h2>
-	        <p class="muted">Latest snapshot values from {metric(len(history))} immutable snapshots in <code>data/snapshots/</code></p>
+	        <p class="muted">Latest values from {metric(len(history))} immutable snapshots. Coverage separates source-cumulative counters from current state and tracking-limited observations.</p>
 	      </div>
 	      <div class="split">
 	        <div>
-	          {table(["Metric", "Current", "Meaning"], growth_rows)}
+	          {table(["Metric", "Current", "Coverage", "Meaning"], growth_rows)}
 	          <p class="callout">Snapshot-to-snapshot change columns are intentionally excluded from the main dashboard because this tracking repository started recently and short-interval movement understates project scale. Raw day-by-day change rows remain available in <code>data/daily.json</code> and <code>data/metrics.sqlite</code>.</p>
 	        </div>
 	        <div>

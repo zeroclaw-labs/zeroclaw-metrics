@@ -339,6 +339,20 @@ class ChaossMetricTests(unittest.TestCase):
 
 
 class SnapshotTests(unittest.TestCase):
+    def test_metric_coverage_distinguishes_source_and_tracker_windows(self):
+        self.assertEqual(
+            "Cumulative · includes pre-tracking activity",
+            dashboard.metric_coverage("cumulative", "2026-07-02"),
+        )
+        self.assertEqual(
+            "Current snapshot · history since 2026-07-02",
+            dashboard.metric_coverage("current", "2026-07-02"),
+        )
+        self.assertEqual(
+            "Tracked since 2026-06-18",
+            dashboard.metric_coverage("observed", "2026-06-18"),
+        )
+
     def test_daily_close_prefers_completeness_then_recency(self):
         history = [
             {"day": "2026-07-11", "generated_at": "2026-07-11T08:00:00Z", "stars": 10, "forks": 2},
