@@ -2296,9 +2296,12 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ("Observed Clones", compact(observed_clone_events), f"Clone events since {clone_first_day or 'first stored day'}"),
         ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
         (
-            f"{primary_public_source_name} Tokens",
+            f"{primary_public_source_name} Tokens — Last 30 Days",
             compact(primary_public_source.get("reported_total_tokens")),
-            f"{primary_public_source_name}-attributed usage window",
+            (
+                f"{primary_public_source.get('window_start', 'n/a')} to "
+                f"{primary_public_source.get('window_end', 'n/a')}"
+            ),
         ),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
     ]
@@ -2720,7 +2723,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 
     <section>
       <div class="section-head">
-        <h2>{html.escape(primary_public_source_name)} Usage</h2>
+        <h2>{html.escape(primary_public_source_name)} Usage — Last 30 Days</h2>
         <p class="muted">{html.escape(str(primary_public_source.get("window_start", "n/a")))} to {html.escape(str(primary_public_source.get("window_end", "n/a")))}</p>
       </div>
       <h3>Attributed tokens by UTC day</h3>
@@ -2729,7 +2732,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       {table(["UTC day", "Tokens", "State"], public_daily_rows)}
       <h3 style="margin-top:16px;">Top models in the current provider window</h3>
       {table(["Model", "Tokens"], public_model_rows)}
-      <p class="callout">OpenRouter attributes this ecosystem usage to ZeroClaw. The published window is rolling, and overlapping daily observations are preserved so the historical series can grow over time.</p>
+      <p class="callout">OpenRouter attributes this ecosystem usage to ZeroClaw and publishes it as a rolling last-30-days window. Overlapping daily observations are preserved so the historical series can grow over time.</p>
     </section>
 
     <section>

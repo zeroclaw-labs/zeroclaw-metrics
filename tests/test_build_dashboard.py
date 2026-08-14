@@ -72,6 +72,11 @@ class PublicInferenceUsageTests(unittest.TestCase):
         self.assertNotIn("estimated_spend_usd", renderer)
         self.assertNotIn("OpenRouter Spend", renderer)
 
+    def test_public_dashboard_labels_openrouter_as_last_30_days(self):
+        renderer = inspect.getsource(dashboard.render_dashboard)
+        self.assertIn("Tokens — Last 30 Days", renderer)
+        self.assertIn("Usage — Last 30 Days", renderer)
+
     def test_parses_embedded_openrouter_usage(self):
         parsed = dashboard.parse_openrouter_app_page(self.PAGE)
         self.assertEqual(300, parsed["reported_total_tokens"])
