@@ -77,6 +77,16 @@ class PublicInferenceUsageTests(unittest.TestCase):
         self.assertIn("Tokens — Last 30 Days", renderer)
         self.assertIn("Usage — Last 30 Days", renderer)
 
+    def test_dashboard_uses_canonical_brand_surface(self):
+        renderer = inspect.getsource(dashboard.render_dashboard)
+        self.assertIn('class="hero"', renderer)
+        self.assertIn('href="assets/style.css"', renderer)
+        self.assertIn('src="assets/zeroclaw-labs-mark.png"', renderer)
+        self.assertTrue((SCRIPT_PATH.parents[1] / "assets" / "style.css").is_file())
+        self.assertTrue(
+            (SCRIPT_PATH.parents[1] / "assets" / "zeroclaw-labs-mark.png").is_file()
+        )
+
     def test_parses_embedded_openrouter_usage(self):
         parsed = dashboard.parse_openrouter_app_page(self.PAGE)
         self.assertEqual(300, parsed["reported_total_tokens"])

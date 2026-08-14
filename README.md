@@ -9,6 +9,7 @@ timestamped, point-in-time snapshots so trends can be computed over time.
 ## Contents
 
 - `index.html` - static dashboard for GitHub Pages.
+- `assets/` - canonical ZeroClaw mark and Midnight/Ice dashboard theme.
 - `data/latest.json` - latest metrics snapshot.
 - `data/daily.json` - generated day-by-day close and delta view.
 - `data/metrics.sqlite` - generated SQLite database for ad hoc queries.

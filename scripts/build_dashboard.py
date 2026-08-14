@@ -2285,16 +2285,6 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
             0.0,
         )
     cards = [
-        ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Total container package downloads"),
-        ("GHCR 30d", compact(ghcr_data.get("last_30_downloads")), "Scraped from authenticated package chart"),
-        ("Prebuilt Payloads", compact(release_data.get("payload_downloads_total")), "Release assets excluding install.sh bootstrap"),
-        ("Bootstrap Script", compact(release_data.get("bootstrap_downloads_total")), "install.sh release asset downloads"),
-        ("Homebrew 30d", metric((homebrew_data.get("install", {}).get("30d") or {}).get("count")), "Homebrew Core installs"),
-        ("Repo Stars", compact(github_data.get("stars")), "GitHub repository stars"),
-        ("Traffic 14d", compact(github_data.get("traffic", {}).get("views_14d")), "Repository page views"),
-        ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
-        ("Observed Clones", compact(observed_clone_events), f"Clone events since {clone_first_day or 'first stored day'}"),
-        ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
         (
             f"{primary_public_source_name} Tokens — Last 30 Days",
             compact(primary_public_source.get("reported_total_tokens")),
@@ -2303,6 +2293,16 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
                 f"{primary_public_source.get('window_end', 'n/a')}"
             ),
         ),
+        ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Total container package downloads"),
+        ("Observed Clones", compact(observed_clone_events), f"Clone events since {clone_first_day or 'first stored day'}"),
+        ("Repo Stars", compact(github_data.get("stars")), "GitHub repository stars"),
+        ("Prebuilt Payloads", compact(release_data.get("payload_downloads_total")), "Release assets excluding install.sh bootstrap"),
+        ("GHCR 30d", compact(ghcr_data.get("last_30_downloads")), "Authenticated package chart"),
+        ("Clones 14d", compact(github_data.get("traffic", {}).get("clones_14d")), "Repository clones"),
+        ("Traffic 14d", compact(github_data.get("traffic", {}).get("views_14d")), "Repository page views"),
+        ("Homebrew 30d", metric((homebrew_data.get("install", {}).get("30d") or {}).get("count")), "Homebrew Core installs"),
+        ("PRs Merged 7d", metric(github_data.get("pulse_7d", {}).get("prs_merged")), "Pulse-like activity"),
+        ("Bootstrap Script", compact(release_data.get("bootstrap_downloads_total")), "install.sh release asset downloads"),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
     ]
 
@@ -2658,9 +2658,9 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     """
 
     cards_html = "\n".join(
-        f'<article class="card"><span class="label">{html.escape(title)}</span>'
+        f'<article class="card{" card--feature" if index == 0 else ""}"><span class="label">{html.escape(title)}</span>'
         f'<span class="value">{value}</span><p class="note">{html.escape(note)}</p></article>'
-        for title, value, note in cards
+        for index, (title, value, note) in enumerate(cards)
     )
 
     ghcr_daily_rows = ghcr_data.get("last_30_daily", [])
@@ -2687,18 +2687,49 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ZeroClaw Metrics Dashboard</title>
+  <meta name="theme-color" content="#050810">
+  <meta name="description" content="Daily adoption, distribution, community-health, and inference metrics for ZeroClaw.">
+  <meta property="og:title" content="ZeroClaw Metrics">
+  <meta property="og:description" content="A clear, daily view of ZeroClaw adoption and project health.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zeroclaw-labs.github.io/zeroclaw-metrics/">
+  <link rel="icon" type="image/png" href="assets/zeroclaw-labs-mark.png">
+  <title>ZeroClaw Metrics — Project telemetry</title>
   <style>{css}</style>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <header>
-    <h1>ZeroClaw Metrics Dashboard</h1>
-    <p>Distribution, release, repository, and project-health metrics for <a href="https://github.com/{html.escape(FULL_REPO)}">{html.escape(FULL_REPO)}</a>. Generated {html.escape(snapshot["generated_at"])}.</p>
+  <header class="hero">
+    <div class="hero-inner">
+      <nav class="topbar" aria-label="Primary navigation">
+        <a class="brand-lockup" href="https://github.com/{html.escape(FULL_REPO)}" aria-label="ZeroClaw on GitHub">
+          <img src="assets/zeroclaw-labs-mark.png" alt="" width="38" height="38">
+          <span>ZeroClaw</span><span class="brand-slash">/</span><span class="brand-product">Metrics</span>
+        </a>
+        <div class="nav-links">
+          <a href="#overview">Overview</a>
+          <a href="#openrouter">OpenRouter</a>
+          <a href="#activity">Activity</a>
+          <a href="#methodology">Methodology</a>
+          <a href="https://github.com/{html.escape(FULL_REPO)}">GitHub ↗</a>
+        </div>
+      </nav>
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Daily project telemetry</p>
+        <h1>ZeroClaw,<br><span>by the numbers.</span></h1>
+        <p class="hero-lede">A clear view of adoption, distribution, community health, and inference activity—collected daily and preserved over time.</p>
+        <div class="hero-meta" aria-label="Dataset summary">
+          <span class="meta-chip">Updated {html.escape(snapshot["generated_at"][:10])}</span>
+          <span class="meta-chip">{metric(len(history))} immutable snapshots</span>
+          <span class="meta-chip">UTC day boundaries</span>
+        </div>
+      </div>
+    </div>
   </header>
   <main>
-{error_banner}    <div class="grid">{cards_html}</div>
+{error_banner}    <div class="grid" aria-label="Key metrics">{cards_html}</div>
 
-	    <section>
+	    <section id="overview">
 	      <div class="section-head">
 	        <h2>Current Scale</h2>
 	        <p class="muted">Latest snapshot values from {metric(len(history))} immutable snapshots in <code>data/snapshots/</code></p>
@@ -2721,7 +2752,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 	      {table(["UTC day", "Clone events", "Daily unique cloners", "Observed cumulative"], clone_history_rows)}
 		    </section>
 
-    <section>
+    <section id="openrouter">
       <div class="section-head">
         <h2>{html.escape(primary_public_source_name)} Usage — Last 30 Days</h2>
         <p class="muted">{html.escape(str(primary_public_source.get("window_start", "n/a")))} to {html.escape(str(primary_public_source.get("window_end", "n/a")))}</p>
@@ -2735,7 +2766,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       <p class="callout">OpenRouter attributes this ecosystem usage to ZeroClaw and publishes it as a rolling last-30-days window. Overlapping daily observations are preserved so the historical series can grow over time.</p>
     </section>
 
-    <section>
+    <section id="health">
       <div class="section-head">
         <h2>CHAOSS Starter Health</h2>
         <p class="muted">Rolling {metric(chaoss_data.get("window_days"))}-day window since {html.escape(str(chaoss_data.get("since", "n/a")))}</p>
@@ -2744,7 +2775,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       <p class="callout">These signals follow the <a href="https://www.chaoss.community/kb/metrics-model-starter-project-health/">CHAOSS Starter Project Health model</a>. They are trends for this project, not a score or cross-project ranking. {html.escape(str(chaoss_data.get("response_policy", "Response policy unavailable.")))}</p>
     </section>
 
-    <section>
+    <section id="distribution">
       <div class="section-head">
         <h2>GHCR Container Downloads</h2>
         <p class="muted">Total {metric(ghcr_data.get("total_downloads"))}; last 7 days {metric(ghcr_data.get("last_7_downloads"))}</p>
@@ -2772,7 +2803,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       <p class="callout"><code>install.sh</code> is a bootstrap path: default installs clone and build the repo, while <code>--prebuilt</code> downloads release payload assets. Treat repo clone traffic as the better proxy for source-build installs. First-21-day and latest-stable rates are computed only from stored snapshots.</p>
     </section>
 
-	    <section>
+	    <section id="activity">
 	      <div class="section-head">
 	        <h2>Repository Activity</h2>
 	        <p class="muted">Pulse-like window since {html.escape(str(pulse.get("since", "n/a")))}</p>
@@ -2796,7 +2827,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 	      {table(["Path", "Title", "Views", "Unique visitors"], popular_path_rows)}
 	    </section>
 
-    <section>
+    <section id="ecosystem">
       <div class="section-head">
         <h2>Package Managers</h2>
         <p class="muted">External package surfaces with usable metrics</p>
@@ -2831,7 +2862,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       {table(["Repository", "Pulls", "Stars", "Description"], docker_rows)}
     </section>
 
-	    <section>
+	    <section id="about">
 	      <div class="section-head">
 	        <h2>Recommended Permanent Home</h2>
 	        <p class="muted">Keep snapshots separate from source code</p>
@@ -2846,7 +2877,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
       </div>
 	    </section>
 
-	    <section>
+	    <section id="methodology">
 	      <div class="section-head">
 	        <h2>Methodology</h2>
 	        <p class="muted">Investor-readable metric definitions and caveats</p>
@@ -2855,7 +2886,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 	      <p class="callout">This dashboard follows a snapshot-first model aligned with CHAOSS project-health reporting. Versioned normalized source records are preserved under <code>data/snapshots/</code>, and aggregate JSON, SQLite, and HTML views are regenerated from those records.</p>
 	    </section>
 
-	    <section>
+	    <section id="sources">
       <div class="section-head">
         <h2>Source Status</h2>
         <p class="muted">Collector health for this snapshot</p>
@@ -2864,7 +2895,13 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     </section>
   </main>
   <footer>
-    <a href="data/latest.json">Source snapshot</a>. <a href="data/daily.json">Daily diffs</a>. <a href="data/metrics.sqlite">Query database</a>. The live platforms remain canonical; this dashboard is a point-in-time operational view.
+    <div class="footer-links">
+      <a href="data/latest.json">Latest snapshot</a>
+      <a href="data/daily.json">Daily history</a>
+      <a href="data/metrics.sqlite">SQLite database</a>
+      <a href="https://github.com/{html.escape(FULL_REPO)}">GitHub</a>
+    </div>
+    <p class="footer-note">Live platforms remain canonical. This dashboard is a point-in-time operational view.</p>
   </footer>
 </body>
 </html>
