@@ -2305,6 +2305,13 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     latest_point = history[-1] if history else {}
     tracking_start_day = first_point.get("day")
     cards = [
+        ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Cumulative total"),
+        (
+            "Prebuilt Payloads",
+            compact(release_data.get("payload_downloads_total")),
+            f"Cumulative · snapshots since {tracking_start_day or 'first snapshot'}",
+        ),
+        ("Observed Clones", compact(observed_clone_events), f"Tracked since {clone_first_day or 'first stored day'}"),
         (
             f"{primary_public_source_name} Tokens — Last 30 Days",
             compact(primary_public_source.get("reported_total_tokens")),
@@ -2313,13 +2320,14 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
                 f"{primary_public_source.get('window_end', 'n/a')}"
             ),
         ),
-        ("GHCR Downloads", compact(ghcr_data.get("total_downloads")), "Cumulative total"),
-        ("Observed Clones", compact(observed_clone_events), f"Tracked since {clone_first_day or 'first stored day'}"),
         ("Repo Stars", compact(github_data.get("stars")), f"Current · history since {tracking_start_day or 'first snapshot'}"),
-        ("Prebuilt Payloads", compact(release_data.get("payload_downloads_total")), "Published assets · cumulative"),
-        ("Bootstrap Script", compact(release_data.get("bootstrap_downloads_total")), "Published asset · cumulative"),
+        (
+            "Bootstrap Script",
+            compact(release_data.get("bootstrap_downloads_total")),
+            f"Cumulative · snapshots since {tracking_start_day or 'first snapshot'}",
+        ),
         ("Clones — 14 Days", compact(github_data.get("traffic", {}).get("clones_14d")), "Latest rolling window"),
-        ("Homebrew — 30 Days", metric((homebrew_data.get("install", {}).get("30d") or {}).get("count")), "Latest rolling window"),
+        ("GHCR — 30 Days", compact(ghcr_data.get("last_30_downloads")), "Recent container downloads"),
     ]
 
     current_release_rows = release_rows_from_snapshot(snapshot)
@@ -2697,9 +2705,9 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     """
 
     cards_html = "\n".join(
-        f'<article class="card{" card--feature" if index == 0 else ""}"><span class="label">{html.escape(title)}</span>'
+        f'<article class="card"><span class="label">{html.escape(title)}</span>'
         f'<span class="value">{value}</span><p class="note">{html.escape(note)}</p></article>'
-        for index, (title, value, note) in enumerate(cards)
+        for title, value, note in cards
     )
 
     ghcr_daily_rows = ghcr_data.get("last_30_daily", [])
@@ -2753,14 +2761,19 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
           <a href="https://github.com/{html.escape(FULL_REPO)}">GitHub ↗</a>
         </div>
       </nav>
-      <div class="hero-copy">
-        <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Daily project telemetry</p>
-        <h1>ZeroClaw,<br><span>by the numbers.</span></h1>
-        <p class="hero-lede">Daily signals for adoption, distribution, community health, and inference.</p>
-        <div class="hero-meta" aria-label="Dataset summary">
-          <span class="meta-chip">Updated {html.escape(snapshot["generated_at"][:10])}</span>
-          <span class="meta-chip">{metric(len(history))} immutable snapshots</span>
-          <span class="meta-chip">UTC day boundaries</span>
+      <div class="hero-content">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Daily project telemetry</p>
+          <h1>ZeroClaw,<br><span>by the numbers.</span></h1>
+          <p class="hero-lede">Daily signals for adoption, distribution, community health, and inference.</p>
+          <div class="hero-meta" aria-label="Dataset summary">
+            <span class="meta-chip">Updated {html.escape(snapshot["generated_at"][:10])}</span>
+            <span class="meta-chip">{metric(len(history))} immutable snapshots</span>
+            <span class="meta-chip">UTC day boundaries</span>
+          </div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <img src="assets/zeroclaw-wordmark-transparent.png" alt="" width="1536" height="1024">
         </div>
       </div>
     </div>
@@ -2783,7 +2796,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 	              </div>
 	              <span class="coverage-badge">Cumulative</span>
 	            </div>
-	            <p class="metric-group-copy">Includes activity from before tracking began. Release counts cover assets currently published on GitHub.</p>
+	            <p class="metric-group-copy">Includes activity from before tracking began. Release counts cover assets currently published on GitHub; daily snapshots begin {html.escape(tracking_start_day or "at the first snapshot")}.</p>
 	            {metric_list(cumulative_scale_rows)}
 	          </article>
 	          <article class="metric-group" aria-labelledby="repository-heading">
