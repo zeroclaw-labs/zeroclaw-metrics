@@ -392,7 +392,7 @@
       "cumulative_count": 234927,
       "cumulative_uniques_sum": 18403,
       "day": "2026-07-31",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-07-31T00:00:00Z",
       "uniques": 201
     },
@@ -401,7 +401,7 @@
       "cumulative_count": 241842,
       "cumulative_uniques_sum": 18717,
       "day": "2026-08-01",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-01T00:00:00Z",
       "uniques": 314
     },
@@ -410,7 +410,7 @@
       "cumulative_count": 247313,
       "cumulative_uniques_sum": 18994,
       "day": "2026-08-02",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-02T00:00:00Z",
       "uniques": 277
     },
@@ -419,7 +419,7 @@
       "cumulative_count": 254181,
       "cumulative_uniques_sum": 19275,
       "day": "2026-08-03",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-03T00:00:00Z",
       "uniques": 281
     },
@@ -428,7 +428,7 @@
       "cumulative_count": 260263,
       "cumulative_uniques_sum": 19510,
       "day": "2026-08-04",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-04T00:00:00Z",
       "uniques": 235
     },
@@ -437,7 +437,7 @@
       "cumulative_count": 269211,
       "cumulative_uniques_sum": 19782,
       "day": "2026-08-05",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-05T00:00:00Z",
       "uniques": 272
     },
@@ -446,7 +446,7 @@
       "cumulative_count": 272530,
       "cumulative_uniques_sum": 20017,
       "day": "2026-08-06",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-06T00:00:00Z",
       "uniques": 235
     },
@@ -455,7 +455,7 @@
       "cumulative_count": 279003,
       "cumulative_uniques_sum": 20216,
       "day": "2026-08-07",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-07T00:00:00Z",
       "uniques": 199
     },
@@ -464,7 +464,7 @@
       "cumulative_count": 285298,
       "cumulative_uniques_sum": 20457,
       "day": "2026-08-08",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-08T00:00:00Z",
       "uniques": 241
     },
@@ -473,7 +473,7 @@
       "cumulative_count": 292882,
       "cumulative_uniques_sum": 20609,
       "day": "2026-08-09",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-09T00:00:00Z",
       "uniques": 152
     },
@@ -482,7 +482,7 @@
       "cumulative_count": 297656,
       "cumulative_uniques_sum": 20788,
       "day": "2026-08-10",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-10T00:00:00Z",
       "uniques": 179
     },
@@ -491,7 +491,7 @@
       "cumulative_count": 307310,
       "cumulative_uniques_sum": 21078,
       "day": "2026-08-11",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-11T00:00:00Z",
       "uniques": 290
     },
@@ -500,7 +500,7 @@
       "cumulative_count": 313481,
       "cumulative_uniques_sum": 21282,
       "day": "2026-08-12",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-12T00:00:00Z",
       "uniques": 204
     },
@@ -509,7 +509,7 @@
       "cumulative_count": 321284,
       "cumulative_uniques_sum": 21601,
       "day": "2026-08-13",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "timestamp": "2026-08-13T00:00:00Z",
       "uniques": 319
     }
@@ -528,7 +528,7 @@
     "open_pull_requests"
   ],
   "day_boundary": "UTC",
-  "generated_at": "2026-08-14T10:13:07.035846+00:00",
+  "generated_at": "2026-08-14T10:19:12.821029+00:00",
   "method": "most complete snapshot per UTC day (latest on ties), diffed against prior UTC day close",
   "public_usage_history": [
     {
@@ -558,7 +558,7 @@
       "priced_tokens": 366660363,
       "pricing_coverage_pct": 83.1398,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 441016825
     },
     {
@@ -573,7 +573,7 @@
       "priced_tokens": 306385645,
       "pricing_coverage_pct": 89.5315,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 342209958
     },
     {
@@ -588,7 +588,7 @@
       "priced_tokens": 334813769,
       "pricing_coverage_pct": 92.0154,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 363867041
     },
     {
@@ -603,7 +603,7 @@
       "priced_tokens": 397361743,
       "pricing_coverage_pct": 81.6696,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 486547790
     },
     {
@@ -618,7 +618,7 @@
       "priced_tokens": 241228907,
       "pricing_coverage_pct": 87.5568,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 275511248
     },
     {
@@ -633,7 +633,7 @@
       "priced_tokens": 253430215,
       "pricing_coverage_pct": 86.7245,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 292224641
     },
     {
@@ -648,7 +648,7 @@
       "priced_tokens": 187665429,
       "pricing_coverage_pct": 79.0883,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 237285894
     },
     {
@@ -663,7 +663,7 @@
       "priced_tokens": 172405677,
       "pricing_coverage_pct": 77.1435,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 223487021
     },
     {
@@ -678,7 +678,7 @@
       "priced_tokens": 560122433,
       "pricing_coverage_pct": 95.3044,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 587719200
     },
     {
@@ -693,7 +693,7 @@
       "priced_tokens": 357672384,
       "pricing_coverage_pct": 92.7336,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 385698895
     },
     {
@@ -708,7 +708,7 @@
       "priced_tokens": 170225454,
       "pricing_coverage_pct": 87.7261,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 194041895
     },
     {
@@ -723,7 +723,7 @@
       "priced_tokens": 209580638,
       "pricing_coverage_pct": 86.3103,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 242822251
     },
     {
@@ -738,7 +738,7 @@
       "priced_tokens": 319538392,
       "pricing_coverage_pct": 82.8914,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 385490348
     },
     {
@@ -753,7 +753,7 @@
       "priced_tokens": 385569756,
       "pricing_coverage_pct": 79.4892,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 485059465
     },
     {
@@ -768,7 +768,7 @@
       "priced_tokens": 259857466,
       "pricing_coverage_pct": 89.014,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 291928886
     },
     {
@@ -783,7 +783,7 @@
       "priced_tokens": 292556998,
       "pricing_coverage_pct": 88.4206,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 330869868
     },
     {
@@ -798,7 +798,7 @@
       "priced_tokens": 476231454,
       "pricing_coverage_pct": 91.1966,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 522203216
     },
     {
@@ -813,7 +813,7 @@
       "priced_tokens": 393599930,
       "pricing_coverage_pct": 91.4445,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 430424995
     },
     {
@@ -828,7 +828,7 @@
       "priced_tokens": 450225986,
       "pricing_coverage_pct": 91.0359,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 494558627
     },
     {
@@ -843,7 +843,7 @@
       "priced_tokens": 642243247,
       "pricing_coverage_pct": 93.9161,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 683848201
     },
     {
@@ -858,7 +858,7 @@
       "priced_tokens": 431976274,
       "pricing_coverage_pct": 93.6142,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 461442996
     },
     {
@@ -873,7 +873,7 @@
       "priced_tokens": 676948346,
       "pricing_coverage_pct": 93.2877,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 725656309
     },
     {
@@ -888,7 +888,7 @@
       "priced_tokens": 792510665,
       "pricing_coverage_pct": 94.701,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 836855775
     },
     {
@@ -903,7 +903,7 @@
       "priced_tokens": 573212138,
       "pricing_coverage_pct": 94.4124,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 607136470
     },
     {
@@ -918,7 +918,7 @@
       "priced_tokens": 1322733049,
       "pricing_coverage_pct": 96.9617,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 1364181102
     },
     {
@@ -933,7 +933,7 @@
       "priced_tokens": 641392024,
       "pricing_coverage_pct": 93.0848,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 689040357
     },
     {
@@ -948,7 +948,7 @@
       "priced_tokens": 474023535,
       "pricing_coverage_pct": 90.5532,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 523475148
     },
     {
@@ -963,7 +963,7 @@
       "priced_tokens": 495431850,
       "pricing_coverage_pct": 88.7099,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 558485663
     },
     {
@@ -978,7 +978,7 @@
       "priced_tokens": 472450670,
       "pricing_coverage_pct": 86.3856,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 546908996
     },
     {
@@ -993,23 +993,23 @@
       "priced_tokens": 499363057,
       "pricing_coverage_pct": 85.5342,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
       "total_tokens": 583817021
     },
     {
       "day": "2026-08-14",
       "entity": "zeroclaw",
-      "estimated_spend_high_usd": 102.159137,
-      "estimated_spend_low_usd": 73.673564,
-      "estimated_spend_usd": 83.168755,
+      "estimated_spend_high_usd": 102.085784,
+      "estimated_spend_low_usd": 73.481347,
+      "estimated_spend_usd": 83.016159,
       "is_partial": true,
-      "observed_cumulative_estimated_spend_usd": 10464.635555,
-      "observed_cumulative_tokens": 15049529705,
-      "priced_tokens": 182742258,
-      "pricing_coverage_pct": 94.2995,
+      "observed_cumulative_estimated_spend_usd": 10464.482959,
+      "observed_cumulative_tokens": 15052110799,
+      "priced_tokens": 184604207,
+      "pricing_coverage_pct": 94.0082,
       "source": "openrouter",
-      "source_snapshot_at": "2026-08-14T10:13:07.035846+00:00",
-      "total_tokens": 193789180
+      "source_snapshot_at": "2026-08-14T10:19:12.821029+00:00",
+      "total_tokens": 196370274
     }
   ],
   "public_usage_history_method": "latest stored observation for each public source/entity/UTC day; overlapping provider windows backfill history and replace partial days",
@@ -3047,13 +3047,13 @@
       "snapshot_at": "2026-08-13T23:53:42.246278+00:00"
     },
     {
-      "aggregate_distribution_delta": 790,
+      "aggregate_distribution_delta": 793,
       "counters": {
         "active_commit_contributors_28d": 65,
         "contributor_absence_factor_28d": 3,
         "crates_downloads": 6806,
         "forks": 4893,
-        "ghcr_downloads": 418437,
+        "ghcr_downloads": 418438,
         "homebrew_installs_365d": 7930,
         "issues_opened_7d": 75,
         "open_issues": 452,
@@ -3062,11 +3062,11 @@
         "pr_median_first_response_hours_28d": 17,
         "prs_merged_7d": 81,
         "release_bootstrap_downloads": 7632,
-        "release_downloads": 165794,
-        "release_payload_downloads": 158162,
+        "release_downloads": 165796,
+        "release_payload_downloads": 158164,
         "repo_clones_14d": 89137,
         "repo_views_14d": 31088,
-        "stars": 32575,
+        "stars": 32576,
         "watchers": 79
       },
       "day": "2026-08-14",
@@ -3075,7 +3075,7 @@
         "contributor_absence_factor_28d": 0,
         "crates_downloads": 8,
         "forks": 1,
-        "ghcr_downloads": 569,
+        "ghcr_downloads": 570,
         "homebrew_installs_365d": 3,
         "issues_opened_7d": -3,
         "open_issues": 1,
@@ -3084,14 +3084,14 @@
         "pr_median_first_response_hours_28d": 0,
         "prs_merged_7d": -19,
         "release_bootstrap_downloads": 9,
-        "release_downloads": 222,
-        "release_payload_downloads": 213,
+        "release_downloads": 224,
+        "release_payload_downloads": 215,
         "repo_clones_14d": 3066,
         "repo_views_14d": 47,
-        "stars": 5,
+        "stars": 6,
         "watchers": 0
       },
-      "snapshot_at": "2026-08-14T10:13:07.035846+00:00"
+      "snapshot_at": "2026-08-14T10:19:12.821029+00:00"
     }
   ],
   "source": "data/snapshots"
