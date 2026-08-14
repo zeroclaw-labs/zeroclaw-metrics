@@ -3,7 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ZeroClaw Metrics Dashboard</title>
+  <meta name="theme-color" content="#050810">
+  <meta name="description" content="Daily adoption, distribution, community-health, and inference metrics for ZeroClaw.">
+  <meta property="og:title" content="ZeroClaw Metrics">
+  <meta property="og:description" content="A clear, daily view of ZeroClaw adoption and project health.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://zeroclaw-labs.github.io/zeroclaw-metrics/">
+  <link rel="icon" type="image/png" href="assets/zeroclaw-labs-mark.png">
+  <title>ZeroClaw Metrics — Project telemetry</title>
   <style>
     :root {
       color-scheme: light;
@@ -170,27 +177,51 @@
       .section-head .muted { margin-top: 4px; }
     }
     </style>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <header>
-    <h1>ZeroClaw Metrics Dashboard</h1>
-    <p>Distribution, release, repository, and project-health metrics for <a href="https://github.com/zeroclaw-labs/zeroclaw">zeroclaw-labs/zeroclaw</a>. Generated 2026-08-14T10:19:12.821029+00:00.</p>
+  <header class="hero">
+    <div class="hero-inner">
+      <nav class="topbar" aria-label="Primary navigation">
+        <a class="brand-lockup" href="https://github.com/zeroclaw-labs/zeroclaw" aria-label="ZeroClaw on GitHub">
+          <img src="assets/zeroclaw-labs-mark.png" alt="" width="38" height="38">
+          <span>ZeroClaw</span><span class="brand-slash">/</span><span class="brand-product">Metrics</span>
+        </a>
+        <div class="nav-links">
+          <a href="#overview">Overview</a>
+          <a href="#openrouter">OpenRouter</a>
+          <a href="#activity">Activity</a>
+          <a href="#methodology">Methodology</a>
+          <a href="https://github.com/zeroclaw-labs/zeroclaw">GitHub ↗</a>
+        </div>
+      </nav>
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Daily project telemetry</p>
+        <h1>ZeroClaw,<br><span>by the numbers.</span></h1>
+        <p class="hero-lede">A clear view of adoption, distribution, community health, and inference activity—collected daily and preserved over time.</p>
+        <div class="hero-meta" aria-label="Dataset summary">
+          <span class="meta-chip">Updated 2026-08-14</span>
+          <span class="meta-chip">61 immutable snapshots</span>
+          <span class="meta-chip">UTC day boundaries</span>
+        </div>
+      </div>
+    </div>
   </header>
   <main>
-    <div class="grid"><article class="card"><span class="label">GHCR Downloads</span><span class="value">418.4K</span><p class="note">Total container package downloads</p></article>
-<article class="card"><span class="label">GHCR 30d</span><span class="value">43.2K</span><p class="note">Scraped from authenticated package chart</p></article>
-<article class="card"><span class="label">Prebuilt Payloads</span><span class="value">158.2K</span><p class="note">Release assets excluding install.sh bootstrap</p></article>
-<article class="card"><span class="label">Bootstrap Script</span><span class="value">7.6K</span><p class="note">install.sh release asset downloads</p></article>
-<article class="card"><span class="label">Homebrew 30d</span><span class="value">355</span><p class="note">Homebrew Core installs</p></article>
-<article class="card"><span class="label">Repo Stars</span><span class="value">32.6K</span><p class="note">GitHub repository stars</p></article>
-<article class="card"><span class="label">Traffic 14d</span><span class="value">31.1K</span><p class="note">Repository page views</p></article>
-<article class="card"><span class="label">Clones 14d</span><span class="value">89.1K</span><p class="note">Repository clones</p></article>
+    <div class="grid" aria-label="Key metrics"><article class="card card--feature"><span class="label">OpenRouter Tokens — Last 30 Days</span><span class="value">14.8B</span><p class="note">2026-07-15 to 2026-08-14</p></article>
+<article class="card"><span class="label">GHCR Downloads</span><span class="value">418.4K</span><p class="note">Total container package downloads</p></article>
 <article class="card"><span class="label">Observed Clones</span><span class="value">321.3K</span><p class="note">Clone events since 2026-06-18</p></article>
+<article class="card"><span class="label">Repo Stars</span><span class="value">32.6K</span><p class="note">GitHub repository stars</p></article>
+<article class="card"><span class="label">Prebuilt Payloads</span><span class="value">158.2K</span><p class="note">Release assets excluding install.sh bootstrap</p></article>
+<article class="card"><span class="label">GHCR 30d</span><span class="value">43.2K</span><p class="note">Authenticated package chart</p></article>
+<article class="card"><span class="label">Clones 14d</span><span class="value">89.1K</span><p class="note">Repository clones</p></article>
+<article class="card"><span class="label">Traffic 14d</span><span class="value">31.1K</span><p class="note">Repository page views</p></article>
+<article class="card"><span class="label">Homebrew 30d</span><span class="value">355</span><p class="note">Homebrew Core installs</p></article>
 <article class="card"><span class="label">PRs Merged 7d</span><span class="value">81</span><p class="note">Pulse-like activity</p></article>
-<article class="card"><span class="label">OpenRouter Tokens — Last 30 Days</span><span class="value">14.8B</span><p class="note">2026-07-15 to 2026-08-14</p></article>
+<article class="card"><span class="label">Bootstrap Script</span><span class="value">7.6K</span><p class="note">install.sh release asset downloads</p></article>
 <article class="card"><span class="label">Snapshots</span><span class="value">61</span><p class="note">Tracking window 42.5 days</p></article></div>
 
-	    <section>
+	    <section id="overview">
 	      <div class="section-head">
 	        <h2>Current Scale</h2>
 	        <p class="muted">Latest snapshot values from 61 immutable snapshots in <code>data/snapshots/</code></p>
@@ -235,7 +266,7 @@
 <tr><td>2026-08-13</td><td>7,803</td><td>319</td><td>321,284</td></tr></tbody></table></div>
 		    </section>
 
-    <section>
+    <section id="openrouter">
       <div class="section-head">
         <h2>OpenRouter Usage — Last 30 Days</h2>
         <p class="muted">2026-07-15 to 2026-08-14</p>
@@ -273,7 +304,7 @@
       <p class="callout">OpenRouter attributes this ecosystem usage to ZeroClaw and publishes it as a rolling last-30-days window. Overlapping daily observations are preserved so the historical series can grow over time.</p>
     </section>
 
-    <section>
+    <section id="health">
       <div class="section-head">
         <h2>CHAOSS Starter Health</h2>
         <p class="muted">Rolling 28-day window since 2026-07-17T10:19:12Z</p>
@@ -290,7 +321,7 @@
       <p class="callout">These signals follow the <a href="https://www.chaoss.community/kb/metrics-model-starter-project-health/">CHAOSS Starter Project Health model</a>. They are trends for this project, not a score or cross-project ranking. first comment or review from a non-bot account other than the author; first 20 comments and reviews inspected</p>
     </section>
 
-    <section>
+    <section id="distribution">
       <div class="section-head">
         <h2>GHCR Container Downloads</h2>
         <p class="muted">Total 418,438; last 7 days 8,144</p>
@@ -340,7 +371,7 @@
       <p class="callout"><code>install.sh</code> is a bootstrap path: default installs clone and build the repo, while <code>--prebuilt</code> downloads release payload assets. Treat repo clone traffic as the better proxy for source-build installs. First-21-day and latest-stable rates are computed only from stored snapshots.</p>
     </section>
 
-	    <section>
+	    <section id="activity">
 	      <div class="section-head">
 	        <h2>Repository Activity</h2>
 	        <p class="muted">Pulse-like window since 2026-08-07T10:19:12Z</p>
@@ -395,7 +426,7 @@
 <tr><td>/zeroclaw-labs/zeroclaw/blob/master/docs/book/src/setup/windows.md</td><td>/blob/master/docs/book/src/setup/windows.md</td><td>136</td><td>96</td></tr></tbody></table></div>
 	    </section>
 
-    <section>
+    <section id="ecosystem">
       <div class="section-head">
         <h2>Package Managers</h2>
         <p class="muted">External package surfaces with usable metrics</p>
@@ -439,7 +470,7 @@
 <tr><td>jyasu/zeroclaw</td><td>1,217</td><td>0</td><td></td></tr></tbody></table></div>
     </section>
 
-	    <section>
+	    <section id="about">
 	      <div class="section-head">
 	        <h2>Recommended Permanent Home</h2>
 	        <p class="muted">Keep snapshots separate from source code</p>
@@ -454,7 +485,7 @@
       </div>
 	    </section>
 
-	    <section>
+	    <section id="methodology">
 	      <div class="section-head">
 	        <h2>Methodology</h2>
 	        <p class="muted">Investor-readable metric definitions and caveats</p>
@@ -471,7 +502,7 @@
 	      <p class="callout">This dashboard follows a snapshot-first model aligned with CHAOSS project-health reporting. Versioned normalized source records are preserved under <code>data/snapshots/</code>, and aggregate JSON, SQLite, and HTML views are regenerated from those records.</p>
 	    </section>
 
-	    <section>
+	    <section id="sources">
       <div class="section-head">
         <h2>Source Status</h2>
         <p class="muted">Collector health for this snapshot</p>
@@ -490,7 +521,13 @@
     </section>
   </main>
   <footer>
-    <a href="data/latest.json">Source snapshot</a>. <a href="data/daily.json">Daily diffs</a>. <a href="data/metrics.sqlite">Query database</a>. The live platforms remain canonical; this dashboard is a point-in-time operational view.
+    <div class="footer-links">
+      <a href="data/latest.json">Latest snapshot</a>
+      <a href="data/daily.json">Daily history</a>
+      <a href="data/metrics.sqlite">SQLite database</a>
+      <a href="https://github.com/zeroclaw-labs/zeroclaw">GitHub</a>
+    </div>
+    <p class="footer-note">Live platforms remain canonical. This dashboard is a point-in-time operational view.</p>
   </footer>
 </body>
 </html>
