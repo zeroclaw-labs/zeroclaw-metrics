@@ -1,5 +1,6 @@
 import datetime as dt
 import importlib.util
+import inspect
 import sqlite3
 import tempfile
 import unittest
@@ -65,6 +66,11 @@ class PublicInferenceUsageTests(unittest.TestCase):
         self.assertEqual(
             "OpenRouter", dashboard.public_usage_source_name({"source": "openrouter"})
         )
+
+    def test_public_dashboard_does_not_render_spend(self):
+        renderer = inspect.getsource(dashboard.render_dashboard)
+        self.assertNotIn("estimated_spend_usd", renderer)
+        self.assertNotIn("OpenRouter Spend", renderer)
 
     def test_parses_embedded_openrouter_usage(self):
         parsed = dashboard.parse_openrouter_app_page(self.PAGE)

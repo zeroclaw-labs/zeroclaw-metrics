@@ -958,12 +958,6 @@ def compact(value: int | None) -> str:
     return str(value)
 
 
-def usd(value: Any) -> str:
-    if not isinstance(value, int | float):
-        return "n/a"
-    return f"${float(value):,.2f}"
-
-
 def public_usage_source_name(source: dict[str, Any]) -> str:
     source_key = str(source.get("source") or "provider")
     return PUBLIC_USAGE_SOURCE_NAMES.get(source_key, source_key)
@@ -2268,11 +2262,6 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
     public_sources = public_usage_data.get("sources", [])
     primary_public_source = public_sources[0] if public_sources else {}
     primary_public_source_name = public_usage_source_name(primary_public_source)
-    public_estimate = (
-        primary_public_source.get("estimate")
-        if isinstance(primary_public_source.get("estimate"), dict)
-        else {}
-    )
 
     history = load_snapshot_history()
     daily = daily_metrics(history)
@@ -2310,11 +2299,6 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
             f"{primary_public_source_name} Tokens",
             compact(primary_public_source.get("reported_total_tokens")),
             f"{primary_public_source_name}-attributed usage window",
-        ),
-        (
-            f"{primary_public_source_name} Spend",
-            usd(public_estimate.get("estimated_spend_usd")),
-            "Estimated from model prices, not a ZeroClaw Labs bill",
         ),
         ("Snapshots", metric(len(history)), f"Tracking window {tracking_days:.1f} days"),
     ]
@@ -2418,9 +2402,6 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         [
             row.get("day"),
             row.get("total_tokens"),
-            usd(row.get("estimated_spend_usd")),
-            f"{usd(row.get('estimated_spend_low_usd'))}–{usd(row.get('estimated_spend_high_usd'))}",
-            f"{row.get('pricing_coverage_pct', 0):.1f}%",
             "partial" if row.get("is_partial") else "closed",
         ]
         for row in public_usage_history[-14:]
@@ -2429,13 +2410,6 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         [
             row.get("model_name") or row.get("model_key"),
             row.get("tokens"),
-            (
-                f"${row.get('input_usd_per_million', 0):g} / "
-                f"${row.get('output_usd_per_million', 0):g}"
-                if row.get("input_usd_per_million") is not None
-                else "unpriced"
-            ),
-            usd(row.get("estimated_spend_usd")),
         ]
         for row in primary_public_source.get("top_models", [])[:12]
     ]
@@ -2483,7 +2457,7 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
         ["Release payload assets", "Binary distribution", "Cumulative", "GitHub release asset counters, excluding install.sh bootstrap downloads."],
         ["Homebrew installs", "Package-manager adoption", "Rolling 30d/90d/365d", "Homebrew anonymous install analytics, not lifetime downloads."],
         ["CHAOSS starter health", "Responsiveness, sustainability, release cadence", f"Rolling {ACTIVITY_WINDOW_DAYS}d", "Human responses exclude authors and bot accounts; definitions are recorded in each snapshot."],
-        [f"{primary_public_source_name} usage", "Provider-attributed ecosystem activity", "Provider-published rolling window", "Daily provider observations are deduplicated by source, entity, and UTC day; spend remains an estimate with stored assumptions and coverage."],
+        [f"{primary_public_source_name} usage", "Provider-attributed ecosystem activity", "Provider-published rolling window", "Daily provider observations are deduplicated by source, entity, and UTC day."],
     ]
 
     status_rows = [
@@ -2746,24 +2720,16 @@ def render_dashboard(snapshot: dict[str, Any]) -> str:
 
     <section>
       <div class="section-head">
-        <h2>{html.escape(primary_public_source_name)} Usage &amp; Spend</h2>
+        <h2>{html.escape(primary_public_source_name)} Usage</h2>
         <p class="muted">{html.escape(str(primary_public_source.get("window_start", "n/a")))} to {html.escape(str(primary_public_source.get("window_end", "n/a")))}</p>
       </div>
-      <div class="split">
-        <div>
-          <h3>Attributed tokens by UTC day</h3>
-          {svg_bars(public_usage_history, date_key="day", value_key="total_tokens", aria_label="Public provider-attributed tokens by UTC day")}
-        </div>
-        <div>
-          <h3>Estimated inference spend by UTC day</h3>
-          {svg_line(public_usage_history, date_key="day", value_key="estimated_spend_usd", value_prefix="$")}
-        </div>
-      </div>
+      <h3>Attributed tokens by UTC day</h3>
+      {svg_bars(public_usage_history, date_key="day", value_key="total_tokens", aria_label="OpenRouter-attributed tokens by UTC day")}
       <h3 style="margin-top:16px;">Recent observations</h3>
-      {table(["UTC day", "Tokens", "Central estimate", "5–20% output range", "Pricing coverage", "State"], public_daily_rows)}
+      {table(["UTC day", "Tokens", "State"], public_daily_rows)}
       <h3 style="margin-top:16px;">Top models in the current provider window</h3>
-      {table(["Model", "Tokens", "Input / output per 1M", "Known-token estimate"], public_model_rows)}
-      <p class="callout">OpenRouter attributes this ecosystem usage to ZeroClaw; it is not necessarily traffic paid by ZeroClaw Labs. The central estimate assumes 90% input and 10% output tokens; the displayed range uses 5–20% output. Unpriced model traffic is scaled at the priced-token blended rate. Current pricing coverage is {metric(public_estimate.get("pricing_coverage_pct"))}%. Cache, reasoning, routing, long-context, request, tool, and credit-purchase effects are excluded. Every observation retains its source, model rates, assumptions, and collection timestamp.</p>
+      {table(["Model", "Tokens"], public_model_rows)}
+      <p class="callout">OpenRouter attributes this ecosystem usage to ZeroClaw. The published window is rolling, and overlapping daily observations are preserved so the historical series can grow over time.</p>
     </section>
 
     <section>
