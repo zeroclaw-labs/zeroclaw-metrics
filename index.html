@@ -198,7 +198,7 @@
       <div class="hero-copy">
         <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Daily project telemetry</p>
         <h1>ZeroClaw,<br><span>by the numbers.</span></h1>
-        <p class="hero-lede">A clear view of adoption, distribution, community health, and inference activity—collected daily and preserved over time.</p>
+        <p class="hero-lede">Daily signals for adoption, distribution, community health, and inference.</p>
         <div class="hero-meta" aria-label="Dataset summary">
           <span class="meta-chip">Updated 2026-08-14</span>
           <span class="meta-chip">62 immutable snapshots</span>
@@ -209,47 +209,64 @@
   </header>
   <main>
     <div class="grid" aria-label="Key metrics"><article class="card card--feature"><span class="label">OpenRouter Tokens — Last 30 Days</span><span class="value">14.8B</span><p class="note">2026-07-15 to 2026-08-14</p></article>
-<article class="card"><span class="label">GHCR Downloads</span><span class="value">418.5K</span><p class="note">Cumulative · includes pre-tracking activity</p></article>
-<article class="card"><span class="label">Observed Clones</span><span class="value">321.3K</span><p class="note">Clone events since 2026-06-18</p></article>
-<article class="card"><span class="label">Repo Stars</span><span class="value">32.6K</span><p class="note">Current snapshot · history since 2026-07-02</p></article>
-<article class="card"><span class="label">Prebuilt Payloads</span><span class="value">158.2K</span><p class="note">Cumulative · includes pre-tracking activity</p></article>
-<article class="card"><span class="label">GHCR 30d</span><span class="value">43.2K</span><p class="note">Authenticated package chart</p></article>
-<article class="card"><span class="label">Clones 14d</span><span class="value">89.1K</span><p class="note">Repository clones</p></article>
-<article class="card"><span class="label">Traffic 14d</span><span class="value">31.1K</span><p class="note">Repository page views</p></article>
-<article class="card"><span class="label">Homebrew 30d</span><span class="value">355</span><p class="note">Homebrew Core installs</p></article>
-<article class="card"><span class="label">PRs Merged 7d</span><span class="value">81</span><p class="note">Pulse-like activity</p></article>
-<article class="card"><span class="label">Bootstrap Script</span><span class="value">7.6K</span><p class="note">Cumulative · includes pre-tracking activity</p></article>
-<article class="card"><span class="label">Snapshots</span><span class="value">62</span><p class="note">Tracking window 42.6 days</p></article></div>
+<article class="card"><span class="label">GHCR Downloads</span><span class="value">418.5K</span><p class="note">Cumulative total</p></article>
+<article class="card"><span class="label">Observed Clones</span><span class="value">321.3K</span><p class="note">Tracked since 2026-06-18</p></article>
+<article class="card"><span class="label">Repo Stars</span><span class="value">32.6K</span><p class="note">Current · history since 2026-07-02</p></article>
+<article class="card"><span class="label">Prebuilt Payloads</span><span class="value">158.2K</span><p class="note">Published assets · cumulative</p></article>
+<article class="card"><span class="label">Bootstrap Script</span><span class="value">7.6K</span><p class="note">Published asset · cumulative</p></article>
+<article class="card"><span class="label">Clones — 14 Days</span><span class="value">89.1K</span><p class="note">Latest rolling window</p></article>
+<article class="card"><span class="label">Homebrew — 30 Days</span><span class="value">355</span><p class="note">Latest rolling window</p></article></div>
 
 	    <section id="overview">
 	      <div class="section-head">
 	        <h2>Current Scale</h2>
-	        <p class="muted">Latest values from 62 immutable snapshots. Coverage separates source-cumulative counters from current state and tracking-limited observations.</p>
+	        <p class="muted">Source totals, current repository state, and the history behind them.</p>
 	      </div>
 	      <div class="split">
-	        <div>
-	          <div class="table-wrap"><table><caption class="sr-only">Metric; Current; Coverage; Meaning</caption><thead><tr><th scope="col">Metric</th><th scope="col">Current</th><th scope="col">Coverage</th><th scope="col">Meaning</th></tr></thead><tbody><tr><td>GHCR downloads</td><td>418,528</td><td>Cumulative · includes pre-tracking activity</td><td>GitHub Container Registry package counter</td></tr>
-<tr><td>Prebuilt release payload downloads</td><td>158,201</td><td>Cumulative · includes pre-tracking activity</td><td>Currently published GitHub release payload assets</td></tr>
-<tr><td>Bootstrap install.sh downloads</td><td>7,632</td><td>Cumulative · includes pre-tracking activity</td><td>Currently published install.sh release assets</td></tr>
-<tr><td>crates.io downloads</td><td>6,806</td><td>Cumulative · includes pre-tracking activity</td><td>crates.io publisher counters</td></tr>
-<tr><td>Repo stars</td><td>32,576</td><td>Current snapshot · history since 2026-07-02</td><td>Current GitHub repository star count</td></tr>
-<tr><td>Repo forks</td><td>4,892</td><td>Current snapshot · history since 2026-07-02</td><td>Current GitHub repository fork count</td></tr></tbody></table></div>
-	          <p class="callout">Snapshot-to-snapshot change columns are intentionally excluded from the main dashboard because this tracking repository started recently and short-interval movement understates project scale. Raw day-by-day change rows remain available in <code>data/daily.json</code> and <code>data/metrics.sqlite</code>.</p>
+	        <div class="metric-groups">
+	          <article class="metric-group" aria-labelledby="cumulative-heading">
+	            <div class="metric-group-head">
+	              <div>
+	                <p class="metric-group-kicker">Provider totals</p>
+	                <h3 id="cumulative-heading">Cumulative distribution</h3>
+	              </div>
+	              <span class="coverage-badge">Cumulative</span>
+	            </div>
+	            <p class="metric-group-copy">Includes activity from before tracking began. Release counts cover assets currently published on GitHub.</p>
+	            <ul class="metric-list"><li><span class="metric-list-label"><strong>Container downloads</strong><small>GHCR package total</small></span><span class="metric-list-value">418,528</span></li>
+<li><span class="metric-list-label"><strong>Prebuilt release payloads</strong><small>Currently published assets</small></span><span class="metric-list-value">158,201</span></li>
+<li><span class="metric-list-label"><strong>Bootstrap install.sh</strong><small>Currently published asset</small></span><span class="metric-list-value">7,632</span></li>
+<li><span class="metric-list-label"><strong>crates.io downloads</strong><small>Publisher total</small></span><span class="metric-list-value">6,806</span></li></ul>
+	          </article>
+	          <article class="metric-group" aria-labelledby="repository-heading">
+	            <div class="metric-group-head">
+	              <div>
+	                <p class="metric-group-kicker">Point in time</p>
+	                <h3 id="repository-heading">Current repository</h3>
+	              </div>
+	              <span class="coverage-badge coverage-badge--current">Current</span>
+	            </div>
+	            <p class="metric-group-copy">Daily history is stored from 2026-07-02 forward.</p>
+	            <ul class="metric-list"><li><span class="metric-list-label"><strong>Repository stars</strong><small>GitHub</small></span><span class="metric-list-value">32,576</span></li>
+<li><span class="metric-list-label"><strong>Repository forks</strong><small>GitHub</small></span><span class="metric-list-value">4,892</span></li></ul>
+	          </article>
 	        </div>
-	        <div>
-	          <h3>GHCR cumulative downloads</h3>
+	        <div class="scale-chart">
+	          <p class="metric-group-kicker">Trend</p>
+	          <h3>Container downloads</h3>
+	          <p class="metric-group-copy">Daily snapshots since 2026-07-02.</p>
 	          <svg class="line-chart" viewBox="0 0 2928 118" role="img" aria-label="ghcr_downloads over time"><polyline points="10.0,96.0 57.7,95.9 105.3,95.2 153.0,93.7 200.7,93.2 248.4,92.1 296.0,90.3 343.7,88.8 391.4,87.5 439.0,87.1 486.7,87.1 534.4,87.1 582.1,87.1 629.7,86.5 677.4,86.3 725.1,85.9 772.8,85.4 820.4,85.4 868.1,84.3 915.8,82.9 963.4,82.8 1011.1,82.2 1058.8,81.5 1106.5,79.7 1154.1,77.9 1201.8,76.0 1249.5,73.7 1297.1,70.6 1344.8,68.7 1392.5,66.8 1440.2,64.5 1487.8,62.3 1535.5,60.1 1583.2,58.1 1630.9,55.8 1678.5,53.5 1726.2,51.2 1773.9,48.7 1821.5,46.6 1869.2,44.3 1916.9,42.0 1964.6,39.7 2012.2,37.9 2059.9,35.7 2107.6,33.5 2155.2,29.7 2202.9,27.5 2250.6,25.3 2298.3,23.5 2345.9,21.7 2393.6,19.7 2441.3,17.9 2489.0,16.1 2536.6,14.1 2584.3,12.3 2632.0,11.0 2679.6,11.0 2727.3,11.0 2775.0,10.4 2822.7,10.1 2870.3,10.1 2918.0,10.0"></polyline><circle cx="10.0" cy="96.0" r="3"><title>2026-07-02: 360,969</title></circle><circle cx="57.7" cy="95.9" r="3"><title>2026-07-02: 361,022</title></circle><circle cx="105.3" cy="95.2" r="3"><title>2026-07-03: 361,518</title></circle><circle cx="153.0" cy="93.7" r="3"><title>2026-07-04: 362,490</title></circle><circle cx="200.7" cy="93.2" r="3"><title>2026-07-04: 362,818</title></circle><circle cx="248.4" cy="92.1" r="3"><title>2026-07-05: 363,572</title></circle><circle cx="296.0" cy="90.3" r="3"><title>2026-07-06: 364,766</title></circle><circle cx="343.7" cy="88.8" r="3"><title>2026-07-07: 365,774</title></circle><circle cx="391.4" cy="87.5" r="3"><title>2026-07-08: 366,653</title></circle><circle cx="439.0" cy="87.1" r="3"><title>2026-07-08: 366,946</title></circle><circle cx="486.7" cy="87.1" r="3"><title>2026-07-08: 366,950</title></circle><circle cx="534.4" cy="87.1" r="3"><title>2026-07-08: 366,955</title></circle><circle cx="582.1" cy="87.1" r="3"><title>2026-07-08: 366,959</title></circle><circle cx="629.7" cy="86.5" r="3"><title>2026-07-09: 367,297</title></circle><circle cx="677.4" cy="86.3" r="3"><title>2026-07-09: 367,491</title></circle><circle cx="725.1" cy="85.9" r="3"><title>2026-07-09: 367,756</title></circle><circle cx="772.8" cy="85.4" r="3"><title>2026-07-09: 368,038</title></circle><circle cx="820.4" cy="85.4" r="3"><title>2026-07-09: 368,039</title></circle><circle cx="868.1" cy="84.3" r="3"><title>2026-07-10: 368,769</title></circle><circle cx="915.8" cy="82.9" r="3"><title>2026-07-11: 369,738</title></circle><circle cx="963.4" cy="82.8" r="3"><title>2026-07-11: 369,817</title></circle><circle cx="1011.1" cy="82.2" r="3"><title>2026-07-11: 370,199</title></circle><circle cx="1058.8" cy="81.5" r="3"><title>2026-07-12: 370,667</title></circle><circle cx="1106.5" cy="79.7" r="3"><title>2026-07-13: 371,896</title></circle><circle cx="1154.1" cy="77.9" r="3"><title>2026-07-14: 373,074</title></circle><circle cx="1201.8" cy="76.0" r="3"><title>2026-07-15: 374,368</title></circle><circle cx="1249.5" cy="73.7" r="3"><title>2026-07-16: 375,880</title></circle><circle cx="1297.1" cy="70.6" r="3"><title>2026-07-17: 377,983</title></circle><circle cx="1344.8" cy="68.7" r="3"><title>2026-07-18: 379,274</title></circle><circle cx="1392.5" cy="66.8" r="3"><title>2026-07-19: 380,542</title></circle><circle cx="1440.2" cy="64.5" r="3"><title>2026-07-20: 382,057</title></circle><circle cx="1487.8" cy="62.3" r="3"><title>2026-07-21: 383,555</title></circle><circle cx="1535.5" cy="60.1" r="3"><title>2026-07-22: 385,018</title></circle><circle cx="1583.2" cy="58.1" r="3"><title>2026-07-23: 386,360</title></circle><circle cx="1630.9" cy="55.8" r="3"><title>2026-07-24: 387,894</title></circle><circle cx="1678.5" cy="53.5" r="3"><title>2026-07-25: 389,406</title></circle><circle cx="1726.2" cy="51.2" r="3"><title>2026-07-26: 390,977</title></circle><circle cx="1773.9" cy="48.7" r="3"><title>2026-07-27: 392,635</title></circle><circle cx="1821.5" cy="46.6" r="3"><title>2026-07-28: 394,030</title></circle><circle cx="1869.2" cy="44.3" r="3"><title>2026-07-29: 395,579</title></circle><circle cx="1916.9" cy="42.0" r="3"><title>2026-07-30: 397,135</title></circle><circle cx="1964.6" cy="39.7" r="3"><title>2026-07-31: 398,641</title></circle><circle cx="2012.2" cy="37.9" r="3"><title>2026-08-01: 399,881</title></circle><circle cx="2059.9" cy="35.7" r="3"><title>2026-08-02: 401,294</title></circle><circle cx="2107.6" cy="33.5" r="3"><title>2026-08-03: 402,831</title></circle><circle cx="2155.2" cy="29.7" r="3"><title>2026-08-04: 405,344</title></circle><circle cx="2202.9" cy="27.5" r="3"><title>2026-08-05: 406,802</title></circle><circle cx="2250.6" cy="25.3" r="3"><title>2026-08-06: 408,278</title></circle><circle cx="2298.3" cy="23.5" r="3"><title>2026-08-07: 409,509</title></circle><circle cx="2345.9" cy="21.7" r="3"><title>2026-08-08: 410,678</title></circle><circle cx="2393.6" cy="19.7" r="3"><title>2026-08-09: 412,033</title></circle><circle cx="2441.3" cy="17.9" r="3"><title>2026-08-10: 413,244</title></circle><circle cx="2489.0" cy="16.1" r="3"><title>2026-08-11: 414,465</title></circle><circle cx="2536.6" cy="14.1" r="3"><title>2026-08-12: 415,762</title></circle><circle cx="2584.3" cy="12.3" r="3"><title>2026-08-13: 416,968</title></circle><circle cx="2632.0" cy="11.0" r="3"><title>2026-08-13: 417,857</title></circle><circle cx="2679.6" cy="11.0" r="3"><title>2026-08-13: 417,858</title></circle><circle cx="2727.3" cy="11.0" r="3"><title>2026-08-13: 417,868</title></circle><circle cx="2775.0" cy="10.4" r="3"><title>2026-08-14: 418,245</title></circle><circle cx="2822.7" cy="10.1" r="3"><title>2026-08-14: 418,437</title></circle><circle cx="2870.3" cy="10.1" r="3"><title>2026-08-14: 418,438</title></circle><circle cx="2918.0" cy="10.0" r="3"><title>2026-08-14: 418,528</title></circle><text x="10" y="114">2026-07-02</text><text x="2918" y="114" text-anchor="end">2026-08-14</text></svg>
 	        </div>
 	      </div>
 	      <h3 style="margin-top:16px;">Rolling windows</h3>
-	      <p class="note">Homebrew and GitHub traffic/pulse APIs expose rolling windows, not lifetime totals. These rows show the latest reported window value only.</p>
+	      <p class="note">Latest values only; these sources do not expose lifetime totals.</p>
 	      <div class="table-wrap"><table><caption class="sr-only">Metric; Current window; Window</caption><thead><tr><th scope="col">Metric</th><th scope="col">Current window</th><th scope="col">Window</th></tr></thead><tbody><tr><td>Homebrew installs 365d</td><td>7,930</td><td>Rolling 365-day Homebrew install events</td></tr>
 <tr><td>Repo views 14d</td><td>31,088</td><td>Rolling 14-day GitHub repository views</td></tr>
 <tr><td>Repo clones 14d</td><td>89,137</td><td>Rolling 14-day GitHub repository clone events</td></tr>
 <tr><td>PRs merged 7d</td><td>81</td><td>Rolling 7-day merged pull requests</td></tr>
 <tr><td>Issues opened 7d</td><td>74</td><td>Rolling 7-day opened issues</td></tr></tbody></table></div>
 	      <h3 style="margin-top:16px;">Observed clone history</h3>
-	      <p class="note">GitHub does not expose lifetime clone totals. This table deduplicates the stored daily rows from the rolling 14-day traffic API, so the cumulative count starts at 2026-06-18 and currently ends at 2026-08-13. Daily uniques are not globally deduplicated.</p>
+	      <p class="note">Observed total from 2026-06-18 through 2026-08-13. GitHub exposes only 14 days at a time; unique cloners may repeat across days.</p>
 	      <div class="table-wrap"><table><caption class="sr-only">UTC day; Clone events; Daily unique cloners; Observed cumulative</caption><thead><tr><th scope="col">UTC day</th><th scope="col">Clone events</th><th scope="col">Daily unique cloners</th><th scope="col">Observed cumulative</th></tr></thead><tbody><tr><td>2026-07-31</td><td>2,780</td><td>201</td><td>234,927</td></tr>
 <tr><td>2026-08-01</td><td>6,915</td><td>314</td><td>241,842</td></tr>
 <tr><td>2026-08-02</td><td>5,471</td><td>277</td><td>247,313</td></tr>
