@@ -1,0 +1,5125 @@
+{
+  "aur": {
+    "collected_at": "2026-10-12T15:19:57.930663+00:00",
+    "data": {
+      "packages": [
+        {
+          "Depends": [
+            "gcc-libs",
+            "glibc",
+            "alsa-lib"
+          ],
+          "Description": "Fast, small, and fully autonomous AI assistant infrastructure \u2014 deploy anywhere, swap anything (Rust)",
+          "FirstSubmitted": 1772550113,
+          "ID": 2034193,
+          "Keywords": [],
+          "LastModified": 1775817652,
+          "License": [
+            "Apache-2.0",
+            "MIT"
+          ],
+          "Maintainer": "ralphptorres",
+          "MakeDepends": [
+            "rust",
+            "clang",
+            "cargo"
+          ],
+          "Name": "zeroclaw",
+          "NumVotes": 4,
+          "OptDepends": [
+            "bubblewrap",
+            "chromium",
+            "postgresql"
+          ],
+          "OutOfDate": 1779451905,
+          "PackageBase": "zeroclaw",
+          "PackageBaseID": 230418,
+          "Popularity": 0.061806,
+          "Submitter": "SteamedFish",
+          "URL": "https://github.com/zeroclaw-labs/zeroclaw",
+          "URLPath": "/cgit/aur.git/snapshot/zeroclaw.tar.gz",
+          "Version": "0.6.9-1"
+        },
+        {
+          "Conflicts": [
+            "zeroclaw",
+            "zerocode"
+          ],
+          "Depends": [
+            "gcc-libs",
+            "openssl"
+          ],
+          "Description": "Zero overhead. Zero compromise. 100% Rust. The fastest, smallest AI assistant.",
+          "FirstSubmitted": 1781222735,
+          "ID": 2227462,
+          "Keywords": [],
+          "LastModified": 1788593821,
+          "License": [
+            "Apache-2.0",
+            "MIT"
+          ],
+          "Maintainer": "zeroclaw-bot",
+          "MakeDepends": [
+            "cargo",
+            "git",
+            "nodejs",
+            "npm"
+          ],
+          "Name": "zeroclawlabs",
+          "NumVotes": 0,
+          "OutOfDate": null,
+          "PackageBase": "zeroclawlabs",
+          "PackageBaseID": 238953,
+          "Popularity": 0,
+          "Provides": [
+            "zeroclaw",
+            "zerocode"
+          ],
+          "Submitter": "zeroclaw-bot",
+          "URL": "https://github.com/zeroclaw-labs/zeroclaw",
+          "URLPath": "/cgit/aur.git/snapshot/zeroclawlabs.tar.gz",
+          "Version": "0.8.5-1"
+        }
+      ]
+    },
+    "ok": true
+  },
+  "chaoss_health": {
+    "collected_at": "2026-10-12T15:20:06.297103+00:00",
+    "data": {
+      "contributors": {
+        "active_commit_contributors": 59,
+        "attributed_default_branch_commits": 401,
+        "contributor_absence_factor_50pct": 2,
+        "default_branch_commits": 406,
+        "top_commit_contributors": [
+          {
+            "commits": 165,
+            "login": "Audacity88"
+          },
+          {
+            "commits": 103,
+            "login": "JordanTheJet"
+          },
+          {
+            "commits": 21,
+            "login": "IftekharUddin"
+          },
+          {
+            "commits": 7,
+            "login": "tidux"
+          },
+          {
+            "commits": 7,
+            "login": "ump45nose"
+          },
+          {
+            "commits": 7,
+            "login": "NiuBlibing"
+          },
+          {
+            "commits": 5,
+            "login": "vadelma-agent"
+          },
+          {
+            "commits": 5,
+            "login": "tunglambk"
+          },
+          {
+            "commits": 4,
+            "login": "alucryd"
+          },
+          {
+            "commits": 4,
+            "login": "jstar0"
+          }
+        ]
+      },
+      "issues": {
+        "closed_from_window": 58,
+        "median_first_response_hours": 19.2,
+        "median_time_to_close_hours": 82.3,
+        "opened": 233,
+        "p90_first_response_hours": 145.6,
+        "p90_time_to_close_hours": 298.9,
+        "pending_within_48h": 5,
+        "responded": 180,
+        "responded_within_48h_pct": 65.4,
+        "response_sla_eligible": 228,
+        "unanswered": 53
+      },
+      "pull_requests": {
+        "closed_during_window": 432,
+        "closed_from_window": 285,
+        "closure_throughput_ratio": 0.741,
+        "median_first_response_hours": 21.8,
+        "median_time_to_close_hours": 55.4,
+        "opened": 583,
+        "p90_first_response_hours": 104.3,
+        "p90_time_to_close_hours": 192.1,
+        "pending_within_48h": 7,
+        "responded": 490,
+        "responded_within_48h_pct": 62.3,
+        "response_sla_eligible": 576,
+        "unanswered": 93
+      },
+      "releases": {
+        "days_since_latest_stable": 37.3,
+        "latest_stable_at": "2026-09-05T07:31:19+00:00",
+        "median_days_between_stable_releases": 4.7,
+        "stable_releases": 0
+      },
+      "response_policy": "first comment or review from a non-bot account other than the author; first 20 comments and reviews inspected",
+      "since": "2026-09-14T15:19:31Z",
+      "window_days": 28
+    },
+    "ok": true
+  },
+  "collector": {
+    "commit": "59f575058b34867294d981e80f3fab6d91e40029",
+    "github_api_version": "2022-11-28",
+    "name": "scripts/build_dashboard.py",
+    "script_sha256": "1255c52e8f10eed0d823853b923e193a7d8d2673d38bcb44086b5b63ff1eda46"
+  },
+  "crates_io": {
+    "collected_at": "2026-10-12T15:19:59.599190+00:00",
+    "data": {
+      "crates": [
+        {
+          "description": "Zero overhead. Zero compromise. 100% Rust. The fastest, smallest AI assistant.",
+          "downloads": 4491,
+          "last_30_downloads": 131,
+          "last_7_downloads": 25,
+          "last_90_downloads": 435,
+          "latest_daily_date": "2026-10-12",
+          "max_version": "0.8.5",
+          "name": "zeroclaw",
+          "recent_downloads": 435,
+          "repository": "https://github.com/zeroclaw-labs/zeroclaw"
+        },
+        {
+          "description": "Low-level bindings for the Total Phase Aardvark I2C/SPI/GPIO USB adapter",
+          "downloads": 2959,
+          "last_30_downloads": 155,
+          "last_7_downloads": 12,
+          "last_90_downloads": 532,
+          "latest_daily_date": "2026-10-12",
+          "max_version": "0.1.0",
+          "name": "aardvark-sys",
+          "recent_downloads": 531,
+          "repository": "https://github.com/zeroclaw-labs/zeroclaw"
+        }
+      ]
+    },
+    "ok": true
+  },
+  "docker_hub": {
+    "collected_at": "2026-10-12T15:20:02.655638+00:00",
+    "data": {
+      "official_candidates": [],
+      "search_count": 94,
+      "top_community_results": [
+        {
+          "pull_count": 884,
+          "repo_name": "sbx/zeroclaw",
+          "short_description": "Fast, small, fully autonomous AI assistant infrastructure (Rust, single binary) \u2014 gateway with ...",
+          "star_count": 0
+        },
+        {
+          "pull_count": 637,
+          "repo_name": "tonymaithanh/zeroclaw",
+          "short_description": "zeroclaw",
+          "star_count": 0
+        },
+        {
+          "pull_count": 10975,
+          "repo_name": "birdxs/zeroclaw",
+          "short_description": "",
+          "star_count": 2
+        },
+        {
+          "pull_count": 4183,
+          "repo_name": "ilteoood/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 3383,
+          "repo_name": "cardellier/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 2608,
+          "repo_name": "nphung/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 2503,
+          "repo_name": "cdfng/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 1905,
+          "repo_name": "mlown/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 1614,
+          "repo_name": "mos4/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        },
+        {
+          "pull_count": 1588,
+          "repo_name": "mkasajim/zeroclaw",
+          "short_description": "",
+          "star_count": 0
+        }
+      ]
+    },
+    "ok": true
+  },
+  "generated_at": "2026-10-12T15:19:31.548237+00:00",
+  "ghcr": {
+    "collected_at": "2026-10-12T15:19:43.307956+00:00",
+    "data": {
+      "last_30_daily": [
+        {
+          "date": "2026-09-13",
+          "downloads": 1375
+        },
+        {
+          "date": "2026-09-14",
+          "downloads": 1422
+        },
+        {
+          "date": "2026-09-15",
+          "downloads": 1437
+        },
+        {
+          "date": "2026-09-16",
+          "downloads": 1253
+        },
+        {
+          "date": "2026-09-17",
+          "downloads": 1334
+        },
+        {
+          "date": "2026-09-18",
+          "downloads": 1372
+        },
+        {
+          "date": "2026-09-19",
+          "downloads": 1408
+        },
+        {
+          "date": "2026-09-20",
+          "downloads": 1127
+        },
+        {
+          "date": "2026-09-21",
+          "downloads": 1280
+        },
+        {
+          "date": "2026-09-22",
+          "downloads": 1895
+        },
+        {
+          "date": "2026-09-23",
+          "downloads": 1172
+        },
+        {
+          "date": "2026-09-24",
+          "downloads": 1260
+        },
+        {
+          "date": "2026-09-25",
+          "downloads": 1235
+        },
+        {
+          "date": "2026-09-26",
+          "downloads": 1351
+        },
+        {
+          "date": "2026-09-27",
+          "downloads": 1197
+        },
+        {
+          "date": "2026-09-28",
+          "downloads": 1285
+        },
+        {
+          "date": "2026-09-29",
+          "downloads": 1410
+        },
+        {
+          "date": "2026-09-30",
+          "downloads": 1569
+        },
+        {
+          "date": "2026-10-01",
+          "downloads": 1512
+        },
+        {
+          "date": "2026-10-02",
+          "downloads": 1514
+        },
+        {
+          "date": "2026-10-03",
+          "downloads": 1518
+        },
+        {
+          "date": "2026-10-04",
+          "downloads": 1515
+        },
+        {
+          "date": "2026-10-05",
+          "downloads": 1343
+        },
+        {
+          "date": "2026-10-06",
+          "downloads": 1356
+        },
+        {
+          "date": "2026-10-07",
+          "downloads": 1586
+        },
+        {
+          "date": "2026-10-08",
+          "downloads": 1630
+        },
+        {
+          "date": "2026-10-09",
+          "downloads": 1524
+        },
+        {
+          "date": "2026-10-10",
+          "downloads": 1458
+        },
+        {
+          "date": "2026-10-11",
+          "downloads": 1541
+        },
+        {
+          "date": "2026-10-12",
+          "downloads": 931
+        }
+      ],
+      "last_30_downloads": 41810,
+      "last_7_downloads": 10026,
+      "package": {
+        "created_at": "2026-02-15T23:48:19Z",
+        "html_url": "https://github.com/orgs/zeroclaw-labs/packages/container/package/zeroclaw",
+        "id": 10588092,
+        "updated_at": "2026-09-05T08:16:25Z",
+        "version_count": 1588,
+        "visibility": "public"
+      },
+      "release_tags_present": [
+        "latest",
+        "v0.8.2",
+        "debian",
+        "v0.8.2-debian"
+      ],
+      "tag_count": 366,
+      "total_downloads": 504658,
+      "total_downloads_display": "505K",
+      "visible_versions": [
+        {
+          "digest": "sha256:93865497a9e1af050d271a7892336665bf0246e2c6d8180da6085f2615acdebf",
+          "downloads": 0,
+          "tags": [
+            "sha256-03e6cd2c53aadf9d6e90284cceac7a526158ded339717b664148fedbe6b41c62.sig"
+          ]
+        },
+        {
+          "digest": "sha256:03e6cd2c53aadf9d6e90284cceac7a526158ded339717b664148fedbe6b41c62",
+          "downloads": 328,
+          "tags": [
+            "all-features",
+            "all-features-v0.8.5"
+          ]
+        },
+        {
+          "digest": "sha256:56a38a587559cf8b98cd1bec594a3f59439af3da367de0f21d3ad56477c18b6e",
+          "downloads": 0,
+          "tags": [
+            "sha256-a1d180fa6885d02aca928590571b861a02539486cabf79b8fbfbe909a06a347a.sig"
+          ]
+        },
+        {
+          "digest": "sha256:a1d180fa6885d02aca928590571b861a02539486cabf79b8fbfbe909a06a347a",
+          "downloads": 119,
+          "tags": [
+            "dist-v0.8.5",
+            "dist"
+          ]
+        },
+        {
+          "digest": "sha256:f7734126f5f259574f8bfcf5c85898c2bb211ca37197660f2f3ba0b8436e8eff",
+          "downloads": 0,
+          "tags": [
+            "sha256-2748ca038c8f93a876bac7e8f9ba971bded7e6cc5c84993aca1b8059f113d875.sig"
+          ]
+        }
+      ]
+    },
+    "ok": true
+  },
+  "github_repo": {
+    "collected_at": "2026-10-12T15:19:31.548530+00:00",
+    "data": {
+      "default_branch": "master",
+      "forks": 4967,
+      "open_issues": 576,
+      "open_pull_requests": 384,
+      "pulse_7d": {
+        "default_branch_commits": 74,
+        "issues_closed": 19,
+        "issues_opened": 48,
+        "prs_merged": 74,
+        "prs_opened": 88,
+        "since": "2026-10-05T15:19:31Z"
+      },
+      "pushed_at": "2026-10-12T09:07:10Z",
+      "stars": 32963,
+      "top_contributors_latest_week": [
+        {
+          "last_week": 9,
+          "login": "Audacity88",
+          "total": 759
+        },
+        {
+          "last_week": 2,
+          "login": "IftekharUddin",
+          "total": 146
+        },
+        {
+          "last_week": 1,
+          "login": "alucryd",
+          "total": 6
+        },
+        {
+          "last_week": 1,
+          "login": "sbenedetto",
+          "total": 8
+        },
+        {
+          "last_week": 1,
+          "login": "ump45nose",
+          "total": 17
+        },
+        {
+          "last_week": 1,
+          "login": "tidux",
+          "total": 61
+        },
+        {
+          "last_week": 0,
+          "login": "nebullii",
+          "total": 5
+        },
+        {
+          "last_week": 0,
+          "login": "MannXo",
+          "total": 5
+        },
+        {
+          "last_week": 0,
+          "login": "shaun0927",
+          "total": 5
+        },
+        {
+          "last_week": 0,
+          "login": "zwffff",
+          "total": 5
+        }
+      ],
+      "traffic": {
+        "clones_14d": 170248,
+        "clones_daily": [
+          {
+            "count": 10873,
+            "timestamp": "2026-09-28T00:00:00Z",
+            "uniques": 438
+          },
+          {
+            "count": 12205,
+            "timestamp": "2026-09-29T00:00:00Z",
+            "uniques": 365
+          },
+          {
+            "count": 7311,
+            "timestamp": "2026-09-30T00:00:00Z",
+            "uniques": 348
+          },
+          {
+            "count": 9526,
+            "timestamp": "2026-10-01T00:00:00Z",
+            "uniques": 334
+          },
+          {
+            "count": 15783,
+            "timestamp": "2026-10-02T00:00:00Z",
+            "uniques": 257
+          },
+          {
+            "count": 10852,
+            "timestamp": "2026-10-03T00:00:00Z",
+            "uniques": 275
+          },
+          {
+            "count": 11913,
+            "timestamp": "2026-10-04T00:00:00Z",
+            "uniques": 357
+          },
+          {
+            "count": 11323,
+            "timestamp": "2026-10-05T00:00:00Z",
+            "uniques": 387
+          },
+          {
+            "count": 12579,
+            "timestamp": "2026-10-06T00:00:00Z",
+            "uniques": 425
+          },
+          {
+            "count": 14796,
+            "timestamp": "2026-10-07T00:00:00Z",
+            "uniques": 390
+          },
+          {
+            "count": 17641,
+            "timestamp": "2026-10-08T00:00:00Z",
+            "uniques": 387
+          },
+          {
+            "count": 13067,
+            "timestamp": "2026-10-09T00:00:00Z",
+            "uniques": 404
+          },
+          {
+            "count": 10333,
+            "timestamp": "2026-10-10T00:00:00Z",
+            "uniques": 371
+          },
+          {
+            "count": 12046,
+            "timestamp": "2026-10-11T00:00:00Z",
+            "uniques": 316
+          }
+        ],
+        "clones_uniques_14d": 3114,
+        "popular_paths": [
+          {
+            "count": 5371,
+            "path": "/zeroclaw-labs/zeroclaw",
+            "title": "Overview",
+            "uniques": 3163
+          },
+          {
+            "count": 622,
+            "path": "/zeroclaw-labs/zeroclaw/issues",
+            "title": "/issues",
+            "uniques": 196
+          },
+          {
+            "count": 622,
+            "path": "/zeroclaw-labs/zeroclaw/pulls",
+            "title": "/pulls",
+            "uniques": 110
+          },
+          {
+            "count": 436,
+            "path": "/zeroclaw-labs/zeroclaw/releases",
+            "title": "/releases",
+            "uniques": 280
+          },
+          {
+            "count": 400,
+            "path": "/zeroclaw-labs/zeroclaw/releases/tag/v0.8.5",
+            "title": "/releases/tag/v0.8.5",
+            "uniques": 300
+          },
+          {
+            "count": 245,
+            "path": "/zeroclaw-labs/zeroclaw/discussions",
+            "title": "/discussions",
+            "uniques": 33
+          },
+          {
+            "count": 150,
+            "path": "/zeroclaw-labs/zeroclaw/commits/master",
+            "title": "/commits/master",
+            "uniques": 43
+          },
+          {
+            "count": 134,
+            "path": "/zeroclaw-labs/zeroclaw/blob/master/docs/book/src/channels/overview.md",
+            "title": "/blob/master/docs/book/src/channels/overview.md",
+            "uniques": 63
+          },
+          {
+            "count": 130,
+            "path": "/zeroclaw-labs/zeroclaw/blob/master/docs/book/src/setup/windows.md",
+            "title": "/blob/master/docs/book/src/setup/windows.md",
+            "uniques": 81
+          },
+          {
+            "count": 126,
+            "path": "/zeroclaw-labs/zeroclaw/blob/master/docs/book/src/getting-started/quickstart.md",
+            "title": "/blob/master/docs/book/src/getting-started/quickstart.md",
+            "uniques": 87
+          }
+        ],
+        "top_referrers": [
+          {
+            "count": 4045,
+            "referrer": "Google",
+            "uniques": 2668
+          },
+          {
+            "count": 3743,
+            "referrer": "github.com",
+            "uniques": 1358
+          },
+          {
+            "count": 176,
+            "referrer": "search.brave.com",
+            "uniques": 97
+          },
+          {
+            "count": 157,
+            "referrer": "Bing",
+            "uniques": 125
+          },
+          {
+            "count": 131,
+            "referrer": "DuckDuckGo",
+            "uniques": 80
+          },
+          {
+            "count": 63,
+            "referrer": "composio.dev",
+            "uniques": 53
+          },
+          {
+            "count": 51,
+            "referrer": "docs.zeroclaw.com",
+            "uniques": 45
+          },
+          {
+            "count": 37,
+            "referrer": "l.threads.com",
+            "uniques": 32
+          },
+          {
+            "count": 31,
+            "referrer": "agentskills.io",
+            "uniques": 22
+          },
+          {
+            "count": 31,
+            "referrer": "yandex.ru",
+            "uniques": 19
+          }
+        ],
+        "views_14d": 22397,
+        "views_daily": [
+          {
+            "count": 1963,
+            "timestamp": "2026-09-28T00:00:00Z",
+            "uniques": 711
+          },
+          {
+            "count": 1947,
+            "timestamp": "2026-09-29T00:00:00Z",
+            "uniques": 804
+          },
+          {
+            "count": 1756,
+            "timestamp": "2026-09-30T00:00:00Z",
+            "uniques": 741
+          },
+          {
+            "count": 1310,
+            "timestamp": "2026-10-01T00:00:00Z",
+            "uniques": 624
+          },
+          {
+            "count": 1697,
+            "timestamp": "2026-10-02T00:00:00Z",
+            "uniques": 639
+          },
+          {
+            "count": 1653,
+            "timestamp": "2026-10-03T00:00:00Z",
+            "uniques": 700
+          },
+          {
+            "count": 1641,
+            "timestamp": "2026-10-04T00:00:00Z",
+            "uniques": 692
+          },
+          {
+            "count": 1472,
+            "timestamp": "2026-10-05T00:00:00Z",
+            "uniques": 580
+          },
+          {
+            "count": 1464,
+            "timestamp": "2026-10-06T00:00:00Z",
+            "uniques": 624
+          },
+          {
+            "count": 1361,
+            "timestamp": "2026-10-07T00:00:00Z",
+            "uniques": 550
+          },
+          {
+            "count": 1220,
+            "timestamp": "2026-10-08T00:00:00Z",
+            "uniques": 556
+          },
+          {
+            "count": 1935,
+            "timestamp": "2026-10-09T00:00:00Z",
+            "uniques": 678
+          },
+          {
+            "count": 1533,
+            "timestamp": "2026-10-10T00:00:00Z",
+            "uniques": 710
+          },
+          {
+            "count": 1445,
+            "timestamp": "2026-10-11T00:00:00Z",
+            "uniques": 679
+          }
+        ],
+        "views_uniques_14d": 6215
+      },
+      "updated_at": "2026-10-12T15:18:53Z",
+      "watchers": 83
+    },
+    "ok": true
+  },
+  "homebrew": {
+    "collected_at": "2026-10-12T15:19:54.509164+00:00",
+    "data": {
+      "build_error_30d": null,
+      "homepage": "https://www.zeroclawlabs.ai/",
+      "install": {
+        "30d": {
+          "count": "77",
+          "formula": "zeroclaw",
+          "number": 3278,
+          "percent": "0"
+        },
+        "365d": {
+          "count": "8,077",
+          "formula": "zeroclaw",
+          "number": 1555,
+          "percent": "0"
+        },
+        "90d": {
+          "count": "508",
+          "formula": "zeroclaw",
+          "number": 2550,
+          "percent": "0"
+        }
+      },
+      "install_on_request": {
+        "30d": {
+          "count": "77",
+          "formula": "zeroclaw",
+          "number": 2753,
+          "percent": "0"
+        },
+        "365d": {
+          "count": "8,077",
+          "formula": "zeroclaw",
+          "number": 1094,
+          "percent": "0.01"
+        },
+        "90d": {
+          "count": "508",
+          "formula": "zeroclaw",
+          "number": 2039,
+          "percent": "0"
+        }
+      },
+      "version": "0.8.5"
+    },
+    "ok": true
+  },
+  "notes": [
+    "GHCR download counts are scraped from authenticated GitHub package HTML because REST objects omit those fields.",
+    "GitHub release downloads are cumulative per asset; downloads/week is an average since release publication.",
+    "install.sh is a bootstrap asset; default source installs clone and build the repo, so clone traffic is the better proxy for that path.",
+    "Traffic endpoints expose only the last 14 days; observed clone history is built from stored daily rows, not a GitHub lifetime total.",
+    "GitHub top referrers and popular paths are rolling-window Insights metrics and are snapshot daily.",
+    "Scoop installs ultimately hit GitHub release assets, so avoid double-counting with release downloads.",
+    "npm packages named zeroclaw/zerocode are unrelated and intentionally excluded.",
+    "Public provider token counts describe attributed ecosystem usage, not a ZeroClaw Labs bill; spend is explicitly estimated from stored pricing assumptions."
+  ],
+  "public_inference_usage": {
+    "collected_at": "2026-10-12T15:20:03.421937+00:00",
+    "data": {
+      "schema_version": 1,
+      "source_status": [
+        {
+          "collected_at": "2026-10-12T15:20:03.421954+00:00",
+          "error": "ValueError: OpenRouter app page did not contain daily usage chart",
+          "ok": false,
+          "source": "openrouter"
+        }
+      ],
+      "sources": []
+    },
+    "ok": true
+  },
+  "releases": {
+    "collected_at": "2026-10-12T15:19:41.548530+00:00",
+    "data": {
+      "all_installable": [
+        {
+          "age_days": 37.325145234224536,
+          "asset_count": 13,
+          "bootstrap_downloads": 198,
+          "downloads": 13812,
+          "downloads_per_week": 2590.3181191468634,
+          "mix": {
+            "Android": 487,
+            "DMG": 85,
+            "Install script": 198,
+            "Linux GNU": 10796,
+            "Linux musl": 640,
+            "Other installable": 62,
+            "Windows zip": 1024,
+            "macOS tarball": 520
+          },
+          "name": "v0.8.5",
+          "payload_downloads": 13614,
+          "payload_downloads_per_week": 2553.1849749540543,
+          "prerelease": false,
+          "published_at": "2026-09-05T07:31:19Z",
+          "published_date": "2026-09-05",
+          "tag": "v0.8.5"
+        },
+        {
+          "age_days": 70.76355958607638,
+          "asset_count": 13,
+          "bootstrap_downloads": 468,
+          "downloads": 16425,
+          "downloads_per_week": 1624.7769427164708,
+          "mix": {
+            "Android": 678,
+            "DMG": 110,
+            "Install script": 468,
+            "Linux GNU": 11768,
+            "Linux musl": 1110,
+            "Other installable": 355,
+            "Windows zip": 1382,
+            "macOS tarball": 554
+          },
+          "name": "v0.8.4",
+          "payload_downloads": 15957,
+          "payload_downloads_per_week": 1578.4819284582481,
+          "prerelease": false,
+          "published_at": "2026-08-02T21:00:00Z",
+          "published_date": "2026-08-02",
+          "tag": "v0.8.4"
+        },
+        {
+          "age_days": 88.56410356755786,
+          "asset_count": 13,
+          "bootstrap_downloads": 441,
+          "downloads": 12024,
+          "downloads_per_week": 950.3624675181808,
+          "mix": {
+            "Android": 524,
+            "DMG": 57,
+            "Install script": 441,
+            "Linux GNU": 7936,
+            "Linux musl": 1178,
+            "Other installable": 378,
+            "Windows zip": 1143,
+            "macOS tarball": 367
+          },
+          "name": "v0.8.3",
+          "payload_downloads": 11583,
+          "payload_downloads_per_week": 915.5063590538164,
+          "prerelease": false,
+          "published_at": "2026-07-16T01:47:13Z",
+          "published_date": "2026-07-16",
+          "tag": "v0.8.3"
+        },
+        {
+          "age_days": 108.44767995644675,
+          "asset_count": 11,
+          "bootstrap_downloads": 467,
+          "downloads": 12556,
+          "downloads_per_week": 810.4553277239122,
+          "mix": {
+            "Android": 564,
+            "DMG": 63,
+            "Install script": 467,
+            "Linux GNU": 8657,
+            "Linux musl": 1040,
+            "Windows zip": 1450,
+            "macOS tarball": 315
+          },
+          "name": "v0.8.2",
+          "payload_downloads": 12089,
+          "payload_downloads_per_week": 780.3117598641586,
+          "prerelease": false,
+          "published_at": "2026-06-26T04:34:52Z",
+          "published_date": "2026-06-26",
+          "tag": "v0.8.2"
+        },
+        {
+          "age_days": 115.55389523422453,
+          "asset_count": 12,
+          "bootstrap_downloads": 410,
+          "downloads": 6682,
+          "downloads_per_week": 404.7808159577001,
+          "mix": {
+            "Android": 431,
+            "DMG": 30,
+            "Install script": 410,
+            "Linux GNU": 3820,
+            "Linux musl": 835,
+            "Windows zip": 935,
+            "macOS tarball": 221
+          },
+          "name": "v0.8.1",
+          "payload_downloads": 6272,
+          "payload_downloads_per_week": 379.94392063554255,
+          "prerelease": false,
+          "published_at": "2026-06-19T02:01:55Z",
+          "published_date": "2026-06-19",
+          "tag": "v0.8.1"
+        },
+        {
+          "age_days": 122.63541143792824,
+          "asset_count": 10,
+          "bootstrap_downloads": 409,
+          "downloads": 8651,
+          "downloads_per_week": 493.79701417360064,
+          "mix": {
+            "Android": 434,
+            "Install script": 409,
+            "Linux GNU": 5796,
+            "Linux musl": 853,
+            "Windows zip": 934,
+            "macOS tarball": 225
+          },
+          "name": "v0.8.0",
+          "payload_downloads": 8242,
+          "payload_downloads_per_week": 470.4513918412688,
+          "prerelease": false,
+          "published_at": "2026-06-12T00:04:32Z",
+          "published_date": "2026-06-12",
+          "tag": "v0.8.0"
+        },
+        {
+          "age_days": 157.4213257897801,
+          "asset_count": 11,
+          "bootstrap_downloads": 652,
+          "downloads": 25571,
+          "downloads_per_week": 1137.0568701665745,
+          "mix": {
+            "Android": 852,
+            "DMG": 309,
+            "Install script": 652,
+            "Linux GNU": 18640,
+            "Linux musl": 1126,
+            "Windows zip": 2840,
+            "macOS tarball": 1152
+          },
+          "name": "v0.7.5",
+          "payload_downloads": 24919,
+          "payload_downloads_per_week": 1108.0646102100375,
+          "prerelease": false,
+          "published_at": "2026-05-08T05:12:49Z",
+          "published_date": "2026-05-08",
+          "tag": "v0.7.5"
+        },
+        {
+          "age_days": 164.51910356755786,
+          "asset_count": 9,
+          "bootstrap_downloads": 476,
+          "downloads": 9319,
+          "downloads_per_week": 396.5071446746172,
+          "mix": {
+            "Android": 474,
+            "DMG": 164,
+            "Install script": 476,
+            "Linux GNU": 6429,
+            "Windows zip": 1387,
+            "macOS tarball": 389
+          },
+          "name": "v0.7.4",
+          "payload_downloads": 8843,
+          "payload_downloads_per_week": 376.2541775252323,
+          "prerelease": false,
+          "published_at": "2026-05-01T02:52:01Z",
+          "published_date": "2026-05-01",
+          "tag": "v0.7.4"
+        },
+        {
+          "age_days": 176.4751220860764,
+          "asset_count": 9,
+          "bootstrap_downloads": 589,
+          "downloads": 13101,
+          "downloads_per_week": 519.6596489972653,
+          "mix": {
+            "Android": 589,
+            "DMG": 287,
+            "Install script": 589,
+            "Linux GNU": 9287,
+            "Windows zip": 1823,
+            "macOS tarball": 526
+          },
+          "name": "v0.7.3",
+          "payload_downloads": 12512,
+          "payload_downloads_per_week": 496.2965825703216,
+          "prerelease": false,
+          "published_at": "2026-04-19T03:55:21Z",
+          "published_date": "2026-04-19",
+          "tag": "v0.7.3"
+        },
+        {
+          "age_days": 176.4793581971875,
+          "asset_count": 8,
+          "bootstrap_downloads": 9,
+          "downloads": 98,
+          "downloads_per_week": 3.88714015626408,
+          "mix": {
+            "Android": 9,
+            "DMG": 11,
+            "Install script": 9,
+            "Linux GNU": 46,
+            "Windows zip": 15,
+            "macOS tarball": 8
+          },
+          "name": "v0.7.3-beta.1051",
+          "payload_downloads": 89,
+          "payload_downloads_per_week": 3.530157897015338,
+          "prerelease": true,
+          "published_at": "2026-04-19T03:49:15Z",
+          "published_date": "2026-04-19",
+          "tag": "v0.7.3-beta.1051"
+        },
+        {
+          "age_days": 176.6939994008912,
+          "asset_count": 8,
+          "bootstrap_downloads": 8,
+          "downloads": 142,
+          "downloads_per_week": 5.625544746116526,
+          "mix": {
+            "Android": 6,
+            "DMG": 9,
+            "Install script": 8,
+            "Linux GNU": 99,
+            "Windows zip": 12,
+            "macOS tarball": 8
+          },
+          "name": "v0.7.1-beta.1049",
+          "payload_downloads": 134,
+          "payload_downloads_per_week": 5.3086126477437645,
+          "prerelease": true,
+          "published_at": "2026-04-18T22:40:10Z",
+          "published_date": "2026-04-18",
+          "tag": "v0.7.1-beta.1049"
+        },
+        {
+          "age_days": 177.26674245644676,
+          "asset_count": 8,
+          "bootstrap_downloads": 8,
+          "downloads": 242,
+          "downloads_per_week": 9.55622005868475,
+          "mix": {
+            "Android": 7,
+            "DMG": 8,
+            "Install script": 8,
+            "Linux GNU": 201,
+            "Windows zip": 12,
+            "macOS tarball": 6
+          },
+          "name": "v0.7.0-beta.1047",
+          "payload_downloads": 234,
+          "payload_downloads_per_week": 9.240311957571205,
+          "prerelease": true,
+          "published_at": "2026-04-18T08:55:25Z",
+          "published_date": "2026-04-18",
+          "tag": "v0.7.0-beta.1047"
+        },
+        {
+          "age_days": 187.38045773422454,
+          "asset_count": 9,
+          "bootstrap_downloads": 434,
+          "downloads": 9567,
+          "downloads_per_week": 357.395860858591,
+          "mix": {
+            "Android": 421,
+            "DMG": 309,
+            "Install script": 434,
+            "Linux GNU": 6449,
+            "Windows zip": 1703,
+            "macOS tarball": 251
+          },
+          "name": "v0.6.9",
+          "payload_downloads": 9133,
+          "payload_downloads_per_week": 341.1828574497242,
+          "prerelease": false,
+          "published_at": "2026-04-08T06:11:40Z",
+          "published_date": "2026-04-08",
+          "tag": "v0.6.9"
+        },
+        {
+          "age_days": 193.60942764163195,
+          "asset_count": 9,
+          "bootstrap_downloads": 334,
+          "downloads": 7456,
+          "downloads_per_week": 269.57364956734745,
+          "mix": {
+            "Android": 343,
+            "DMG": 233,
+            "Install script": 334,
+            "Linux GNU": 4970,
+            "Windows zip": 1352,
+            "macOS tarball": 224
+          },
+          "name": "v0.6.8",
+          "payload_downloads": 7122,
+          "payload_downloads_per_week": 257.497791338338,
+          "prerelease": false,
+          "published_at": "2026-04-02T00:41:57Z",
+          "published_date": "2026-04-02",
+          "tag": "v0.6.8"
+        },
+        {
+          "age_days": 196.7523443082986,
+          "asset_count": 9,
+          "bootstrap_downloads": 133,
+          "downloads": 1284,
+          "downloads_per_week": 45.681793686363235,
+          "mix": {
+            "Android": 131,
+            "DMG": 17,
+            "Install script": 133,
+            "Linux GNU": 616,
+            "Windows zip": 370,
+            "macOS tarball": 17
+          },
+          "name": "v0.6.7",
+          "payload_downloads": 1151,
+          "payload_downloads_per_week": 40.949956801405044,
+          "prerelease": false,
+          "published_at": "2026-03-29T21:16:09Z",
+          "published_date": "2026-03-29",
+          "tag": "v0.6.7"
+        },
+        {
+          "age_days": 199.483501715706,
+          "asset_count": 9,
+          "bootstrap_downloads": 267,
+          "downloads": 5361,
+          "downloads_per_week": 188.1208204048955,
+          "mix": {
+            "Android": 270,
+            "DMG": 138,
+            "Install script": 267,
+            "Linux GNU": 3670,
+            "Windows zip": 841,
+            "macOS tarball": 175
+          },
+          "name": "v0.6.5",
+          "payload_downloads": 5094,
+          "payload_downloads_per_week": 178.75162453694045,
+          "prerelease": false,
+          "published_at": "2026-03-27T03:43:17Z",
+          "published_date": "2026-03-27",
+          "tag": "v0.6.5"
+        },
+        {
+          "age_days": 200.03178875274304,
+          "asset_count": 8,
+          "bootstrap_downloads": 166,
+          "downloads": 1785,
+          "downloads_per_week": 62.4650715664245,
+          "mix": {
+            "DMG": 32,
+            "Install script": 166,
+            "Linux GNU": 1089,
+            "Windows zip": 455,
+            "macOS tarball": 43
+          },
+          "name": "v0.6.3",
+          "payload_downloads": 1619,
+          "payload_downloads_per_week": 56.65599488293628,
+          "prerelease": false,
+          "published_at": "2026-03-26T14:33:45Z",
+          "published_date": "2026-03-26",
+          "tag": "v0.6.3"
+        },
+        {
+          "age_days": 201.8037794934838,
+          "asset_count": 9,
+          "bootstrap_downloads": 158,
+          "downloads": 2563,
+          "downloads_per_week": 88.90319123373659,
+          "mix": {
+            "Android": 222,
+            "DMG": 60,
+            "Install script": 158,
+            "Linux GNU": 1499,
+            "Windows zip": 546,
+            "macOS tarball": 78
+          },
+          "name": "v0.6.2",
+          "payload_downloads": 2405,
+          "payload_downloads_per_week": 83.42261994425927,
+          "prerelease": false,
+          "published_at": "2026-03-24T20:02:05Z",
+          "published_date": "2026-03-24",
+          "tag": "v0.6.2"
+        },
+        {
+          "age_days": 202.28552717866899,
+          "asset_count": 9,
+          "bootstrap_downloads": 123,
+          "downloads": 1272,
+          "downloads_per_week": 44.01698986668249,
+          "mix": {
+            "Android": 127,
+            "DMG": 17,
+            "Install script": 123,
+            "Linux GNU": 617,
+            "Windows zip": 376,
+            "macOS tarball": 12
+          },
+          "name": "v0.6.1",
+          "payload_downloads": 1149,
+          "payload_downloads_per_week": 39.760629997498576,
+          "prerelease": false,
+          "published_at": "2026-03-24T08:28:22Z",
+          "published_date": "2026-03-24",
+          "tag": "v0.6.1"
+        },
+        {
+          "age_days": 202.28758736385416,
+          "asset_count": 8,
+          "bootstrap_downloads": 8,
+          "downloads": 50,
+          "downloads_per_week": 1.730209967705314,
+          "mix": {
+            "Android": 6,
+            "DMG": 6,
+            "Install script": 8,
+            "Linux GNU": 18,
+            "Windows zip": 6,
+            "macOS tarball": 6
+          },
+          "name": "v0.6.1-beta.637",
+          "payload_downloads": 42,
+          "payload_downloads_per_week": 1.4533763728724638,
+          "prerelease": true,
+          "published_at": "2026-03-24T08:25:24Z",
+          "published_date": "2026-03-24",
+          "tag": "v0.6.1-beta.637"
+        },
+        {
+          "age_days": 202.5686406045949,
+          "asset_count": 8,
+          "bootstrap_downloads": 122,
+          "downloads": 1176,
+          "downloads_per_week": 40.63807692755614,
+          "mix": {
+            "Android": 125,
+            "Install script": 122,
+            "Linux GNU": 578,
+            "Windows zip": 339,
+            "macOS tarball": 12
+          },
+          "name": "v0.6.0",
+          "payload_downloads": 1054,
+          "payload_downloads_per_week": 36.422222008200826,
+          "prerelease": false,
+          "published_at": "2026-03-24T01:40:41Z",
+          "published_date": "2026-03-24",
+          "tag": "v0.6.0"
+        },
+        {
+          "age_days": 203.58174245644676,
+          "asset_count": 8,
+          "bootstrap_downloads": 128,
+          "downloads": 1378,
+          "downloads_per_week": 47.38145908179175,
+          "mix": {
+            "Android": 136,
+            "Install script": 128,
+            "Linux GNU": 705,
+            "Windows zip": 378,
+            "macOS tarball": 31
+          },
+          "name": "v0.5.9",
+          "payload_downloads": 1250,
+          "payload_downloads_per_week": 42.980278557503404,
+          "prerelease": false,
+          "published_at": "2026-03-23T01:21:49Z",
+          "published_date": "2026-03-23",
+          "tag": "v0.5.9"
+        },
+        {
+          "age_days": 203.581939215706,
+          "asset_count": 7,
+          "bootstrap_downloads": 4,
+          "downloads": 37,
+          "downloads_per_week": 1.272215015721879,
+          "mix": {
+            "Android": 5,
+            "Install script": 4,
+            "Linux GNU": 17,
+            "Windows zip": 6,
+            "macOS tarball": 5
+          },
+          "name": "v0.5.9-beta.579",
+          "payload_downloads": 33,
+          "payload_downloads_per_week": 1.1346782572654597,
+          "prerelease": true,
+          "published_at": "2026-03-23T01:21:32Z",
+          "published_date": "2026-03-23",
+          "tag": "v0.5.9-beta.579"
+        },
+        {
+          "age_days": 203.6052956971875,
+          "asset_count": 7,
+          "bootstrap_downloads": 4,
+          "downloads": 41,
+          "downloads_per_week": 1.4095900551960177,
+          "mix": {
+            "Android": 7,
+            "Install script": 4,
+            "Linux GNU": 20,
+            "Windows zip": 5,
+            "macOS tarball": 5
+          },
+          "name": "v0.5.9-beta.578",
+          "payload_downloads": 37,
+          "payload_downloads_per_week": 1.2720690742012841,
+          "prerelease": true,
+          "published_at": "2026-03-23T00:47:54Z",
+          "published_date": "2026-03-23",
+          "tag": "v0.5.9-beta.578"
+        },
+        {
+          "age_days": 203.63603643792823,
+          "asset_count": 7,
+          "bootstrap_downloads": 4,
+          "downloads": 34,
+          "downloads_per_week": 1.1687518779248411,
+          "mix": {
+            "Android": 5,
+            "Install script": 4,
+            "Linux GNU": 15,
+            "Windows zip": 5,
+            "macOS tarball": 5
+          },
+          "name": "v0.5.8-beta.577",
+          "payload_downloads": 30,
+          "payload_downloads_per_week": 1.031251656992507,
+          "prerelease": true,
+          "published_at": "2026-03-23T00:03:38Z",
+          "published_date": "2026-03-23",
+          "tag": "v0.5.8-beta.577"
+        },
+        {
+          "age_days": 203.71611745644677,
+          "asset_count": 8,
+          "bootstrap_downloads": 124,
+          "downloads": 1104,
+          "downloads_per_week": 37.93514276872177,
+          "mix": {
+            "Android": 120,
+            "Install script": 124,
+            "Linux GNU": 513,
+            "Windows zip": 334,
+            "macOS tarball": 13
+          },
+          "name": "v0.5.8",
+          "payload_downloads": 980,
+          "payload_downloads_per_week": 33.674311515713164,
+          "prerelease": false,
+          "published_at": "2026-03-22T22:08:19Z",
+          "published_date": "2026-03-22",
+          "tag": "v0.5.8"
+        },
+        {
+          "age_days": 203.76789986385415,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 28,
+          "downloads_per_week": 0.9618786871286192,
+          "mix": {
+            "Android": 4,
+            "Install script": 3,
+            "Linux GNU": 13,
+            "Windows zip": 4,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.8-beta.564",
+          "payload_downloads": 25,
+          "payload_downloads_per_week": 0.8588202563648386,
+          "prerelease": true,
+          "published_at": "2026-03-22T20:53:45Z",
+          "published_date": "2026-03-22",
+          "tag": "v0.5.8-beta.564"
+        },
+        {
+          "age_days": 203.84229801200232,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 27,
+          "downloads_per_week": 0.92718734945223,
+          "mix": {
+            "Android": 4,
+            "Install script": 3,
+            "Linux GNU": 12,
+            "Windows zip": 4,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.7-beta.563",
+          "payload_downloads": 24,
+          "payload_downloads_per_week": 0.8241665328464267,
+          "prerelease": true,
+          "published_at": "2026-03-22T19:06:37Z",
+          "published_date": "2026-03-22",
+          "tag": "v0.5.7-beta.563"
+        },
+        {
+          "age_days": 204.3596128268171,
+          "asset_count": 8,
+          "bootstrap_downloads": 125,
+          "downloads": 1235,
+          "downloads_per_week": 42.30287912771754,
+          "mix": {
+            "Android": 128,
+            "Install script": 125,
+            "Linux GNU": 615,
+            "Windows zip": 353,
+            "macOS tarball": 14
+          },
+          "name": "v0.5.7",
+          "payload_downloads": 1110,
+          "payload_downloads_per_week": 38.02121119981091,
+          "prerelease": false,
+          "published_at": "2026-03-22T06:41:41Z",
+          "published_date": "2026-03-22",
+          "tag": "v0.5.7"
+        },
+        {
+          "age_days": 204.38884893792823,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 36,
+          "downloads_per_week": 1.232943975708435,
+          "mix": {
+            "Android": 4,
+            "Install script": 3,
+            "Linux GNU": 20,
+            "Windows zip": 4,
+            "macOS tarball": 5
+          },
+          "name": "v0.5.7-beta.554",
+          "payload_downloads": 33,
+          "payload_downloads_per_week": 1.130198644399399,
+          "prerelease": true,
+          "published_at": "2026-03-22T05:59:35Z",
+          "published_date": "2026-03-22",
+          "tag": "v0.5.7-beta.554"
+        },
+        {
+          "age_days": 204.55273782681712,
+          "asset_count": 7,
+          "bootstrap_downloads": 5,
+          "downloads": 57,
+          "downloads_per_week": 1.950597211452677,
+          "mix": {
+            "Android": 4,
+            "Install script": 5,
+            "Linux GNU": 39,
+            "Windows zip": 5,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.6-beta.536",
+          "payload_downloads": 52,
+          "payload_downloads_per_week": 1.7794921929041967,
+          "prerelease": true,
+          "published_at": "2026-03-22T02:03:35Z",
+          "published_date": "2026-03-22",
+          "tag": "v0.5.6-beta.536"
+        },
+        {
+          "age_days": 204.63434662311343,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 34,
+          "downloads_per_week": 1.1630501131774225,
+          "mix": {
+            "Android": 4,
+            "Install script": 3,
+            "Linux GNU": 19,
+            "Windows zip": 4,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.6-beta.526",
+          "payload_downloads": 31,
+          "payload_downloads_per_week": 1.06042804436765,
+          "prerelease": true,
+          "published_at": "2026-03-22T00:06:04Z",
+          "published_date": "2026-03-22",
+          "tag": "v0.5.6-beta.526"
+        },
+        {
+          "age_days": 204.65869847496526,
+          "asset_count": 7,
+          "bootstrap_downloads": 4,
+          "downloads": 36,
+          "downloads_per_week": 1.23131829664609,
+          "mix": {
+            "Android": 5,
+            "Install script": 4,
+            "Linux GNU": 16,
+            "Windows zip": 6,
+            "macOS tarball": 5
+          },
+          "name": "v0.5.6-beta.524",
+          "payload_downloads": 32,
+          "payload_downloads_per_week": 1.0945051525743024,
+          "prerelease": true,
+          "published_at": "2026-03-21T23:31:00Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.6-beta.524"
+        },
+        {
+          "age_days": 204.7025757897801,
+          "asset_count": 7,
+          "bootstrap_downloads": 4,
+          "downloads": 34,
+          "downloads_per_week": 1.1626624583581926,
+          "mix": {
+            "Android": 4,
+            "Install script": 4,
+            "Linux GNU": 17,
+            "Windows zip": 5,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.6-beta.523",
+          "payload_downloads": 30,
+          "payload_downloads_per_week": 1.025878639727817,
+          "prerelease": true,
+          "published_at": "2026-03-21T22:27:49Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.6-beta.523"
+        },
+        {
+          "age_days": 204.77349014163195,
+          "asset_count": 7,
+          "bootstrap_downloads": 4,
+          "downloads": 34,
+          "downloads_per_week": 1.1622598210119233,
+          "mix": {
+            "Android": 3,
+            "Install script": 4,
+            "Linux GNU": 21,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.5-beta.522",
+          "payload_downloads": 30,
+          "payload_downloads_per_week": 1.0255233714811087,
+          "prerelease": true,
+          "published_at": "2026-03-21T20:45:42Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.5-beta.522"
+        },
+        {
+          "age_days": 204.86112903052083,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 32,
+          "downloads_per_week": 1.0934236331706821,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 18,
+            "Windows zip": 4,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.5-beta.521",
+          "payload_downloads": 29,
+          "payload_downloads_per_week": 0.9909151675609307,
+          "prerelease": true,
+          "published_at": "2026-03-21T18:39:30Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.5-beta.521"
+        },
+        {
+          "age_days": 204.94175403052083,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 28,
+          "downloads_per_week": 0.956369291007487,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 14,
+            "Windows zip": 5,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.5-beta.519",
+          "payload_downloads": 25,
+          "payload_downloads_per_week": 0.8539011526852562,
+          "prerelease": true,
+          "published_at": "2026-03-21T16:43:24Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.5-beta.519"
+        },
+        {
+          "age_days": 204.99494847496527,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 26,
+          "downloads_per_week": 0.8878267555077168,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 14,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.5-beta.517",
+          "payload_downloads": 23,
+          "payload_downloads_per_week": 0.785385206795288,
+          "prerelease": true,
+          "published_at": "2026-03-21T15:26:48Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.5-beta.517"
+        },
+        {
+          "age_days": 205.08504106755785,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 29,
+          "downloads_per_week": 0.9898332854668274,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 16,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.5-beta.516",
+          "payload_downloads": 26,
+          "payload_downloads_per_week": 0.887436738694397,
+          "prerelease": true,
+          "published_at": "2026-03-21T13:17:04Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.5-beta.516"
+        },
+        {
+          "age_days": 205.10965912311343,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 23,
+          "downloads_per_week": 0.7849459683581387,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 11,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.5-beta.514",
+          "payload_downloads": 20,
+          "payload_downloads_per_week": 0.6825617116157727,
+          "prerelease": true,
+          "published_at": "2026-03-21T12:41:37Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.5-beta.514"
+        },
+        {
+          "age_days": 205.189277178669,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 24,
+          "downloads_per_week": 0.8187562347798206,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 12,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.4-beta.504",
+          "payload_downloads": 21,
+          "payload_downloads_per_week": 0.716411705432343,
+          "prerelease": true,
+          "published_at": "2026-03-21T10:46:58Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.4-beta.504"
+        },
+        {
+          "age_days": 205.27656884533565,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 29,
+          "downloads_per_week": 0.9889097481600497,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 13,
+            "Windows zip": 7,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.4-beta.491",
+          "payload_downloads": 26,
+          "payload_downloads_per_week": 0.8866087397296998,
+          "prerelease": true,
+          "published_at": "2026-03-21T08:41:16Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.4-beta.491"
+        },
+        {
+          "age_days": 205.444126715706,
+          "asset_count": 7,
+          "bootstrap_downloads": 4,
+          "downloads": 39,
+          "downloads_per_week": 1.328828447735466,
+          "mix": {
+            "Android": 4,
+            "Install script": 4,
+            "Linux GNU": 22,
+            "Windows zip": 5,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.4-beta.490",
+          "payload_downloads": 35,
+          "payload_downloads_per_week": 1.1925383505318286,
+          "prerelease": true,
+          "published_at": "2026-03-21T04:39:59Z",
+          "published_date": "2026-03-21",
+          "tag": "v0.5.4-beta.490"
+        },
+        {
+          "age_days": 205.67177717866898,
+          "asset_count": 7,
+          "bootstrap_downloads": 4,
+          "downloads": 30,
+          "downloads_per_week": 1.0210443206195037,
+          "mix": {
+            "Android": 4,
+            "Install script": 4,
+            "Linux GNU": 12,
+            "Windows zip": 6,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.4-beta.487",
+          "payload_downloads": 26,
+          "payload_downloads_per_week": 0.8849050778702365,
+          "prerelease": true,
+          "published_at": "2026-03-20T23:12:10Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.4-beta.487"
+        },
+        {
+          "age_days": 205.77904569718748,
+          "asset_count": 8,
+          "bootstrap_downloads": 126,
+          "downloads": 1260,
+          "downloads_per_week": 42.86150696305104,
+          "mix": {
+            "Android": 125,
+            "Install script": 126,
+            "Linux GNU": 627,
+            "Windows zip": 371,
+            "macOS tarball": 11
+          },
+          "name": "v0.5.4",
+          "payload_downloads": 1134,
+          "payload_downloads_per_week": 38.575356266745935,
+          "prerelease": false,
+          "published_at": "2026-03-20T20:37:42Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.4"
+        },
+        {
+          "age_days": 205.78446236385417,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 23,
+          "downloads_per_week": 0.7823719932524871,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 10,
+            "Windows zip": 4,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.4-beta.471",
+          "payload_downloads": 20,
+          "payload_downloads_per_week": 0.680323472393467,
+          "prerelease": true,
+          "published_at": "2026-03-20T20:29:54Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.4-beta.471"
+        },
+        {
+          "age_days": 205.88955495644674,
+          "asset_count": 8,
+          "bootstrap_downloads": 118,
+          "downloads": 1069,
+          "downloads_per_week": 36.344728617160456,
+          "mix": {
+            "Android": 118,
+            "Install script": 118,
+            "Linux GNU": 501,
+            "Windows zip": 326,
+            "macOS tarball": 6
+          },
+          "name": "v0.5.3",
+          "payload_downloads": 951,
+          "payload_downloads_per_week": 32.33286895689391,
+          "prerelease": false,
+          "published_at": "2026-03-20T17:58:34Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.3"
+        },
+        {
+          "age_days": 205.88992532681712,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 21,
+          "downloads_per_week": 0.7139737399324477,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 9,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.3-beta.458",
+          "payload_downloads": 18,
+          "payload_downloads_per_week": 0.6119774913706695,
+          "prerelease": true,
+          "published_at": "2026-03-20T17:58:02Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.3-beta.458"
+        },
+        {
+          "age_days": 205.94240217866897,
+          "asset_count": 7,
+          "bootstrap_downloads": 4,
+          "downloads": 22,
+          "downloads_per_week": 0.7477818961555793,
+          "mix": {
+            "Android": 3,
+            "Install script": 4,
+            "Linux GNU": 9,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.2-beta.457",
+          "payload_downloads": 18,
+          "payload_downloads_per_week": 0.6118215514000195,
+          "prerelease": true,
+          "published_at": "2026-03-20T16:42:28Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.2-beta.457"
+        },
+        {
+          "age_days": 206.37068921570602,
+          "asset_count": 7,
+          "bootstrap_downloads": 3,
+          "downloads": 24,
+          "downloads_per_week": 0.8140690940097621,
+          "mix": {
+            "Android": 4,
+            "Install script": 3,
+            "Linux GNU": 11,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.2-beta.448",
+          "payload_downloads": 21,
+          "payload_downloads_per_week": 0.7123104572585419,
+          "prerelease": true,
+          "published_at": "2026-03-20T06:25:44Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.2-beta.448"
+        },
+        {
+          "age_days": 206.4345781045949,
+          "asset_count": 6,
+          "bootstrap_downloads": 128,
+          "downloads": 983,
+          "downloads_per_week": 33.3325940991997,
+          "mix": {
+            "Android": 136,
+            "Install script": 128,
+            "Linux GNU": 361,
+            "Windows zip": 349,
+            "macOS tarball": 9
+          },
+          "name": "v0.5.2",
+          "payload_downloads": 855,
+          "payload_downloads_per_week": 28.992235966241857,
+          "prerelease": false,
+          "published_at": "2026-03-20T04:53:44Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.2"
+        },
+        {
+          "age_days": 206.45199708607637,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 20,
+          "downloads_per_week": 0.6781237380892449,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.2-beta.442",
+          "payload_downloads": 17,
+          "payload_downloads_per_week": 0.5764051773758582,
+          "prerelease": true,
+          "published_at": "2026-03-20T04:28:39Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.2-beta.442"
+        },
+        {
+          "age_days": 206.46849014163195,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 18,
+          "downloads_per_week": 0.6102626115663815,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 6,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.2-beta.441",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.5085521763053179,
+          "prerelease": true,
+          "published_at": "2026-03-20T04:04:54Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.2-beta.441"
+        },
+        {
+          "age_days": 206.50030727126156,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 19,
+          "downloads_per_week": 0.6440668382410173,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 7,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.1-beta.438",
+          "payload_downloads": 16,
+          "payload_downloads_per_week": 0.5423720743082251,
+          "prerelease": true,
+          "published_at": "2026-03-20T03:19:05Z",
+          "published_date": "2026-03-20",
+          "tag": "v0.5.1-beta.438"
+        },
+        {
+          "age_days": 206.64014523422452,
+          "asset_count": 6,
+          "bootstrap_downloads": 4,
+          "downloads": 26,
+          "downloads_per_week": 0.8807581885586889,
+          "mix": {
+            "Android": 4,
+            "Install script": 4,
+            "Linux GNU": 8,
+            "Windows zip": 6,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.1-beta.414",
+          "payload_downloads": 22,
+          "payload_downloads_per_week": 0.7452569287804292,
+          "prerelease": true,
+          "published_at": "2026-03-19T23:57:43Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.1-beta.414"
+        },
+        {
+          "age_days": 206.65771467866898,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.4064692195527816,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.1-beta.413",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.338724349627318,
+          "prerelease": true,
+          "published_at": "2026-03-19T23:32:25Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.1-beta.413"
+        },
+        {
+          "age_days": 206.75677717866898,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 18,
+          "downloads_per_week": 0.609411704512675,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 6,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.1-beta.403",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.5078430870938958,
+          "prerelease": true,
+          "published_at": "2026-03-19T21:09:46Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.1-beta.403"
+        },
+        {
+          "age_days": 206.78019153052082,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.4062284659776107,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.1-beta.402",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.3385237216480089,
+          "prerelease": true,
+          "published_at": "2026-03-19T20:36:03Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.1-beta.402"
+        },
+        {
+          "age_days": 206.81901097496527,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.4061522178450409,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.1-beta.400",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.3384601815375341,
+          "prerelease": true,
+          "published_at": "2026-03-19T19:40:09Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.1-beta.400"
+        },
+        {
+          "age_days": 206.84362903052082,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.4061038785371793,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.1-beta.390",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.3384198987809827,
+          "prerelease": true,
+          "published_at": "2026-03-19T19:04:42Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.1-beta.390"
+        },
+        {
+          "age_days": 206.88261051200232,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.40602735914880933,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.1-beta.379",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.33835613262400777,
+          "prerelease": true,
+          "published_at": "2026-03-19T18:08:34Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.1-beta.379"
+        },
+        {
+          "age_days": 207.03583967866896,
+          "asset_count": 6,
+          "bootstrap_downloads": 127,
+          "downloads": 1018,
+          "downloads_per_week": 34.41916148943074,
+          "mix": {
+            "Android": 124,
+            "Install script": 127,
+            "Linux GNU": 392,
+            "Windows zip": 365,
+            "macOS tarball": 10
+          },
+          "name": "v0.5.1",
+          "payload_downloads": 891,
+          "payload_downloads_per_week": 30.12521894605382,
+          "prerelease": false,
+          "published_at": "2026-03-19T14:27:55Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.1"
+        },
+        {
+          "age_days": 207.04130264163194,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 19,
+          "downloads_per_week": 0.6423839026467577,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 6,
+            "Windows zip": 4,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.1-beta.378",
+          "payload_downloads": 16,
+          "payload_downloads_per_week": 0.5409548653867433,
+          "prerelease": true,
+          "published_at": "2026-03-19T14:20:03Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.1-beta.378"
+        },
+        {
+          "age_days": 207.1089994008912,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 13,
+          "downloads_per_week": 0.43938216235527044,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 5,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.369",
+          "payload_downloads": 11,
+          "payload_downloads_per_week": 0.37178490660830577,
+          "prerelease": true,
+          "published_at": "2026-03-19T12:42:34Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.0-beta.369"
+        },
+        {
+          "age_days": 207.4600294934838,
+          "asset_count": 6,
+          "bootstrap_downloads": 4,
+          "downloads": 43,
+          "downloads_per_week": 1.450881891489629,
+          "mix": {
+            "Android": 5,
+            "Install script": 4,
+            "Linux GNU": 21,
+            "Windows zip": 9,
+            "macOS tarball": 4
+          },
+          "name": "v0.5.0-beta.368",
+          "payload_downloads": 39,
+          "payload_downloads_per_week": 1.3159161341417565,
+          "prerelease": true,
+          "published_at": "2026-03-19T04:17:05Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.0-beta.368"
+        },
+        {
+          "age_days": 207.5995318082986,
+          "asset_count": 6,
+          "bootstrap_downloads": 4,
+          "downloads": 47,
+          "downloads_per_week": 1.5847819941318795,
+          "mix": {
+            "Android": 7,
+            "Install script": 4,
+            "Linux GNU": 20,
+            "Windows zip": 10,
+            "macOS tarball": 6
+          },
+          "name": "v0.5.0-beta.365",
+          "payload_downloads": 43,
+          "payload_downloads_per_week": 1.449906930801507,
+          "prerelease": true,
+          "published_at": "2026-03-19T00:56:12Z",
+          "published_date": "2026-03-19",
+          "tag": "v0.5.0-beta.365"
+        },
+        {
+          "age_days": 207.73794616015047,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.4043555910350739,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.364",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.33696299252922823,
+          "prerelease": true,
+          "published_at": "2026-03-18T21:36:53Z",
+          "published_date": "2026-03-18",
+          "tag": "v0.5.0-beta.364"
+        },
+        {
+          "age_days": 207.7946244008912,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.40424529865576125,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.360",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.3368710822131344,
+          "prerelease": true,
+          "published_at": "2026-03-18T20:15:16Z",
+          "published_date": "2026-03-18",
+          "tag": "v0.5.0-beta.360"
+        },
+        {
+          "age_days": 207.81970541940973,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.4041965117334569,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.357",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.3368304264445474,
+          "prerelease": true,
+          "published_at": "2026-03-18T19:39:09Z",
+          "published_date": "2026-03-18",
+          "tag": "v0.5.0-beta.357"
+        },
+        {
+          "age_days": 207.98762208607639,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.4038701878385643,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.351",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.33655848986547027,
+          "prerelease": true,
+          "published_at": "2026-03-18T15:37:21Z",
+          "published_date": "2026-03-18",
+          "tag": "v0.5.0-beta.351"
+        },
+        {
+          "age_days": 208.0348443082986,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.40377851258184255,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.349",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.33648209381820215,
+          "prerelease": true,
+          "published_at": "2026-03-18T14:29:21Z",
+          "published_date": "2026-03-18",
+          "tag": "v0.5.0-beta.349"
+        },
+        {
+          "age_days": 208.36887208607638,
+          "asset_count": 6,
+          "bootstrap_downloads": 125,
+          "downloads": 1196,
+          "downloads_per_week": 40.178746067894245,
+          "mix": {
+            "Android": 135,
+            "Install script": 125,
+            "Linux GNU": 521,
+            "Windows zip": 392,
+            "macOS tarball": 23
+          },
+          "name": "v0.5.0",
+          "payload_downloads": 1071,
+          "payload_downloads_per_week": 35.979462406952116,
+          "prerelease": false,
+          "published_at": "2026-03-18T06:28:21Z",
+          "published_date": "2026-03-18",
+          "tag": "v0.5.0"
+        },
+        {
+          "age_days": 208.5268581971875,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 40,
+          "downloads_per_week": 1.342752691047721,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 31,
+            "Windows zip": 2,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.0-beta.347",
+          "payload_downloads": 38,
+          "payload_downloads_per_week": 1.2756150564953348,
+          "prerelease": true,
+          "published_at": "2026-03-18T02:40:51Z",
+          "published_date": "2026-03-18",
+          "tag": "v0.5.0-beta.347"
+        },
+        {
+          "age_days": 208.65401097496527,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 52,
+          "downloads_per_week": 1.744514750994523,
+          "mix": {
+            "Android": 5,
+            "Install script": 3,
+            "Linux GNU": 35,
+            "Windows zip": 6,
+            "macOS tarball": 3
+          },
+          "name": "v0.5.0-beta.346",
+          "payload_downloads": 49,
+          "payload_downloads_per_week": 1.6438696692063774,
+          "prerelease": true,
+          "published_at": "2026-03-17T23:37:45Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.5.0-beta.346"
+        },
+        {
+          "age_days": 208.67064291940972,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 15,
+          "downloads_per_week": 0.5031852997191936,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 7,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.345",
+          "payload_downloads": 13,
+          "payload_downloads_per_week": 0.43609392642330114,
+          "prerelease": true,
+          "published_at": "2026-03-17T23:13:48Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.5.0-beta.345"
+        },
+        {
+          "age_days": 208.70968227126156,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 16,
+          "downloads_per_week": 0.5366305903069353,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 6,
+            "Windows zip": 4,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.344",
+          "payload_downloads": 14,
+          "payload_downloads_per_week": 0.4695517665185684,
+          "prerelease": true,
+          "published_at": "2026-03-17T22:17:35Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.5.0-beta.344"
+        },
+        {
+          "age_days": 208.81522625274306,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 20,
+          "downloads_per_week": 0.6704491933483271,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 12,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.341",
+          "payload_downloads": 18,
+          "payload_downloads_per_week": 0.6034042740134944,
+          "prerelease": true,
+          "published_at": "2026-03-17T19:45:36Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.5.0-beta.341"
+        },
+        {
+          "age_days": 208.854439215706,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 16,
+          "downloads_per_week": 0.5362586518179093,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 8,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.5.0-beta.340",
+          "payload_downloads": 14,
+          "payload_downloads_per_week": 0.46922632034067063,
+          "prerelease": true,
+          "published_at": "2026-03-17T18:49:08Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.5.0-beta.340"
+        },
+        {
+          "age_days": 209.0699369008912,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 14,
+          "downloads_per_week": 0.46874266789708996,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 6,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.3-beta.323",
+          "payload_downloads": 12,
+          "payload_downloads_per_week": 0.4017794296260771,
+          "prerelease": true,
+          "published_at": "2026-03-17T13:38:49Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.4.3-beta.323"
+        },
+        {
+          "age_days": 209.10463597496528,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.40171275786566857,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.3-beta.317",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.3347606315547238,
+          "prerelease": true,
+          "published_at": "2026-03-17T12:48:51Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.4.3-beta.317"
+        },
+        {
+          "age_days": 209.37982116015047,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 13,
+          "downloads_per_week": 0.4346168579941422,
+          "mix": {
+            "Android": 3,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.3-beta.316",
+          "payload_downloads": 11,
+          "payload_downloads_per_week": 0.3677527259950434,
+          "prerelease": true,
+          "published_at": "2026-03-17T06:12:35Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.4.3-beta.316"
+        },
+        {
+          "age_days": 209.40142995644675,
+          "asset_count": 6,
+          "bootstrap_downloads": 4,
+          "downloads": 21,
+          "downloads_per_week": 0.7020009368158299,
+          "mix": {
+            "Android": 3,
+            "Install script": 4,
+            "Linux GNU": 6,
+            "Windows zip": 5,
+            "macOS tarball": 3
+          },
+          "name": "v0.4.3-beta.314",
+          "payload_downloads": 17,
+          "payload_downloads_per_week": 0.5682864726604336,
+          "prerelease": true,
+          "published_at": "2026-03-17T05:41:28Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.4.3-beta.314"
+        },
+        {
+          "age_days": 209.41236745644676,
+          "asset_count": 6,
+          "bootstrap_downloads": 1,
+          "downloads": 9,
+          "downloads_per_week": 0.3008418307151923,
+          "mix": {
+            "Android": 2,
+            "Install script": 1,
+            "Linux GNU": 3,
+            "Windows zip": 1,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.3-beta.313",
+          "payload_downloads": 8,
+          "payload_downloads_per_week": 0.2674149606357265,
+          "prerelease": true,
+          "published_at": "2026-03-17T05:25:43Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.4.3-beta.313"
+        },
+        {
+          "age_days": 209.4252841231134,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 19,
+          "downloads_per_week": 0.6350713599691916,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 6,
+            "Windows zip": 4,
+            "macOS tarball": 3
+          },
+          "name": "v0.4.3-beta.312",
+          "payload_downloads": 16,
+          "payload_downloads_per_week": 0.5347969347108982,
+          "prerelease": true,
+          "published_at": "2026-03-17T05:07:07Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.4.3-beta.312"
+        },
+        {
+          "age_days": 209.43874477126158,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 18,
+          "downloads_per_week": 0.6016078836683768,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 5,
+            "Windows zip": 4,
+            "macOS tarball": 3
+          },
+          "name": "v0.4.3-beta.311",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.5013399030569807,
+          "prerelease": true,
+          "published_at": "2026-03-17T04:47:44Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.4.3-beta.311"
+        },
+        {
+          "age_days": 209.54336282681712,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 14,
+          "downloads_per_week": 0.4676836272833647,
+          "mix": {
+            "Android": 3,
+            "Install script": 2,
+            "Linux GNU": 5,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.3-beta.310",
+          "payload_downloads": 12,
+          "payload_downloads_per_week": 0.40087168052859834,
+          "prerelease": true,
+          "published_at": "2026-03-17T02:17:05Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.4.3-beta.310"
+        },
+        {
+          "age_days": 209.54727486385417,
+          "asset_count": 6,
+          "bootstrap_downloads": 139,
+          "downloads": 881,
+          "downloads_per_week": 29.43011310458123,
+          "mix": {
+            "Android": 121,
+            "Install script": 139,
+            "Linux GNU": 425,
+            "Windows zip": 187,
+            "macOS tarball": 9
+          },
+          "name": "v0.4.3",
+          "payload_downloads": 742,
+          "payload_downloads_per_week": 24.78676949330224,
+          "prerelease": false,
+          "published_at": "2026-03-17T02:11:27Z",
+          "published_date": "2026-03-17",
+          "tag": "v0.4.3"
+        },
+        {
+          "age_days": 209.68259893792825,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 29,
+          "downloads_per_week": 0.968129930801237,
+          "mix": {
+            "Android": 2,
+            "Install script": 3,
+            "Linux GNU": 18,
+            "Windows zip": 3,
+            "macOS tarball": 3
+          },
+          "name": "v0.4.2-beta.300",
+          "payload_downloads": 26,
+          "payload_downloads_per_week": 0.8679785586493849,
+          "prerelease": true,
+          "published_at": "2026-03-16T22:56:35Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.2-beta.300"
+        },
+        {
+          "age_days": 209.76984430829862,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 18,
+          "downloads_per_week": 0.6006583091839353,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 10,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.2-beta.281",
+          "payload_downloads": 16,
+          "payload_downloads_per_week": 0.5339184970523869,
+          "prerelease": true,
+          "published_at": "2026-03-16T20:50:57Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.2-beta.281"
+        },
+        {
+          "age_days": 209.8151568082986,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 16,
+          "downloads_per_week": 0.5338031899303196,
+          "mix": {
+            "Android": 2,
+            "Install script": 3,
+            "Linux GNU": 7,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.1-beta.269",
+          "payload_downloads": 13,
+          "payload_downloads_per_week": 0.43371509181838463,
+          "prerelease": true,
+          "published_at": "2026-03-16T19:45:42Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.1-beta.269"
+        },
+        {
+          "age_days": 209.8189994008912,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 12,
+          "downloads_per_week": 0.4003450604561563,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.1-beta.266",
+          "payload_downloads": 10,
+          "payload_downloads_per_week": 0.3336208837134636,
+          "prerelease": true,
+          "published_at": "2026-03-16T19:40:10Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.1-beta.266"
+        },
+        {
+          "age_days": 209.83021467866897,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 19,
+          "downloads_per_week": 0.6338457986314046,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 6,
+            "Windows zip": 4,
+            "macOS tarball": 3
+          },
+          "name": "v0.4.1-beta.267",
+          "payload_downloads": 16,
+          "payload_downloads_per_week": 0.5337648830580248,
+          "prerelease": true,
+          "published_at": "2026-03-16T19:24:01Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.1-beta.267"
+        },
+        {
+          "age_days": 209.87750634533563,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 14,
+          "downloads_per_week": 0.4669390336606597,
+          "mix": {
+            "Android": 2,
+            "Install script": 3,
+            "Linux GNU": 5,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.0-beta.260",
+          "payload_downloads": 11,
+          "payload_downloads_per_week": 0.36688066930480406,
+          "prerelease": true,
+          "published_at": "2026-03-16T18:15:55Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.0-beta.260"
+        },
+        {
+          "age_days": 209.88728643792822,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 16,
+          "downloads_per_week": 0.5336197437243191,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 8,
+            "Windows zip": 2,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.0-beta.259",
+          "payload_downloads": 14,
+          "payload_downloads_per_week": 0.46691727575877917,
+          "prerelease": true,
+          "published_at": "2026-03-16T18:01:50Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.0-beta.259"
+        },
+        {
+          "age_days": 209.92317764163195,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 13,
+          "downloads_per_week": 0.4334919136721037,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 4,
+            "Windows zip": 3,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.0-beta.258",
+          "payload_downloads": 11,
+          "payload_downloads_per_week": 0.3668008500302416,
+          "prerelease": true,
+          "published_at": "2026-03-16T17:10:09Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.0-beta.258"
+        },
+        {
+          "age_days": 209.92321236385416,
+          "asset_count": 6,
+          "bootstrap_downloads": 122,
+          "downloads": 911,
+          "downloads_per_week": 30.37777446424991,
+          "mix": {
+            "Android": 124,
+            "Install script": 122,
+            "Linux GNU": 301,
+            "Windows zip": 355,
+            "macOS tarball": 9
+          },
+          "name": "v0.4.0",
+          "payload_downloads": 789,
+          "payload_downloads_per_week": 26.309620254987024,
+          "prerelease": false,
+          "published_at": "2026-03-16T17:10:06Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.0"
+        },
+        {
+          "age_days": 209.97824708607638,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 17,
+          "downloads_per_week": 0.5667253710867408,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 2
+          },
+          "name": "v0.4.0-beta.257",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.5000517980177125,
+          "prerelease": true,
+          "published_at": "2026-03-16T15:50:51Z",
+          "published_date": "2026-03-16",
+          "tag": "v0.4.0-beta.257"
+        },
+        {
+          "age_days": 210.68530727126156,
+          "asset_count": 6,
+          "bootstrap_downloads": 17,
+          "downloads": 104,
+          "downloads_per_week": 3.455390456168286,
+          "mix": {
+            "Android": 4,
+            "Install script": 17,
+            "Linux GNU": 72,
+            "Windows zip": 5,
+            "macOS tarball": 6
+          },
+          "name": "v0.3.4-beta.232",
+          "payload_downloads": 87,
+          "payload_downloads_per_week": 2.890567016217701,
+          "prerelease": true,
+          "published_at": "2026-03-15T22:52:41Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.4-beta.232"
+        },
+        {
+          "age_days": 210.755689215706,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 27,
+          "downloads_per_week": 0.8967729445564845,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 14,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.4-beta.231",
+          "payload_downloads": 24,
+          "payload_downloads_per_week": 0.7971315062724307,
+          "prerelease": true,
+          "published_at": "2026-03-15T21:11:20Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.4-beta.231"
+        },
+        {
+          "age_days": 210.78969384533565,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 17,
+          "downloads_per_week": 0.5645437299572852,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 8,
+            "Windows zip": 2,
+            "macOS tarball": 3
+          },
+          "name": "v0.3.4-beta.230",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.4981268205505458,
+          "prerelease": true,
+          "published_at": "2026-03-15T20:22:22Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.4-beta.230"
+        },
+        {
+          "age_days": 210.82237903052084,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 25,
+          "downloads_per_week": 0.8300826544352067,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 12,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.3-beta.218",
+          "payload_downloads": 22,
+          "payload_downloads_per_week": 0.7304727359029819,
+          "prerelease": true,
+          "published_at": "2026-03-15T19:35:18Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.3-beta.218"
+        },
+        {
+          "age_days": 211.01345541940972,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 38,
+          "downloads_per_week": 1.2605831200256836,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 25,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.3-beta.217",
+          "payload_downloads": 35,
+          "payload_downloads_per_week": 1.161063400023656,
+          "prerelease": true,
+          "published_at": "2026-03-15T15:00:09Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.3-beta.217"
+        },
+        {
+          "age_days": 211.06960125274304,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 21,
+          "downloads_per_week": 0.6964527299408522,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.2-beta.216",
+          "payload_downloads": 18,
+          "payload_downloads_per_week": 0.5969594828064447,
+          "prerelease": true,
+          "published_at": "2026-03-15T13:39:18Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.2-beta.216"
+        },
+        {
+          "age_days": 211.15351328978008,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 22,
+          "downloads_per_week": 0.7293271970741756,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 4,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.2-beta.215",
+          "payload_downloads": 19,
+          "payload_downloads_per_week": 0.6298734883822426,
+          "prerelease": true,
+          "published_at": "2026-03-15T11:38:28Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.2-beta.215"
+        },
+        {
+          "age_days": 211.17674245644676,
+          "asset_count": 6,
+          "bootstrap_downloads": 169,
+          "downloads": 1111,
+          "downloads_per_week": 36.82697208762908,
+          "mix": {
+            "Android": 128,
+            "Install script": 169,
+            "Linux GNU": 427,
+            "Windows zip": 375,
+            "macOS tarball": 12
+          },
+          "name": "v0.3.2",
+          "payload_downloads": 942,
+          "payload_downloads_per_week": 31.22502943883582,
+          "prerelease": false,
+          "published_at": "2026-03-15T11:05:01Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.2"
+        },
+        {
+          "age_days": 211.20470541940972,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 15,
+          "downloads_per_week": 0.49714801472576703,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 6,
+            "Windows zip": 2,
+            "macOS tarball": 3
+          },
+          "name": "v0.3.1-beta.214",
+          "payload_downloads": 13,
+          "payload_downloads_per_week": 0.4308616127623314,
+          "prerelease": true,
+          "published_at": "2026-03-15T10:24:45Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.1-beta.214"
+        },
+        {
+          "age_days": 211.50896467866897,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 21,
+          "downloads_per_week": 0.6950060023381373,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.1-beta.213",
+          "payload_downloads": 18,
+          "payload_downloads_per_week": 0.5957194305755462,
+          "prerelease": true,
+          "published_at": "2026-03-15T03:06:37Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.1-beta.213"
+        },
+        {
+          "age_days": 211.5316382897801,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 15,
+          "downloads_per_week": 0.49637964726656664,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 6,
+            "Windows zip": 2,
+            "macOS tarball": 3
+          },
+          "name": "v0.3.1-beta.212",
+          "payload_downloads": 13,
+          "payload_downloads_per_week": 0.4301956942976911,
+          "prerelease": true,
+          "published_at": "2026-03-15T02:33:58Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.1-beta.212"
+        },
+        {
+          "age_days": 211.55316606755787,
+          "asset_count": 6,
+          "bootstrap_downloads": 3,
+          "downloads": 21,
+          "downloads_per_week": 0.6948607895239757,
+          "mix": {
+            "Android": 3,
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.1-beta.211",
+          "payload_downloads": 18,
+          "payload_downloads_per_week": 0.595594962449122,
+          "prerelease": true,
+          "published_at": "2026-03-15T02:02:58Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.1-beta.211"
+        },
+        {
+          "age_days": 211.56202023422452,
+          "asset_count": 6,
+          "bootstrap_downloads": 4,
+          "downloads": 28,
+          "downloads_per_week": 0.9264422781697986,
+          "mix": {
+            "Android": 4,
+            "Install script": 4,
+            "Linux GNU": 10,
+            "Windows zip": 5,
+            "macOS tarball": 5
+          },
+          "name": "v0.3.1-beta.210",
+          "payload_downloads": 24,
+          "payload_downloads_per_week": 0.7940933812883988,
+          "prerelease": true,
+          "published_at": "2026-03-15T01:50:13Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.1-beta.210"
+        },
+        {
+          "age_days": 211.5921359749653,
+          "asset_count": 6,
+          "bootstrap_downloads": 123,
+          "downloads": 950,
+          "downloads_per_week": 31.42838919489333,
+          "mix": {
+            "Android": 125,
+            "Install script": 123,
+            "Linux GNU": 339,
+            "Windows zip": 352,
+            "macOS tarball": 11
+          },
+          "name": "v0.3.1",
+          "payload_downloads": 827,
+          "payload_downloads_per_week": 27.359239857028196,
+          "prerelease": false,
+          "published_at": "2026-03-15T01:06:51Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.1"
+        },
+        {
+          "age_days": 211.59566606755786,
+          "asset_count": 6,
+          "bootstrap_downloads": 2,
+          "downloads": 15,
+          "downloads_per_week": 0.49622944529721985,
+          "mix": {
+            "Android": 2,
+            "Install script": 2,
+            "Linux GNU": 6,
+            "Windows zip": 2,
+            "macOS tarball": 3
+          },
+          "name": "v0.3.1-beta.205",
+          "payload_downloads": 13,
+          "payload_downloads_per_week": 0.4300655192575905,
+          "prerelease": true,
+          "published_at": "2026-03-15T01:01:46Z",
+          "published_date": "2026-03-15",
+          "tag": "v0.3.1-beta.205"
+        },
+        {
+          "age_days": 211.64715912311343,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 18,
+          "downloads_per_week": 0.5953304571723868,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.0-beta.201",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.49610871431032233,
+          "prerelease": true,
+          "published_at": "2026-03-14T23:47:37Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.3.0-beta.201"
+        },
+        {
+          "age_days": 211.69766838237268,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 18,
+          "downloads_per_week": 0.5951884163996375,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.0-beta.200",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.49599034699969785,
+          "prerelease": true,
+          "published_at": "2026-03-14T22:34:53Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.3.0-beta.200"
+        },
+        {
+          "age_days": 211.73142995644676,
+          "asset_count": 5,
+          "bootstrap_downloads": 5,
+          "downloads": 21,
+          "downloads_per_week": 0.6942757626028311,
+          "mix": {
+            "Install script": 5,
+            "Linux GNU": 8,
+            "Windows zip": 4,
+            "macOS tarball": 4
+          },
+          "name": "v0.3.0-beta.196",
+          "payload_downloads": 16,
+          "payload_downloads_per_week": 0.5289720096021571,
+          "prerelease": true,
+          "published_at": "2026-03-14T21:46:16Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.3.0-beta.196"
+        },
+        {
+          "age_days": 211.75093227126158,
+          "asset_count": 5,
+          "bootstrap_downloads": 122,
+          "downloads": 741,
+          "downloads_per_week": 24.495759921166446,
+          "mix": {
+            "Install script": 122,
+            "Linux GNU": 273,
+            "Windows zip": 341,
+            "macOS tarball": 5
+          },
+          "name": "v0.3.0",
+          "payload_downloads": 619,
+          "payload_downloads_per_week": 20.462719826183577,
+          "prerelease": false,
+          "published_at": "2026-03-14T21:18:11Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.3.0"
+        },
+        {
+          "age_days": 211.76199708607638,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 19,
+          "downloads_per_week": 0.6280635894548093,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 4,
+            "macOS tarball": 4
+          },
+          "name": "v0.2.2-beta.190",
+          "payload_downloads": 16,
+          "payload_downloads_per_week": 0.5288956542777342,
+          "prerelease": true,
+          "published_at": "2026-03-14T21:02:15Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.2-beta.190"
+        },
+        {
+          "age_days": 211.77362903052082,
+          "asset_count": 5,
+          "bootstrap_downloads": 4,
+          "downloads": 24,
+          "downloads_per_week": 0.7932999059849318,
+          "mix": {
+            "Install script": 4,
+            "Linux GNU": 10,
+            "Windows zip": 5,
+            "macOS tarball": 5
+          },
+          "name": "v0.2.1-beta.188",
+          "payload_downloads": 20,
+          "payload_downloads_per_week": 0.6610832549874432,
+          "prerelease": true,
+          "published_at": "2026-03-14T20:45:30Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.1-beta.188"
+        },
+        {
+          "age_days": 211.78313134533565,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 18,
+          "downloads_per_week": 0.5949482340713113,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.2.1-beta.187",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.49579019505942606,
+          "prerelease": true,
+          "published_at": "2026-03-14T20:31:49Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.1-beta.187"
+        },
+        {
+          "age_days": 211.81755264163195,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 18,
+          "downloads_per_week": 0.5948515523318116,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.2.1-beta.186",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.4957096269431764,
+          "prerelease": true,
+          "published_at": "2026-03-14T19:42:15Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.1-beta.186"
+        },
+        {
+          "age_days": 211.84773782681714,
+          "asset_count": 5,
+          "bootstrap_downloads": 4,
+          "downloads": 19,
+          "downloads_per_week": 0.6278093944469014,
+          "mix": {
+            "Install script": 4,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.2.1-beta.183",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.4956389956159748,
+          "prerelease": true,
+          "published_at": "2026-03-14T18:58:47Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.1-beta.183"
+        },
+        {
+          "age_days": 211.8734206971875,
+          "asset_count": 5,
+          "bootstrap_downloads": 118,
+          "downloads": 732,
+          "downloads_per_week": 24.184251064333804,
+          "mix": {
+            "Install script": 118,
+            "Linux GNU": 263,
+            "Windows zip": 345,
+            "macOS tarball": 6
+          },
+          "name": "v0.2.1",
+          "payload_downloads": 614,
+          "payload_downloads_per_week": 20.285696931012232,
+          "prerelease": false,
+          "published_at": "2026-03-14T18:21:48Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.1"
+        },
+        {
+          "age_days": 211.87713597496528,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 17,
+          "downloads_per_week": 0.5616462552809882,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 7,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.2.1-beta.180",
+          "payload_downloads": 14,
+          "payload_downloads_per_week": 0.46253221023140206,
+          "prerelease": true,
+          "published_at": "2026-03-14T18:16:27Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.1-beta.180"
+        },
+        {
+          "age_days": 211.89175403052084,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 21,
+          "downloads_per_week": 0.6937504513687973,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 11,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.2.1-beta.179",
+          "payload_downloads": 18,
+          "payload_downloads_per_week": 0.5946432440303977,
+          "prerelease": true,
+          "published_at": "2026-03-14T17:55:24Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.1-beta.179"
+        },
+        {
+          "age_days": 211.90190449348378,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 18,
+          "downloads_per_week": 0.5946147596038932,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 3,
+            "macOS tarball": 4
+          },
+          "name": "v0.2.1-beta.178",
+          "payload_downloads": 15,
+          "payload_downloads_per_week": 0.495512299669911,
+          "prerelease": true,
+          "published_at": "2026-03-14T17:40:47Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.1-beta.178"
+        },
+        {
+          "age_days": 211.9313605120023,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 25,
+          "downloads_per_week": 0.8257390486109263,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 13,
+            "Windows zip": 5,
+            "macOS tarball": 4
+          },
+          "name": "v0.2.0-beta.172",
+          "payload_downloads": 22,
+          "payload_downloads_per_week": 0.7266503627776151,
+          "prerelease": true,
+          "published_at": "2026-03-14T16:58:22Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.0-beta.172"
+        },
+        {
+          "age_days": 211.96083967866898,
+          "asset_count": 5,
+          "bootstrap_downloads": 3,
+          "downloads": 20,
+          "downloads_per_week": 0.6604993649404246,
+          "mix": {
+            "Install script": 3,
+            "Linux GNU": 8,
+            "Windows zip": 5,
+            "macOS tarball": 4
+          },
+          "name": "v0.2.0-beta.170",
+          "payload_downloads": 17,
+          "payload_downloads_per_week": 0.5614244601993609,
+          "prerelease": true,
+          "published_at": "2026-03-14T16:15:55Z",
+          "published_date": "2026-03-14",
+          "tag": "v0.2.0-beta.170"
+        },
+        {
+          "age_days": 214.88041143792825,
+          "asset_count": 4,
+          "bootstrap_downloads": 0,
+          "downloads": 700,
+          "downloads_per_week": 22.803381505137548,
+          "mix": {
+            "Linux GNU": 580,
+            "Windows zip": 104,
+            "macOS tarball": 16
+          },
+          "name": "v0.1.7-beta.30",
+          "payload_downloads": 700,
+          "payload_downloads_per_week": 22.803381505137548,
+          "prerelease": true,
+          "published_at": "2026-03-11T18:11:44Z",
+          "published_date": "2026-03-11",
+          "tag": "v0.1.7-beta.30"
+        },
+        {
+          "age_days": 214.9307818082986,
+          "asset_count": 4,
+          "bootstrap_downloads": 0,
+          "downloads": 35,
+          "downloads_per_week": 1.1399018695168606,
+          "mix": {
+            "Linux GNU": 20,
+            "Windows zip": 9,
+            "macOS tarball": 6
+          },
+          "name": "v0.1.7-beta.28",
+          "payload_downloads": 35,
+          "payload_downloads_per_week": 1.1399018695168606,
+          "prerelease": true,
+          "published_at": "2026-03-11T16:59:12Z",
+          "published_date": "2026-03-11",
+          "tag": "v0.1.7-beta.28"
+        },
+        {
+          "age_days": 230.26085125274304,
+          "asset_count": 8,
+          "bootstrap_downloads": 0,
+          "downloads": 19158,
+          "downloads_per_week": 582.4090342339618,
+          "mix": {
+            "Android": 1369,
+            "Linux GNU": 12908,
+            "Windows zip": 3659,
+            "macOS tarball": 1222
+          },
+          "name": "v0.1.7",
+          "payload_downloads": 19158,
+          "payload_downloads_per_week": 582.4090342339618,
+          "prerelease": false,
+          "published_at": "2026-02-24T09:03:54Z",
+          "published_date": "2026-02-24",
+          "tag": "v0.1.7"
+        },
+        {
+          "age_days": 232.50014523422453,
+          "asset_count": 6,
+          "bootstrap_downloads": 0,
+          "downloads": 4597,
+          "downloads_per_week": 138.40421461923103,
+          "mix": {
+            "Linux GNU": 3302,
+            "Windows zip": 1017,
+            "macOS tarball": 278
+          },
+          "name": "v0.1.6",
+          "payload_downloads": 4597,
+          "payload_downloads_per_week": 138.40421461923103,
+          "prerelease": false,
+          "published_at": "2026-02-22T03:19:19Z",
+          "published_date": "2026-02-22",
+          "tag": "v0.1.6"
+        },
+        {
+          "age_days": 232.53173088237267,
+          "asset_count": 6,
+          "bootstrap_downloads": 0,
+          "downloads": 628,
+          "downloads_per_week": 18.904946792933558,
+          "mix": {
+            "Linux GNU": 440,
+            "Windows zip": 164,
+            "macOS tarball": 24
+          },
+          "name": "v0.1.5",
+          "payload_downloads": 628,
+          "payload_downloads_per_week": 18.904946792933558,
+          "prerelease": false,
+          "published_at": "2026-02-22T02:33:50Z",
+          "published_date": "2026-02-22",
+          "tag": "v0.1.5"
+        },
+        {
+          "age_days": 232.83111745644675,
+          "asset_count": 6,
+          "bootstrap_downloads": 0,
+          "downloads": 906,
+          "downloads_per_week": 27.23862716153622,
+          "mix": {
+            "Linux GNU": 669,
+            "Windows zip": 182,
+            "macOS tarball": 55
+          },
+          "name": "v0.1.4",
+          "payload_downloads": 906,
+          "payload_downloads_per_week": 27.23862716153622,
+          "prerelease": false,
+          "published_at": "2026-02-21T19:22:43Z",
+          "published_date": "2026-02-21",
+          "tag": "v0.1.4"
+        },
+        {
+          "age_days": 232.91257578978008,
+          "asset_count": 6,
+          "bootstrap_downloads": 0,
+          "downloads": 675,
+          "downloads_per_week": 20.28658170980275,
+          "mix": {
+            "Linux GNU": 499,
+            "Windows zip": 157,
+            "macOS tarball": 19
+          },
+          "name": "v0.1.2",
+          "payload_downloads": 675,
+          "payload_downloads_per_week": 20.28658170980275,
+          "prerelease": false,
+          "published_at": "2026-02-21T17:25:25Z",
+          "published_date": "2026-02-21",
+          "tag": "v0.1.2"
+        }
+      ],
+      "asset_totals": {
+        "Android": 9825,
+        "DMG": 1945,
+        "Install script": 7953,
+        "Linux GNU": 128681,
+        "Linux musl": 6782,
+        "Other installable": 795,
+        "Windows zip": 29376,
+        "macOS tarball": 7197
+      },
+      "bootstrap_downloads_total": 7953,
+      "installable_downloads_total": 192554,
+      "payload_downloads_total": 184601,
+      "prerelease_downloads_total": 3416,
+      "published_releases": [
+        {
+          "prerelease": false,
+          "published_at": "2026-09-05T07:31:19Z",
+          "tag": "v0.8.5"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-08-02T21:00:00Z",
+          "tag": "v0.8.4"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-07-16T01:47:13Z",
+          "tag": "v0.8.3"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-06-26T04:34:52Z",
+          "tag": "v0.8.2"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-06-19T02:01:55Z",
+          "tag": "v0.8.1"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-06-12T00:04:32Z",
+          "tag": "v0.8.0"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-06-02T15:20:32Z",
+          "tag": "v0.8.0-beta-2"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-05-21T01:36:16Z",
+          "tag": "v0.8.0-beta-1"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-05-08T05:12:49Z",
+          "tag": "v0.7.5"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-05-01T02:52:01Z",
+          "tag": "v0.7.4"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-04-19T03:55:21Z",
+          "tag": "v0.7.3"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-04-19T03:49:15Z",
+          "tag": "v0.7.3-beta.1051"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-04-18T22:40:10Z",
+          "tag": "v0.7.1-beta.1049"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-04-18T08:55:25Z",
+          "tag": "v0.7.0-beta.1047"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-04-08T06:11:40Z",
+          "tag": "v0.6.9"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-04-02T00:41:57Z",
+          "tag": "v0.6.8"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-29T21:16:09Z",
+          "tag": "v0.6.7"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-27T03:43:17Z",
+          "tag": "v0.6.5"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-26T14:33:45Z",
+          "tag": "v0.6.3"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-24T20:02:05Z",
+          "tag": "v0.6.2"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-24T08:28:22Z",
+          "tag": "v0.6.1"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-24T08:25:24Z",
+          "tag": "v0.6.1-beta.637"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-24T01:40:41Z",
+          "tag": "v0.6.0"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-23T01:21:49Z",
+          "tag": "v0.5.9"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-23T01:21:32Z",
+          "tag": "v0.5.9-beta.579"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-23T00:47:54Z",
+          "tag": "v0.5.9-beta.578"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-22T22:08:19Z",
+          "tag": "v0.5.8"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-23T00:03:38Z",
+          "tag": "v0.5.8-beta.577"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-22T20:53:45Z",
+          "tag": "v0.5.8-beta.564"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-22T06:41:41Z",
+          "tag": "v0.5.7"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-22T19:06:37Z",
+          "tag": "v0.5.7-beta.563"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-22T05:59:35Z",
+          "tag": "v0.5.7-beta.554"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-22T02:03:35Z",
+          "tag": "v0.5.6-beta.536"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-21T22:03:55Z",
+          "tag": "v0.5.6"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-22T00:06:04Z",
+          "tag": "v0.5.6-beta.526"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T23:31:00Z",
+          "tag": "v0.5.6-beta.524"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T22:27:49Z",
+          "tag": "v0.5.6-beta.523"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-21T15:03:41Z",
+          "tag": "v0.5.5"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T20:45:42Z",
+          "tag": "v0.5.5-beta.522"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T18:39:30Z",
+          "tag": "v0.5.5-beta.521"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T16:43:24Z",
+          "tag": "v0.5.5-beta.519"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T15:26:48Z",
+          "tag": "v0.5.5-beta.517"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T13:17:04Z",
+          "tag": "v0.5.5-beta.516"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T12:41:37Z",
+          "tag": "v0.5.5-beta.514"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T10:46:58Z",
+          "tag": "v0.5.4-beta.504"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T08:41:16Z",
+          "tag": "v0.5.4-beta.491"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-21T04:39:59Z",
+          "tag": "v0.5.4-beta.490"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-20T20:37:42Z",
+          "tag": "v0.5.4"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-20T23:12:10Z",
+          "tag": "v0.5.4-beta.487"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-20T20:29:54Z",
+          "tag": "v0.5.4-beta.471"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-20T17:58:34Z",
+          "tag": "v0.5.3"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-20T17:58:02Z",
+          "tag": "v0.5.3-beta.458"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-20T04:53:44Z",
+          "tag": "v0.5.2"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-20T16:42:28Z",
+          "tag": "v0.5.2-beta.457"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-20T06:25:44Z",
+          "tag": "v0.5.2-beta.448"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-20T04:28:39Z",
+          "tag": "v0.5.2-beta.442"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-20T04:04:54Z",
+          "tag": "v0.5.2-beta.441"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-20T03:19:05Z",
+          "tag": "v0.5.1-beta.438"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-19T14:27:55Z",
+          "tag": "v0.5.1"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T23:57:43Z",
+          "tag": "v0.5.1-beta.414"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T23:32:25Z",
+          "tag": "v0.5.1-beta.413"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T21:09:46Z",
+          "tag": "v0.5.1-beta.403"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T20:36:03Z",
+          "tag": "v0.5.1-beta.402"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T19:40:09Z",
+          "tag": "v0.5.1-beta.400"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T19:04:42Z",
+          "tag": "v0.5.1-beta.390"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T18:08:34Z",
+          "tag": "v0.5.1-beta.379"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T14:20:03Z",
+          "tag": "v0.5.1-beta.378"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T12:42:34Z",
+          "tag": "v0.5.0-beta.369"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T04:17:05Z",
+          "tag": "v0.5.0-beta.368"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-19T00:56:12Z",
+          "tag": "v0.5.0-beta.365"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-18T06:28:21Z",
+          "tag": "v0.5.0"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-18T21:36:53Z",
+          "tag": "v0.5.0-beta.364"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-18T20:15:16Z",
+          "tag": "v0.5.0-beta.360"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-18T19:39:09Z",
+          "tag": "v0.5.0-beta.357"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-18T15:37:21Z",
+          "tag": "v0.5.0-beta.351"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-18T14:29:21Z",
+          "tag": "v0.5.0-beta.349"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-18T02:40:51Z",
+          "tag": "v0.5.0-beta.347"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T23:37:45Z",
+          "tag": "v0.5.0-beta.346"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T23:13:48Z",
+          "tag": "v0.5.0-beta.345"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T22:17:35Z",
+          "tag": "v0.5.0-beta.344"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T19:45:36Z",
+          "tag": "v0.5.0-beta.341"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T18:49:08Z",
+          "tag": "v0.5.0-beta.340"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-17T02:11:27Z",
+          "tag": "v0.4.3"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T13:38:49Z",
+          "tag": "v0.4.3-beta.323"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T12:48:51Z",
+          "tag": "v0.4.3-beta.317"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T06:12:35Z",
+          "tag": "v0.4.3-beta.316"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T05:41:28Z",
+          "tag": "v0.4.3-beta.314"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T05:25:43Z",
+          "tag": "v0.4.3-beta.313"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T05:07:07Z",
+          "tag": "v0.4.3-beta.312"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T04:47:44Z",
+          "tag": "v0.4.3-beta.311"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-17T02:17:05Z",
+          "tag": "v0.4.3-beta.310"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-16T22:56:35Z",
+          "tag": "v0.4.2-beta.300"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-16T20:50:57Z",
+          "tag": "v0.4.2-beta.281"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-16T19:45:42Z",
+          "tag": "v0.4.1-beta.269"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-16T19:24:01Z",
+          "tag": "v0.4.1-beta.267"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-16T19:40:10Z",
+          "tag": "v0.4.1-beta.266"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-16T17:10:06Z",
+          "tag": "v0.4.0"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-16T18:15:55Z",
+          "tag": "v0.4.0-beta.260"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-16T18:01:50Z",
+          "tag": "v0.4.0-beta.259"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-16T17:10:09Z",
+          "tag": "v0.4.0-beta.258"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-16T15:50:51Z",
+          "tag": "v0.4.0-beta.257"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T22:52:41Z",
+          "tag": "v0.3.4-beta.232"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T21:11:20Z",
+          "tag": "v0.3.4-beta.231"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T20:22:22Z",
+          "tag": "v0.3.4-beta.230"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T19:35:18Z",
+          "tag": "v0.3.3-beta.218"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T15:00:09Z",
+          "tag": "v0.3.3-beta.217"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-15T11:05:01Z",
+          "tag": "v0.3.2"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T13:39:18Z",
+          "tag": "v0.3.2-beta.216"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T11:38:28Z",
+          "tag": "v0.3.2-beta.215"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-15T01:06:51Z",
+          "tag": "v0.3.1"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T10:24:45Z",
+          "tag": "v0.3.1-beta.214"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T03:06:37Z",
+          "tag": "v0.3.1-beta.213"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T02:33:58Z",
+          "tag": "v0.3.1-beta.212"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T02:02:58Z",
+          "tag": "v0.3.1-beta.211"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T01:50:13Z",
+          "tag": "v0.3.1-beta.210"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-15T01:01:46Z",
+          "tag": "v0.3.1-beta.205"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-14T21:18:11Z",
+          "tag": "v0.3.0"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T23:47:37Z",
+          "tag": "v0.3.0-beta.201"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T22:34:53Z",
+          "tag": "v0.3.0-beta.200"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T21:46:16Z",
+          "tag": "v0.3.0-beta.196"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T21:02:15Z",
+          "tag": "v0.2.2-beta.190"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-14T18:21:48Z",
+          "tag": "v0.2.1"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T20:45:30Z",
+          "tag": "v0.2.1-beta.188"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T20:31:49Z",
+          "tag": "v0.2.1-beta.187"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T19:42:15Z",
+          "tag": "v0.2.1-beta.186"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T18:58:47Z",
+          "tag": "v0.2.1-beta.183"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T18:16:27Z",
+          "tag": "v0.2.1-beta.180"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T17:55:24Z",
+          "tag": "v0.2.1-beta.179"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T17:40:47Z",
+          "tag": "v0.2.1-beta.178"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T16:58:22Z",
+          "tag": "v0.2.0-beta.172"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T16:15:55Z",
+          "tag": "v0.2.0-beta.170"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T15:33:09Z",
+          "tag": "v0.2.0-beta.167"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T14:37:42Z",
+          "tag": "v0.2.0-beta.166"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T13:55:07Z",
+          "tag": "v0.2.0-beta.163"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T12:48:41Z",
+          "tag": "v0.2.0-beta.162"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T12:05:33Z",
+          "tag": "v0.1.9-beta.161"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T11:23:50Z",
+          "tag": "v0.1.9-beta.157"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T10:37:17Z",
+          "tag": "v0.1.9-beta.153"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T09:54:59Z",
+          "tag": "v0.1.9-beta.152"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T09:11:27Z",
+          "tag": "v0.1.9-beta.151"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T03:24:25Z",
+          "tag": "v0.1.9-beta.150"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T02:41:51Z",
+          "tag": "v0.1.9-beta.148"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-14T01:59:10Z",
+          "tag": "v0.1.9-beta.141"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-13T23:19:56Z",
+          "tag": "v0.1.9-beta.140"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-13T22:37:02Z",
+          "tag": "v0.1.9-beta.136"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-03-12T22:02:05Z",
+          "tag": "v0.1.9a"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-11T18:11:44Z",
+          "tag": "v0.1.7-beta.30"
+        },
+        {
+          "prerelease": true,
+          "published_at": "2026-03-11T16:59:12Z",
+          "tag": "v0.1.7-beta.28"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-02-24T09:03:54Z",
+          "tag": "v0.1.7"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-02-22T03:19:19Z",
+          "tag": "v0.1.6"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-02-22T02:33:50Z",
+          "tag": "v0.1.5"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-02-21T19:22:43Z",
+          "tag": "v0.1.4"
+        },
+        {
+          "prerelease": false,
+          "published_at": "2026-02-21T17:25:25Z",
+          "tag": "v0.1.2"
+        }
+      ],
+      "recent_stable": [
+        {
+          "age_days": 37.325145234224536,
+          "asset_count": 13,
+          "bootstrap_downloads": 198,
+          "downloads": 13812,
+          "downloads_per_week": 2590.3181191468634,
+          "mix": {
+            "Android": 487,
+            "DMG": 85,
+            "Install script": 198,
+            "Linux GNU": 10796,
+            "Linux musl": 640,
+            "Other installable": 62,
+            "Windows zip": 1024,
+            "macOS tarball": 520
+          },
+          "name": "v0.8.5",
+          "payload_downloads": 13614,
+          "payload_downloads_per_week": 2553.1849749540543,
+          "prerelease": false,
+          "published_at": "2026-09-05T07:31:19Z",
+          "published_date": "2026-09-05",
+          "tag": "v0.8.5"
+        },
+        {
+          "age_days": 70.76355958607638,
+          "asset_count": 13,
+          "bootstrap_downloads": 468,
+          "downloads": 16425,
+          "downloads_per_week": 1624.7769427164708,
+          "mix": {
+            "Android": 678,
+            "DMG": 110,
+            "Install script": 468,
+            "Linux GNU": 11768,
+            "Linux musl": 1110,
+            "Other installable": 355,
+            "Windows zip": 1382,
+            "macOS tarball": 554
+          },
+          "name": "v0.8.4",
+          "payload_downloads": 15957,
+          "payload_downloads_per_week": 1578.4819284582481,
+          "prerelease": false,
+          "published_at": "2026-08-02T21:00:00Z",
+          "published_date": "2026-08-02",
+          "tag": "v0.8.4"
+        },
+        {
+          "age_days": 88.56410356755786,
+          "asset_count": 13,
+          "bootstrap_downloads": 441,
+          "downloads": 12024,
+          "downloads_per_week": 950.3624675181808,
+          "mix": {
+            "Android": 524,
+            "DMG": 57,
+            "Install script": 441,
+            "Linux GNU": 7936,
+            "Linux musl": 1178,
+            "Other installable": 378,
+            "Windows zip": 1143,
+            "macOS tarball": 367
+          },
+          "name": "v0.8.3",
+          "payload_downloads": 11583,
+          "payload_downloads_per_week": 915.5063590538164,
+          "prerelease": false,
+          "published_at": "2026-07-16T01:47:13Z",
+          "published_date": "2026-07-16",
+          "tag": "v0.8.3"
+        },
+        {
+          "age_days": 108.44767995644675,
+          "asset_count": 11,
+          "bootstrap_downloads": 467,
+          "downloads": 12556,
+          "downloads_per_week": 810.4553277239122,
+          "mix": {
+            "Android": 564,
+            "DMG": 63,
+            "Install script": 467,
+            "Linux GNU": 8657,
+            "Linux musl": 1040,
+            "Windows zip": 1450,
+            "macOS tarball": 315
+          },
+          "name": "v0.8.2",
+          "payload_downloads": 12089,
+          "payload_downloads_per_week": 780.3117598641586,
+          "prerelease": false,
+          "published_at": "2026-06-26T04:34:52Z",
+          "published_date": "2026-06-26",
+          "tag": "v0.8.2"
+        },
+        {
+          "age_days": 115.55389523422453,
+          "asset_count": 12,
+          "bootstrap_downloads": 410,
+          "downloads": 6682,
+          "downloads_per_week": 404.7808159577001,
+          "mix": {
+            "Android": 431,
+            "DMG": 30,
+            "Install script": 410,
+            "Linux GNU": 3820,
+            "Linux musl": 835,
+            "Windows zip": 935,
+            "macOS tarball": 221
+          },
+          "name": "v0.8.1",
+          "payload_downloads": 6272,
+          "payload_downloads_per_week": 379.94392063554255,
+          "prerelease": false,
+          "published_at": "2026-06-19T02:01:55Z",
+          "published_date": "2026-06-19",
+          "tag": "v0.8.1"
+        },
+        {
+          "age_days": 122.63541143792824,
+          "asset_count": 10,
+          "bootstrap_downloads": 409,
+          "downloads": 8651,
+          "downloads_per_week": 493.79701417360064,
+          "mix": {
+            "Android": 434,
+            "Install script": 409,
+            "Linux GNU": 5796,
+            "Linux musl": 853,
+            "Windows zip": 934,
+            "macOS tarball": 225
+          },
+          "name": "v0.8.0",
+          "payload_downloads": 8242,
+          "payload_downloads_per_week": 470.4513918412688,
+          "prerelease": false,
+          "published_at": "2026-06-12T00:04:32Z",
+          "published_date": "2026-06-12",
+          "tag": "v0.8.0"
+        },
+        {
+          "age_days": 157.4213257897801,
+          "asset_count": 11,
+          "bootstrap_downloads": 652,
+          "downloads": 25571,
+          "downloads_per_week": 1137.0568701665745,
+          "mix": {
+            "Android": 852,
+            "DMG": 309,
+            "Install script": 652,
+            "Linux GNU": 18640,
+            "Linux musl": 1126,
+            "Windows zip": 2840,
+            "macOS tarball": 1152
+          },
+          "name": "v0.7.5",
+          "payload_downloads": 24919,
+          "payload_downloads_per_week": 1108.0646102100375,
+          "prerelease": false,
+          "published_at": "2026-05-08T05:12:49Z",
+          "published_date": "2026-05-08",
+          "tag": "v0.7.5"
+        },
+        {
+          "age_days": 164.51910356755786,
+          "asset_count": 9,
+          "bootstrap_downloads": 476,
+          "downloads": 9319,
+          "downloads_per_week": 396.5071446746172,
+          "mix": {
+            "Android": 474,
+            "DMG": 164,
+            "Install script": 476,
+            "Linux GNU": 6429,
+            "Windows zip": 1387,
+            "macOS tarball": 389
+          },
+          "name": "v0.7.4",
+          "payload_downloads": 8843,
+          "payload_downloads_per_week": 376.2541775252323,
+          "prerelease": false,
+          "published_at": "2026-05-01T02:52:01Z",
+          "published_date": "2026-05-01",
+          "tag": "v0.7.4"
+        },
+        {
+          "age_days": 176.4751220860764,
+          "asset_count": 9,
+          "bootstrap_downloads": 589,
+          "downloads": 13101,
+          "downloads_per_week": 519.6596489972653,
+          "mix": {
+            "Android": 589,
+            "DMG": 287,
+            "Install script": 589,
+            "Linux GNU": 9287,
+            "Windows zip": 1823,
+            "macOS tarball": 526
+          },
+          "name": "v0.7.3",
+          "payload_downloads": 12512,
+          "payload_downloads_per_week": 496.2965825703216,
+          "prerelease": false,
+          "published_at": "2026-04-19T03:55:21Z",
+          "published_date": "2026-04-19",
+          "tag": "v0.7.3"
+        },
+        {
+          "age_days": 187.38045773422454,
+          "asset_count": 9,
+          "bootstrap_downloads": 434,
+          "downloads": 9567,
+          "downloads_per_week": 357.395860858591,
+          "mix": {
+            "Android": 421,
+            "DMG": 309,
+            "Install script": 434,
+            "Linux GNU": 6449,
+            "Windows zip": 1703,
+            "macOS tarball": 251
+          },
+          "name": "v0.6.9",
+          "payload_downloads": 9133,
+          "payload_downloads_per_week": 341.1828574497242,
+          "prerelease": false,
+          "published_at": "2026-04-08T06:11:40Z",
+          "published_date": "2026-04-08",
+          "tag": "v0.6.9"
+        },
+        {
+          "age_days": 193.60942764163195,
+          "asset_count": 9,
+          "bootstrap_downloads": 334,
+          "downloads": 7456,
+          "downloads_per_week": 269.57364956734745,
+          "mix": {
+            "Android": 343,
+            "DMG": 233,
+            "Install script": 334,
+            "Linux GNU": 4970,
+            "Windows zip": 1352,
+            "macOS tarball": 224
+          },
+          "name": "v0.6.8",
+          "payload_downloads": 7122,
+          "payload_downloads_per_week": 257.497791338338,
+          "prerelease": false,
+          "published_at": "2026-04-02T00:41:57Z",
+          "published_date": "2026-04-02",
+          "tag": "v0.6.8"
+        },
+        {
+          "age_days": 196.7523443082986,
+          "asset_count": 9,
+          "bootstrap_downloads": 133,
+          "downloads": 1284,
+          "downloads_per_week": 45.681793686363235,
+          "mix": {
+            "Android": 131,
+            "DMG": 17,
+            "Install script": 133,
+            "Linux GNU": 616,
+            "Windows zip": 370,
+            "macOS tarball": 17
+          },
+          "name": "v0.6.7",
+          "payload_downloads": 1151,
+          "payload_downloads_per_week": 40.949956801405044,
+          "prerelease": false,
+          "published_at": "2026-03-29T21:16:09Z",
+          "published_date": "2026-03-29",
+          "tag": "v0.6.7"
+        }
+      ],
+      "release_count": 153,
+      "stable_downloads_total": 189138,
+      "top_by_rate": [
+        {
+          "age_days": 37.325145234224536,
+          "asset_count": 13,
+          "bootstrap_downloads": 198,
+          "downloads": 13812,
+          "downloads_per_week": 2590.3181191468634,
+          "mix": {
+            "Android": 487,
+            "DMG": 85,
+            "Install script": 198,
+            "Linux GNU": 10796,
+            "Linux musl": 640,
+            "Other installable": 62,
+            "Windows zip": 1024,
+            "macOS tarball": 520
+          },
+          "name": "v0.8.5",
+          "payload_downloads": 13614,
+          "payload_downloads_per_week": 2553.1849749540543,
+          "prerelease": false,
+          "published_at": "2026-09-05T07:31:19Z",
+          "published_date": "2026-09-05",
+          "tag": "v0.8.5"
+        },
+        {
+          "age_days": 70.76355958607638,
+          "asset_count": 13,
+          "bootstrap_downloads": 468,
+          "downloads": 16425,
+          "downloads_per_week": 1624.7769427164708,
+          "mix": {
+            "Android": 678,
+            "DMG": 110,
+            "Install script": 468,
+            "Linux GNU": 11768,
+            "Linux musl": 1110,
+            "Other installable": 355,
+            "Windows zip": 1382,
+            "macOS tarball": 554
+          },
+          "name": "v0.8.4",
+          "payload_downloads": 15957,
+          "payload_downloads_per_week": 1578.4819284582481,
+          "prerelease": false,
+          "published_at": "2026-08-02T21:00:00Z",
+          "published_date": "2026-08-02",
+          "tag": "v0.8.4"
+        },
+        {
+          "age_days": 157.4213257897801,
+          "asset_count": 11,
+          "bootstrap_downloads": 652,
+          "downloads": 25571,
+          "downloads_per_week": 1137.0568701665745,
+          "mix": {
+            "Android": 852,
+            "DMG": 309,
+            "Install script": 652,
+            "Linux GNU": 18640,
+            "Linux musl": 1126,
+            "Windows zip": 2840,
+            "macOS tarball": 1152
+          },
+          "name": "v0.7.5",
+          "payload_downloads": 24919,
+          "payload_downloads_per_week": 1108.0646102100375,
+          "prerelease": false,
+          "published_at": "2026-05-08T05:12:49Z",
+          "published_date": "2026-05-08",
+          "tag": "v0.7.5"
+        },
+        {
+          "age_days": 88.56410356755786,
+          "asset_count": 13,
+          "bootstrap_downloads": 441,
+          "downloads": 12024,
+          "downloads_per_week": 950.3624675181808,
+          "mix": {
+            "Android": 524,
+            "DMG": 57,
+            "Install script": 441,
+            "Linux GNU": 7936,
+            "Linux musl": 1178,
+            "Other installable": 378,
+            "Windows zip": 1143,
+            "macOS tarball": 367
+          },
+          "name": "v0.8.3",
+          "payload_downloads": 11583,
+          "payload_downloads_per_week": 915.5063590538164,
+          "prerelease": false,
+          "published_at": "2026-07-16T01:47:13Z",
+          "published_date": "2026-07-16",
+          "tag": "v0.8.3"
+        },
+        {
+          "age_days": 108.44767995644675,
+          "asset_count": 11,
+          "bootstrap_downloads": 467,
+          "downloads": 12556,
+          "downloads_per_week": 810.4553277239122,
+          "mix": {
+            "Android": 564,
+            "DMG": 63,
+            "Install script": 467,
+            "Linux GNU": 8657,
+            "Linux musl": 1040,
+            "Windows zip": 1450,
+            "macOS tarball": 315
+          },
+          "name": "v0.8.2",
+          "payload_downloads": 12089,
+          "payload_downloads_per_week": 780.3117598641586,
+          "prerelease": false,
+          "published_at": "2026-06-26T04:34:52Z",
+          "published_date": "2026-06-26",
+          "tag": "v0.8.2"
+        },
+        {
+          "age_days": 230.26085125274304,
+          "asset_count": 8,
+          "bootstrap_downloads": 0,
+          "downloads": 19158,
+          "downloads_per_week": 582.4090342339618,
+          "mix": {
+            "Android": 1369,
+            "Linux GNU": 12908,
+            "Windows zip": 3659,
+            "macOS tarball": 1222
+          },
+          "name": "v0.1.7",
+          "payload_downloads": 19158,
+          "payload_downloads_per_week": 582.4090342339618,
+          "prerelease": false,
+          "published_at": "2026-02-24T09:03:54Z",
+          "published_date": "2026-02-24",
+          "tag": "v0.1.7"
+        },
+        {
+          "age_days": 176.4751220860764,
+          "asset_count": 9,
+          "bootstrap_downloads": 589,
+          "downloads": 13101,
+          "downloads_per_week": 519.6596489972653,
+          "mix": {
+            "Android": 589,
+            "DMG": 287,
+            "Install script": 589,
+            "Linux GNU": 9287,
+            "Windows zip": 1823,
+            "macOS tarball": 526
+          },
+          "name": "v0.7.3",
+          "payload_downloads": 12512,
+          "payload_downloads_per_week": 496.2965825703216,
+          "prerelease": false,
+          "published_at": "2026-04-19T03:55:21Z",
+          "published_date": "2026-04-19",
+          "tag": "v0.7.3"
+        },
+        {
+          "age_days": 122.63541143792824,
+          "asset_count": 10,
+          "bootstrap_downloads": 409,
+          "downloads": 8651,
+          "downloads_per_week": 493.79701417360064,
+          "mix": {
+            "Android": 434,
+            "Install script": 409,
+            "Linux GNU": 5796,
+            "Linux musl": 853,
+            "Windows zip": 934,
+            "macOS tarball": 225
+          },
+          "name": "v0.8.0",
+          "payload_downloads": 8242,
+          "payload_downloads_per_week": 470.4513918412688,
+          "prerelease": false,
+          "published_at": "2026-06-12T00:04:32Z",
+          "published_date": "2026-06-12",
+          "tag": "v0.8.0"
+        },
+        {
+          "age_days": 115.55389523422453,
+          "asset_count": 12,
+          "bootstrap_downloads": 410,
+          "downloads": 6682,
+          "downloads_per_week": 404.7808159577001,
+          "mix": {
+            "Android": 431,
+            "DMG": 30,
+            "Install script": 410,
+            "Linux GNU": 3820,
+            "Linux musl": 835,
+            "Windows zip": 935,
+            "macOS tarball": 221
+          },
+          "name": "v0.8.1",
+          "payload_downloads": 6272,
+          "payload_downloads_per_week": 379.94392063554255,
+          "prerelease": false,
+          "published_at": "2026-06-19T02:01:55Z",
+          "published_date": "2026-06-19",
+          "tag": "v0.8.1"
+        },
+        {
+          "age_days": 164.51910356755786,
+          "asset_count": 9,
+          "bootstrap_downloads": 476,
+          "downloads": 9319,
+          "downloads_per_week": 396.5071446746172,
+          "mix": {
+            "Android": 474,
+            "DMG": 164,
+            "Install script": 476,
+            "Linux GNU": 6429,
+            "Windows zip": 1387,
+            "macOS tarball": 389
+          },
+          "name": "v0.7.4",
+          "payload_downloads": 8843,
+          "payload_downloads_per_week": 376.2541775252323,
+          "prerelease": false,
+          "published_at": "2026-05-01T02:52:01Z",
+          "published_date": "2026-05-01",
+          "tag": "v0.7.4"
+        },
+        {
+          "age_days": 187.38045773422454,
+          "asset_count": 9,
+          "bootstrap_downloads": 434,
+          "downloads": 9567,
+          "downloads_per_week": 357.395860858591,
+          "mix": {
+            "Android": 421,
+            "DMG": 309,
+            "Install script": 434,
+            "Linux GNU": 6449,
+            "Windows zip": 1703,
+            "macOS tarball": 251
+          },
+          "name": "v0.6.9",
+          "payload_downloads": 9133,
+          "payload_downloads_per_week": 341.1828574497242,
+          "prerelease": false,
+          "published_at": "2026-04-08T06:11:40Z",
+          "published_date": "2026-04-08",
+          "tag": "v0.6.9"
+        },
+        {
+          "age_days": 193.60942764163195,
+          "asset_count": 9,
+          "bootstrap_downloads": 334,
+          "downloads": 7456,
+          "downloads_per_week": 269.57364956734745,
+          "mix": {
+            "Android": 343,
+            "DMG": 233,
+            "Install script": 334,
+            "Linux GNU": 4970,
+            "Windows zip": 1352,
+            "macOS tarball": 224
+          },
+          "name": "v0.6.8",
+          "payload_downloads": 7122,
+          "payload_downloads_per_week": 257.497791338338,
+          "prerelease": false,
+          "published_at": "2026-04-02T00:41:57Z",
+          "published_date": "2026-04-02",
+          "tag": "v0.6.8"
+        },
+        {
+          "age_days": 199.483501715706,
+          "asset_count": 9,
+          "bootstrap_downloads": 267,
+          "downloads": 5361,
+          "downloads_per_week": 188.1208204048955,
+          "mix": {
+            "Android": 270,
+            "DMG": 138,
+            "Install script": 267,
+            "Linux GNU": 3670,
+            "Windows zip": 841,
+            "macOS tarball": 175
+          },
+          "name": "v0.6.5",
+          "payload_downloads": 5094,
+          "payload_downloads_per_week": 178.75162453694045,
+          "prerelease": false,
+          "published_at": "2026-03-27T03:43:17Z",
+          "published_date": "2026-03-27",
+          "tag": "v0.6.5"
+        },
+        {
+          "age_days": 232.50014523422453,
+          "asset_count": 6,
+          "bootstrap_downloads": 0,
+          "downloads": 4597,
+          "downloads_per_week": 138.40421461923103,
+          "mix": {
+            "Linux GNU": 3302,
+            "Windows zip": 1017,
+            "macOS tarball": 278
+          },
+          "name": "v0.1.6",
+          "payload_downloads": 4597,
+          "payload_downloads_per_week": 138.40421461923103,
+          "prerelease": false,
+          "published_at": "2026-02-22T03:19:19Z",
+          "published_date": "2026-02-22",
+          "tag": "v0.1.6"
+        },
+        {
+          "age_days": 201.8037794934838,
+          "asset_count": 9,
+          "bootstrap_downloads": 158,
+          "downloads": 2563,
+          "downloads_per_week": 88.90319123373659,
+          "mix": {
+            "Android": 222,
+            "DMG": 60,
+            "Install script": 158,
+            "Linux GNU": 1499,
+            "Windows zip": 546,
+            "macOS tarball": 78
+          },
+          "name": "v0.6.2",
+          "payload_downloads": 2405,
+          "payload_downloads_per_week": 83.42261994425927,
+          "prerelease": false,
+          "published_at": "2026-03-24T20:02:05Z",
+          "published_date": "2026-03-24",
+          "tag": "v0.6.2"
+        }
+      ],
+      "with_installable_downloads": 134
+    },
+    "ok": true
+  },
+  "repo": "zeroclaw-labs/zeroclaw",
+  "schema_version": 3,
+  "scoop": {
+    "collected_at": "2026-10-12T15:20:00.877627+00:00",
+    "data": {
+      "download_url": "https://github.com/zeroclaw-labs/zeroclaw/releases/download/v0.8.5/zeroclaw-x86_64-pc-windows-msvc.zip",
+      "manifest_version": "0.8.5",
+      "repo": {
+        "forks": 2,
+        "html_url": "https://github.com/zeroclaw-labs/scoop-zeroclaw",
+        "stars": 1,
+        "updated_at": "2026-09-05T07:31:53Z"
+      },
+      "traffic": {
+        "clones_14d": 81,
+        "clones_uniques_14d": 78,
+        "views_14d": 16,
+        "views_uniques_14d": 7
+      }
+    },
+    "ok": true
+  }
+}
