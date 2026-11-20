@@ -1274,7 +1274,7 @@
       "cumulative_count": 1020146,
       "cumulative_uniques_sum": 48229,
       "day": "2026-11-06",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-06T00:00:00Z",
       "uniques": 375
     },
@@ -1283,7 +1283,7 @@
       "cumulative_count": 1031940,
       "cumulative_uniques_sum": 49875,
       "day": "2026-11-07",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-07T00:00:00Z",
       "uniques": 1646
     },
@@ -1292,7 +1292,7 @@
       "cumulative_count": 1035271,
       "cumulative_uniques_sum": 50142,
       "day": "2026-11-08",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-08T00:00:00Z",
       "uniques": 267
     },
@@ -1301,7 +1301,7 @@
       "cumulative_count": 1061418,
       "cumulative_uniques_sum": 50489,
       "day": "2026-11-09",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-09T00:00:00Z",
       "uniques": 347
     },
@@ -1310,7 +1310,7 @@
       "cumulative_count": 1077927,
       "cumulative_uniques_sum": 50819,
       "day": "2026-11-10",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-10T00:00:00Z",
       "uniques": 330
     },
@@ -1319,7 +1319,7 @@
       "cumulative_count": 1083522,
       "cumulative_uniques_sum": 51154,
       "day": "2026-11-11",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-11T00:00:00Z",
       "uniques": 335
     },
@@ -1328,7 +1328,7 @@
       "cumulative_count": 1091582,
       "cumulative_uniques_sum": 51489,
       "day": "2026-11-12",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-12T00:00:00Z",
       "uniques": 335
     },
@@ -1337,7 +1337,7 @@
       "cumulative_count": 1098967,
       "cumulative_uniques_sum": 51776,
       "day": "2026-11-13",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-13T00:00:00Z",
       "uniques": 287
     },
@@ -1346,7 +1346,7 @@
       "cumulative_count": 1112401,
       "cumulative_uniques_sum": 52207,
       "day": "2026-11-14",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-14T00:00:00Z",
       "uniques": 431
     },
@@ -1355,7 +1355,7 @@
       "cumulative_count": 1123387,
       "cumulative_uniques_sum": 52563,
       "day": "2026-11-15",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-15T00:00:00Z",
       "uniques": 356
     },
@@ -1364,7 +1364,7 @@
       "cumulative_count": 1138433,
       "cumulative_uniques_sum": 52839,
       "day": "2026-11-16",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-16T00:00:00Z",
       "uniques": 276
     },
@@ -1373,7 +1373,7 @@
       "cumulative_count": 1162621,
       "cumulative_uniques_sum": 53130,
       "day": "2026-11-17",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-17T00:00:00Z",
       "uniques": 291
     },
@@ -1382,9 +1382,18 @@
       "cumulative_count": 1199522,
       "cumulative_uniques_sum": 53526,
       "day": "2026-11-18",
-      "source_snapshot_at": "2026-11-19T15:41:49.829663+00:00",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
       "timestamp": "2026-11-18T00:00:00Z",
       "uniques": 396
+    },
+    {
+      "count": 28399,
+      "cumulative_count": 1227921,
+      "cumulative_uniques_sum": 53964,
+      "day": "2026-11-19",
+      "source_snapshot_at": "2026-11-20T15:24:23.427223+00:00",
+      "timestamp": "2026-11-19T00:00:00Z",
+      "uniques": 438
     }
   ],
   "clone_history_method": "deduplicated GitHub traffic clone day rows from stored snapshots; cumulative values are observed clone events, not all-time GitHub totals",
@@ -1401,7 +1410,7 @@
     "open_pull_requests"
   ],
   "day_boundary": "UTC",
-  "generated_at": "2026-11-19T15:41:49.829663+00:00",
+  "generated_at": "2026-11-20T15:24:23.427223+00:00",
   "method": "most complete snapshot per UTC day (latest on ties), diffed against prior UTC day close",
   "public_usage_history": [
     {
@@ -9334,6 +9343,53 @@
         "watchers": 0
       },
       "snapshot_at": "2026-11-19T15:41:49.829663+00:00"
+    },
+    {
+      "aggregate_distribution_delta": 3970,
+      "counters": {
+        "active_commit_contributors_28d": 20,
+        "contributor_absence_factor_28d": 3,
+        "crates_downloads": 7867,
+        "forks": 5038,
+        "ghcr_downloads": 576214,
+        "homebrew_installs_365d": 8406,
+        "issues_opened_7d": 38,
+        "open_issues": 768,
+        "open_pull_requests": 575,
+        "pr_closure_throughput_pct_28d": 45,
+        "pr_median_first_response_hours_28d": 25,
+        "prs_merged_7d": 21,
+        "release_bootstrap_downloads": 8346,
+        "release_downloads": 223537,
+        "release_payload_downloads": 215191,
+        "repo_clones_14d": 219765,
+        "repo_views_14d": 21350,
+        "stars": 33525,
+        "watchers": 85
+      },
+      "day": "2026-11-20",
+      "deltas": {
+        "active_commit_contributors_28d": 0,
+        "contributor_absence_factor_28d": 1,
+        "crates_downloads": 11,
+        "forks": 7,
+        "ghcr_downloads": 3207,
+        "homebrew_installs_365d": 5,
+        "issues_opened_7d": 2,
+        "open_issues": 5,
+        "open_pull_requests": 7,
+        "pr_closure_throughput_pct_28d": -2,
+        "pr_median_first_response_hours_28d": -1,
+        "prs_merged_7d": 2,
+        "release_bootstrap_downloads": 10,
+        "release_downloads": 762,
+        "release_payload_downloads": 752,
+        "repo_clones_14d": 18027,
+        "repo_views_14d": -6228,
+        "stars": 29,
+        "watchers": 0
+      },
+      "snapshot_at": "2026-11-20T15:24:23.427223+00:00"
     }
   ],
   "source": "data/snapshots"
